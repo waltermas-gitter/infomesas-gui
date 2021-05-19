@@ -27,6 +27,36 @@
      <string>PushButton</string>
     </property>
    </widget>
+   <widget class="QTableWidget" name="pedidosTableWidget">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>30</y>
+      <width>251</width>
+      <height>351</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableView" name="pedidosTableView">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>30</y>
+      <width>351</width>
+      <height>341</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDateEdit" name="dateEdit">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>430</y>
+      <width>149</width>
+      <height>38</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
