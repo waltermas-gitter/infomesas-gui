@@ -2,10 +2,17 @@
 
 # https://realpython.com/python-pyqt-database/
 
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox, QTableWidgetItem
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+# from PyQt5 import QtWidgets, uic
+# from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox, QTableWidgetItem
+# from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+
+# import sys
 import sys
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtSql import *
+from PyQt5 import uic
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
@@ -21,10 +28,12 @@ if not con.open():
     sys.exit(1)
     
 
-class PedidoWindow(QWidget):
-    def __init__(self):
+class PedidoDialog(QDialog):
+    def __init__(self, id):
         super().__init__()
-        uic.loadUi("pedido.ui", self)
+        uic.loadUi("pedidoDialog.ui", self)
+        self.id = id
+        print(self.id)
 
 
 
@@ -52,9 +61,11 @@ class InfomesasWindow(QMainWindow):
         self.pedidosTableWidget.resizeColumnsToContents()                    
 
     def editarPedido(self):
-        self.pedido = PedidoWindow()
-        print(self.pedido)
-        self.pedido.show()
+        item = self.pedidosTableWidget.item(self.pedidosTableWidget.currentRow(),0)
+        self.pedido = PedidoDialog(item.text())
+        if self.pedido.exec_() == QDialog.Accepted:
+            print("aceptado")
+
 
     def salir(self):
         con.close()
