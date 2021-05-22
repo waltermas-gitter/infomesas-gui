@@ -30,12 +30,42 @@ if not con.open():
     sys.exit(1)
     
 
+
+
+
 class PedidoDialog(QDialog):
     def __init__(self, id):
         super().__init__()
         uic.loadUi("pedidoDialog.ui", self)
         self.id = id
         print(self.id)
+        self.initUI()
+
+    def initUI(self):
+        clientes = []
+        query = QSqlQuery("SELECT nombre FROM clientes")
+        while query.next():
+            clientes.append(query.value(0))
+        clientes.sort()
+        self.clienteComboBox.addItems(clientes)
+
+        query = QSqlQuery("SELECT modelo FROM modelos")
+        while query.next():
+            self.modeloListWidget.addItem(query.value(0))
+   
+        query = QSqlQuery("SELECT chapa FROM chapas")
+        while query.next():
+            self.chapaListWidget.addItem(query.value(0))
+
+        self.notasPlainTextEdit.setPlainText("hola")
+
+        estados = ['pendiente', 'en produccion', 'terminada', 'entregada', 'anulada']
+        self.estadoListWidget.addItems(estados)
+
+        query = QSqlQuery("SELECT nombre FROM lugaresEntrega")
+        while query.next():
+            self.lugarEntregaComboBox.addItem(query.value(0))
+
 
 
 
