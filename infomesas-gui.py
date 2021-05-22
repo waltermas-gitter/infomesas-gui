@@ -61,27 +61,48 @@ class InfomesasWindow(QMainWindow):
             fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
             # fechap = "%s-%s-%s" % (fecha.day, fecha.month, fecha.year)
             fechap = fecha.strftime("%d-%m-%Y")
-            
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
-            # cur.execute("SELECT nombre from clientes WHERE idCliente = %s" % (item[2])) 
-            # cliente = cur.fetchall()[0][0] 
             queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = %s" % query.value(2))
             queryCliente.first()
  
             self.pedidosTableWidget.setItem(rows, 2, QTableWidgetItem(str(queryCliente.value(0))))
+            queryModelo = QSqlQuery("SELECT modelo FROM modelos WHERE idModelo = '%s'" % query.value(3))
+            queryModelo.first()
+            self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(queryModelo.value(0)))
+
+            queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % query.value(4))
+            queryChapa.first()
+            self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(str(queryChapa.value(0))))
 
 
-
-            self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(query.value(3)))
-            self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(str(query.value(4))))
             self.pedidosTableWidget.setItem(rows, 5, QTableWidgetItem(str(query.value(5))))
-            self.pedidosTableWidget.setItem(rows, 6, QTableWidgetItem(str(query.value(6))))
-            self.pedidosTableWidget.setItem(rows, 7, QTableWidgetItem(str(query.value(7))))
-            self.pedidosTableWidget.setItem(rows, 8, QTableWidgetItem(str(query.value(8))))
-            self.pedidosTableWidget.setItem(rows, 9, QTableWidgetItem(str(query.value(9))))
+            medidaCerrada = QTableWidgetItem(str(query.value(6)))
+            medidaCerrada.setTextAlignment(Qt.AlignRight)
+            self.pedidosTableWidget.setItem(rows, 6, medidaCerrada)
+            medidaAbierta = QTableWidgetItem(str(query.value(7)))
+            medidaAbierta.setTextAlignment(Qt.AlignRight)
+            self.pedidosTableWidget.setItem(rows, 7, medidaAbierta)
+            medidaAncho = QTableWidgetItem(str(query.value(8)))
+            medidaAncho.setTextAlignment(Qt.AlignRight)
+            self.pedidosTableWidget.setItem(rows, 8, medidaAncho)
+            precio = QTableWidgetItem(str(query.value(9)))
+            precio.setTextAlignment(Qt.AlignRight)
+            self.pedidosTableWidget.setItem(rows, 9, precio)
+            
             self.pedidosTableWidget.setItem(rows, 10, QTableWidgetItem(str(query.value(10))))
-            self.pedidosTableWidget.setItem(rows, 11, QTableWidgetItem(str(query.value(11))))
-            self.pedidosTableWidget.setItem(rows, 12, QTableWidgetItem(str(query.value(12))))
+            if query.value(11):
+                fecha = datetime.strptime(query.value(11), "%Y-%m-%d %H:%M:%S")
+                fechap = fecha.strftime("%d-%m-%Y")
+            else:
+                fechap = None
+            self.pedidosTableWidget.setItem(rows, 11, QTableWidgetItem(fechap))
+            if query.value(12):
+                queryLugar =  QSqlQuery("SELECT nombre FROM lugaresEntrega WHERE idLugarEntrega = %s"% query.value(12))
+                queryLugar.first()
+                lugarEntrega = queryLugar.value(0)
+            else:
+                lugarEntrega = ''
+            self.pedidosTableWidget.setItem(rows, 12, QTableWidgetItem(lugarEntrega))
 
         self.pedidosTableWidget.resizeColumnsToContents()                    
 
