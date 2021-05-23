@@ -38,7 +38,6 @@ class PedidoDialog(QDialog):
         super().__init__()
         uic.loadUi("pedidoDialog.ui", self)
         self.id = id
-        print(self.id)
         self.initUI()
 
     def initUI(self):
@@ -49,6 +48,8 @@ class PedidoDialog(QDialog):
         clientes.sort()
         self.clienteComboBox.addItems(clientes)
 
+
+
         query = QSqlQuery("SELECT modelo FROM modelos")
         while query.next():
             self.modeloListWidget.addItem(query.value(0))
@@ -57,7 +58,7 @@ class PedidoDialog(QDialog):
         while query.next():
             self.chapaListWidget.addItem(query.value(0))
 
-        self.notasPlainTextEdit.setPlainText("hola")
+        # self.notasPlainTextEdit.setPlainText("hola")
 
         estados = ['pendiente', 'en produccion', 'terminada', 'entregada', 'anulada']
         self.estadoListWidget.addItems(estados)
@@ -66,6 +67,33 @@ class PedidoDialog(QDialog):
         while query.next():
             self.lugarEntregaComboBox.addItem(query.value(0))
 
+
+        # lleno los items correspondientes
+        dialist = self.id[1].text().split('-')
+        dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+        self.fechaDateEdit.setDate(dia)
+        self.clienteComboBox.setCurrentText(self.id[2].text())
+        modeloItem = self.modeloListWidget.findItems(self.id[3].text(), Qt.MatchExactly)
+        self.modeloListWidget.setCurrentItem(modeloItem[0])
+        chapaItem = self.chapaListWidget.findItems(self.id[4].text(), Qt.MatchExactly)
+        self.chapaListWidget.setCurrentItem(chapaItem[0])
+        self.notasPlainTextEdit.setPlainText(self.id[5].text())
+        self.medidaCerradaSpinBox.setValue(int(self.id[6].text()))
+        self.medidaAbiertaSpinBox.setValue(int(self.id[7].text()))
+        self.anchoSpinBox.setValue(int(self.id[8].text()))
+        self.precioLineEdit.setText(self.id[9].text())
+        estadoItem = self.estadoListWidget.findItems(self.id[10].text(), Qt.MatchExactly)
+        self.estadoListWidget.setCurrentItem(estadoItem[0])
+        if self.id[11].text() != '':
+            dialist = self.id[11].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaEntregaDateEdit.setDate(dia)
+        # if self.id[12].text() != '':
+        #     self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
+        # else:
+        #     self.lugarEntregaComboBox.setCurrentText('')
+
+        self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
 
 
 
@@ -82,6 +110,7 @@ class InfomesasWindow(QMainWindow):
 
         # lleno pedidosTableWidget
         self.pedidosTableWidget.setColumnCount(13)
+        self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "M.cerrada", "M.abierta", "M.ancho", "Precio", "Estado", "F.entrega", "Lugar entrega"])
         query = QSqlQuery("SELECT * FROM pedidos")
         while query.next():        
@@ -137,8 +166,9 @@ class InfomesasWindow(QMainWindow):
         self.pedidosTableWidget.resizeColumnsToContents()                    
 
     def editarPedido(self):
-        item = self.pedidosTableWidget.item(self.pedidosTableWidget.currentRow(),0)
-        self.pedido = PedidoDialog(item.text())
+        # item = self.pedidosTableWidget.item(self.pedidosTableWidget.currentRow(),0)
+        # self.pedido = PedidoDialog(item.text())
+        self.pedido = PedidoDialog(self.pedidosTableWidget.selectedItems())
         if self.pedido.exec_() == QDialog.Accepted:
             print("aceptado")
 

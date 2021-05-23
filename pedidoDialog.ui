@@ -205,6 +205,9 @@
      <height>38</height>
     </rect>
    </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>
