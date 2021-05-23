@@ -88,13 +88,27 @@ class PedidoDialog(QDialog):
             dialist = self.id[11].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
             self.fechaEntregaDateEdit.setDate(dia)
-        # if self.id[12].text() != '':
-        #     self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
-        # else:
-        #     self.lugarEntregaComboBox.setCurrentText('')
-
         self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
 
+        self.dialogButtonBox.accepted.connect(self.save)
+
+    def save(self):
+        query = QSqlQuery()
+        # query.prepare("UPDATE pedidos SET fecha = :fecha, notas = :notas WHERE idPedido = :idPedido")
+        query.prepare("UPDATE pedidos SET fecha = :fecha, notas = :notas WHERE idPedido = :idPedido")
+        # query.bindValue(":notas", 'prueba sql')
+        # query.bindValue(":idPedido", 27)
+        # query.bindValue(":idPedido", int(self.id[0].text()))
+        # dia = datetime.strptime(self.id[1].text(), "%d-%m-%Y")
+        # print(dia)
+        # print(self.fechaDateEdit.text())
+        # dia = datetime.strftime(self.fechaDateEdit.text(), "%d-%m-%Y")
+        # print(dia)
+        
+        # query.bindValue(":fecha", dia)
+        query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
+
+        query.exec_()
 
 
 class InfomesasWindow(QMainWindow):

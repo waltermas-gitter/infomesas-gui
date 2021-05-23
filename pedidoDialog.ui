@@ -169,6 +169,9 @@
      <height>38</height>
     </rect>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
   </widget>
   <widget class="QListWidget" name="estadoListWidget">
    <property name="geometry">
