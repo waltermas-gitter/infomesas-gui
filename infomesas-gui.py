@@ -38,6 +38,7 @@ class PedidoDialog(QDialog):
         super().__init__()
         uic.loadUi("pedidoDialog.ui", self)
         self.id = id
+        self.returnValues = []
         self.initUI()
 
     def initUI(self):
@@ -88,40 +89,78 @@ class PedidoDialog(QDialog):
             dialist = self.id[11].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
             self.fechaEntregaDateEdit.setDate(dia)
+        else:
+            self.fechaEntregaDateEdit.setEnabled(False)
+            self.lugarEntregaComboBox.setEnabled(False)
+
         self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
 
+        self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
         self.dialogButtonBox.accepted.connect(self.save)
+
+    def cambioEstado(self):
+        if self.estadoListWidget.currentItem().text() == 'entregada':
+            self.fechaEntregaDateEdit.setEnabled(True)
+            self.lugarEntregaComboBox.setEnabled(True)
+
 
     def save(self):
         query = QSqlQuery()
-        query.prepare("UPDATE pedidos SET fecha = :fecha, cliente = :cliente, modelo = :modelo, chapa = :chapa, notas = :notas, medidaCerrada = :medidaCerrada, medidaAbierta = :medidaAbierta, medidaAncho = :medidaAncho , precio = :precio , estado = :estado WHERE idPedido = :idPedido")
+        query.prepare("UPDATE pedidos SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
         query.bindValue(":idPedido", int(self.id[0].text()))
+        print(self.id[0].text())
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
         query.bindValue(":fecha", diaString)
         queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % self.clienteComboBox.currentText())
         queryCliente.first()
+        query.bindValue(":cliente", queryCliente.value(0))
         modelo = self.modeloListWidget.currentItem().text()
         queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
         queryModelo.first()
         query.bindValue(":modelo", queryModelo.value(0))
-
         chapa = self.chapaListWidget.currentItem().text()
         queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
         queryChapa.first()
         query.bindValue(":chapa", queryChapa.value(0))
-        query.bindValue(":cliente", queryCliente.value(0))
         query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
-
         query.bindValue(":medidaCerrada", self.medidaCerradaSpinBox.value())
         query.bindValue(":medidaAbierta", self.medidaAbiertaSpinBox.value())
         query.bindValue(":medidaAncho", self.anchoSpinBox.value())
-        
         query.bindValue(":precio", int(self.precioLineEdit.text()))
-
         query.bindValue(":estado", self.estadoListWidget.currentItem().text())
-
+        if self.fechaEntregaDateEdit.isEnabled() == True:
+            dia = self.fechaEntregaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            query.bindValue(":fechaEntrega", diaString)
+            queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.lugarEntregaComboBox.currentText())
+            queryEntrega.first()
+            query.bindValue(":lugarEntrega", queryEntrega.value(0))
         query.exec_()
+
+        self.returnValues.append(self.id[0].text())
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%d-%m-%Y")
+        self.returnValues.append(diaString)
+        self.returnValues.append(self.clienteComboBox.currentText())
+        self.returnValues.append(self.modeloListWidget.currentItem().text())
+        self.returnValues.append(self.chapaListWidget.currentItem().text())
+        self.returnValues.append(self.notasPlainTextEdit.toPlainText())
+        self.returnValues.append(str(self.medidaCerradaSpinBox.value()))
+        self.returnValues.append(str(self.medidaAbiertaSpinBox.value()))
+        self.returnValues.append(str(self.anchoSpinBox.value()))
+        self.returnValues.append(self.precioLineEdit.text())
+        self.returnValues.append(self.estadoListWidget.currentItem().text())
+        if self.fechaEntregaDateEdit.isEnabled() == True:
+            dia = self.fechaEntregaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%d-%m-%Y")
+            self.returnValues.append(diaString)
+            self.returnValues.append(self.lugarEntregaComboBox.currentText())
+
+
+
+
+
 
 
 class InfomesasWindow(QMainWindow):
@@ -198,6 +237,10 @@ class InfomesasWindow(QMainWindow):
         self.pedido = PedidoDialog(self.pedidosTableWidget.selectedItems())
         if self.pedido.exec_() == QDialog.Accepted:
             print("aceptado")
+            # row = int(self.pedidosTableWidget.selectedItems()[0].text())
+            print(self.pedido.returnValues)
+            for i in range(len(self.pedido.returnValues)):
+                self.pedidosTableWidget.selectedItems()[i].setText(self.pedido.returnValues[i])
 
     def nuevoPedido(self):
         pass
