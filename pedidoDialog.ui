@@ -54,6 +54,9 @@
      <height>38</height>
     </rect>
    </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QListWidget" name="modeloListWidget">
    <property name="geometry">
@@ -132,7 +135,7 @@
     <number>10</number>
    </property>
    <property name="value">
-    <number>160</number>
+    <number>200</number>
    </property>
   </widget>
   <widget class="QSpinBox" name="anchoSpinBox">
@@ -148,7 +151,7 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
    <property name="minimum">
-    <number>80</number>
+    <number>10</number>
    </property>
    <property name="maximum">
     <number>350</number>
@@ -157,7 +160,7 @@
     <number>10</number>
    </property>
    <property name="value">
-    <number>160</number>
+    <number>85</number>
    </property>
   </widget>
   <widget class="QLineEdit" name="precioLineEdit">
@@ -184,6 +187,9 @@
    </property>
   </widget>
   <widget class="QDateEdit" name="fechaEntregaDateEdit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>610</x>
@@ -200,6 +206,9 @@
    </property>
   </widget>
   <widget class="QComboBox" name="lugarEntregaComboBox">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>610</x>
