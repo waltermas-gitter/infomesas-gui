@@ -190,11 +190,18 @@ class InfomesasWindow(QMainWindow):
         self.pendientesPushButton.clicked.connect(self.pendientesView)
 
 
-        # lleno pedidosTableWidget
         self.pedidosTableWidget.setColumnCount(13)
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "M.cerrada", "M.abierta", "M.ancho", "Precio", "Estado", "F.entrega", "Lugar entrega"])
-        query = QSqlQuery("SELECT * FROM pedidos")
+        self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
+
+        # lleno pedidosTableWidget
+        self.visualizarQuery("SELECT * FROM pedidos")
+
+
+    def visualizarQuery(self,queryString):
+        self.pedidosTableWidget.setRowCount(0)
+        query = QSqlQuery(queryString)
         while query.next():        
             rows = self.pedidosTableWidget.rowCount()
             self.pedidosTableWidget.setRowCount(rows + 1)
@@ -245,8 +252,10 @@ class InfomesasWindow(QMainWindow):
                 lugarEntrega = ''
             self.pedidosTableWidget.setItem(rows, 12, QTableWidgetItem(lugarEntrega))
 
-        self.pedidosTableWidget.resizeColumnsToContents()                    
-        self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
+        self.pedidosTableWidget.resizeColumnsToContents()
+        self.pedidosTableWidget.scrollToBottom()
+
+
 
 
     def editarPedido(self):
@@ -268,6 +277,9 @@ class InfomesasWindow(QMainWindow):
 
     def pendientesView(self):
         print('pendientes')
+        
+        self.visualizarQuery("SELECT * FROM pedidos WHERE estado='pendiente'")
+
 
 
 
