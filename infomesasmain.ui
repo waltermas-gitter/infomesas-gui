@@ -46,8 +46,8 @@
    <widget class="QTableView" name="pedidosTableView">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>480</y>
+      <x>260</x>
+      <y>420</y>
       <width>81</width>
       <height>41</height>
      </rect>
@@ -61,6 +61,19 @@
       <width>149</width>
       <height>38</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pendientesPushButton">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>480</y>
+      <width>102</width>
+      <height>38</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>

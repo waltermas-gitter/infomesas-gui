@@ -187,6 +187,8 @@ class InfomesasWindow(QMainWindow):
     def initUI(self):
         self.actionSalir.triggered.connect(self.salir)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
+        self.pendientesPushButton.clicked.connect(self.pendientesView)
+
 
         # lleno pedidosTableWidget
         self.pedidosTableWidget.setColumnCount(13)
@@ -263,6 +265,10 @@ class InfomesasWindow(QMainWindow):
     def salir(self):
         con.close()
         sys.exit(0)
+
+    def pendientesView(self):
+        print('pendientes')
+
 
 
     
