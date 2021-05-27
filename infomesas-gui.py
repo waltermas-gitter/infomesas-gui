@@ -187,8 +187,11 @@ class InfomesasWindow(QMainWindow):
     def initUI(self):
         self.actionSalir.triggered.connect(self.salir)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
-        self.pendientesPushButton.clicked.connect(self.pendientesView)
-
+        self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
+        self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
+        self.terminadasCheckBox.stateChanged.connect(self.vistaChanged)
+        self.entregadasCheckBox.stateChanged.connect(self.vistaChanged)
+        self.anuladasCheckBox.stateChanged.connect(self.vistaChanged)
 
         self.pedidosTableWidget.setColumnCount(13)
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
@@ -254,6 +257,7 @@ class InfomesasWindow(QMainWindow):
 
         self.pedidosTableWidget.resizeColumnsToContents()
         self.pedidosTableWidget.scrollToBottom()
+        self.statusbar.showMessage("%i registros" % self.pedidosTableWidget.rowCount())
 
 
 
@@ -275,10 +279,24 @@ class InfomesasWindow(QMainWindow):
         con.close()
         sys.exit(0)
 
-    def pendientesView(self):
-        print('pendientes')
-        
-        self.visualizarQuery("SELECT * FROM pedidos WHERE estado='pendiente'")
+    def vistaChanged(self):
+        queryString = ''
+        if self.pendientesCheckBox.isChecked():
+            queryString = queryString + " OR estado='pendiente'"
+        if self.enproduccionCheckBox.isChecked():
+            queryString = queryString + " OR estado='en produccion'"
+        if self.terminadasCheckBox.isChecked():
+            queryString = queryString + " OR estado='terminada'"
+        if self.entregadasCheckBox.isChecked():
+            queryString = queryString + " OR estado='entregada'"
+        if self.anuladasCheckBox.isChecked():
+            queryString = queryString + " OR estado='anulada'"
+
+        queryString = "SELECT * FROM pedidos WHERE" + queryString
+        queryString = queryString[:28] + queryString[31:]
+        print(queryString)
+
+        self.visualizarQuery(queryString)
 
 
 
