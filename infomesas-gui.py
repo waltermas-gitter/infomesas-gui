@@ -7,6 +7,9 @@
 # from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 # import sys
+
+# select cliente from pedidos where fecha BETWEEN "2021-01-01" and "2021-02-02"
+
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -14,7 +17,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtSql import *
 from PyQt5 import uic
 from datetime import datetime, timedelta
-
+import calendar
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
@@ -197,9 +200,15 @@ class InfomesasWindow(QMainWindow):
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "M.cerrada", "M.abierta", "M.ancho", "Precio", "Estado", "F.entrega", "Lugar entrega"])
         self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
+        self.hastaDateEdit.setDate(QDate.currentDate())
+        self.desdeDateEdit.dateChanged.connect(self.vistaChanged)
+        self.hastaDateEdit.dateChanged.connect(self.vistaChanged)
+
+
 
         # lleno pedidosTableWidget
-        self.visualizarQuery("SELECT * FROM pedidos")
+        # self.visualizarQuery("SELECT * FROM pedidos")
+        self.vistaChanged()
 
 
     def visualizarQuery(self,queryString):
@@ -291,10 +300,22 @@ class InfomesasWindow(QMainWindow):
             queryString = queryString + " OR estado='entregada'"
         if self.anuladasCheckBox.isChecked():
             queryString = queryString + " OR estado='anulada'"
+        # queryString = "SELECT * FROM pedidos WHERE" + queryString
+        # queryString = queryString[:28] + queryString[31:]
+        queryString = queryString[3:]
 
-        queryString = "SELECT * FROM pedidos WHERE" + queryString
-        queryString = queryString[:28] + queryString[31:]
+        diaDesde = self.desdeDateEdit.date().toPyDate()
+        diaDesdeString = datetime.strftime(diaDesde, "%Y-%m-01")
+        diaHasta = self.hastaDateEdit.date().toPyDate()
+        diaHastaString = datetime.strftime(diaHasta, "%Y-%m-")
+        ultimoDiaMes = calendar.monthrange(int(datetime.strftime(diaHasta,"%y")), int(datetime.strftime(diaHasta,"%m")))[1]
+        diaHastaString = diaHastaString + str(ultimoDiaMes)
+        queryStringFecha = "SELECT * FROM pedidos WHERE (fecha BETWEEN '" + diaDesdeString + "'AND '" + diaHastaString + "') AND ("
+        # queryString = queryStringFecha + queryString[27:] + ")"
+        
+        queryString = queryStringFecha + queryString + ")"
         print(queryString)
+
 
         self.visualizarQuery(queryString)
 

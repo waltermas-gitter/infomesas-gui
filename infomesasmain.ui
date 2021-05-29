@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1005</width>
+    <width>1018</width>
     <height>645</height>
    </rect>
   </property>
@@ -15,20 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="1">
-     <widget class="QPushButton" name="nuevoPushButton">
-      <property name="text">
-       <string>nuevo</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="pendientesPushButton">
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
@@ -88,7 +74,7 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="1" column="0" colspan="3">
      <widget class="QTableWidget" name="pedidosTableWidget">
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -98,6 +84,65 @@
       </attribute>
      </widget>
     </item>
+    <item row="2" column="2">
+     <widget class="QPushButton" name="nuevoPushButton">
+      <property name="text">
+       <string>nuevo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pendientesPushButton">
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>desde:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDateEdit" name="desdeDateEdit">
+        <property name="displayFormat">
+         <string>MM/yy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2020</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>hasta:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDateEdit" name="hastaDateEdit">
+        <property name="displayFormat">
+         <string>MM/yy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -105,7 +150,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1005</width>
+     <width>1018</width>
      <height>35</height>
     </rect>
    </property>
