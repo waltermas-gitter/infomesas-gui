@@ -45,12 +45,7 @@ class PedidoDialog(QDialog):
         self.initUI()
 
     def initUI(self):
-        clientes = []
-        clientes.append(" [elegir]")
-        query = QSqlQuery("SELECT nombre FROM clientes")
-        while query.next():
-            clientes.append(query.value(0))
-        clientes.sort()
+        clientes = llenoClientes()
         self.clienteComboBox.addItems(clientes)
         query = QSqlQuery("SELECT modelo FROM modelos")
         while query.next():
@@ -129,9 +124,10 @@ class PedidoDialog(QDialog):
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
         query.bindValue(":fecha", diaString)
-        queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % self.clienteComboBox.currentText())
-        queryCliente.first()
-        query.bindValue(":cliente", queryCliente.value(0))
+        # queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % self.clienteComboBox.currentText())
+        # queryCliente.first()
+        # query.bindValue(":cliente", queryCliente.value(0))
+        query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
         modelo = self.modeloListWidget.currentItem().text()
         queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
         queryModelo.first()
@@ -198,11 +194,20 @@ class InfomesasWindow(QMainWindow):
 
         self.pedidosTableWidget.setColumnCount(13)
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "M.cerrada", "M.abierta", "M.ancho", "Precio", "Estado", "F.entrega", "Lugar entrega"])
+        self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "cerrada", "abierta", "ancho", "Precio", "Estado", "F.entrega", "L.entrega"])
         self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
         self.hastaDateEdit.setDate(QDate.currentDate())
         self.desdeDateEdit.dateChanged.connect(self.vistaChanged)
         self.hastaDateEdit.dateChanged.connect(self.vistaChanged)
+        # clientes = []
+        # clientes.append(" [elegir]")
+        # query = QSqlQuery("SELECT nombre FROM clientes")
+        # while query.next():
+        #     clientes.append(query.value(0))
+        # clientes.sort()
+        clientes = llenoClientes()
+        self.clienteComboBox.addItems(clientes)
+        self.clienteComboBox.currentTextChanged.connect(self.vistaChanged)
 
 
 
@@ -265,6 +270,8 @@ class InfomesasWindow(QMainWindow):
             self.pedidosTableWidget.setItem(rows, 12, QTableWidgetItem(lugarEntrega))
 
         self.pedidosTableWidget.resizeColumnsToContents()
+        # self.pedidosTableWidget.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
+
         self.pedidosTableWidget.scrollToBottom()
         self.statusbar.showMessage("%i registros" % self.pedidosTableWidget.rowCount())
 
@@ -314,14 +321,30 @@ class InfomesasWindow(QMainWindow):
         # queryString = queryStringFecha + queryString[27:] + ")"
         
         queryString = queryStringFecha + queryString + ")"
+        print(self.clienteComboBox.currentText())
+        if self.clienteComboBox.currentText() != " [elegir]":
+            queryString = queryString + " AND cliente=" + str(devuelvoIdCliente(self.clienteComboBox.currentText()))
+
         print(queryString)
 
 
         self.visualizarQuery(queryString)
 
+def llenoClientes():
+        clientes = []
+        clientes.append(" [elegir]")
+        query = QSqlQuery("SELECT nombre FROM clientes")
+        while query.next():
+            clientes.append(query.value(0))
+        clientes.sort()
+        return(clientes)
 
+def devuelvoIdCliente(nombre):
+    queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % nombre)
+    queryCliente.first()
+    return(queryCliente.value(0))
 
-
+ 
     
 def window():
     app = QApplication(sys.argv)
