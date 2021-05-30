@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1018</width>
-    <height>645</height>
+    <width>1416</width>
+    <height>631</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,11 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QCheckBox" name="pendientesCheckBox">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>pendientes</string>
          </property>
@@ -33,6 +38,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="enproduccionCheckBox">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>en produccion</string>
          </property>
@@ -43,6 +53,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="terminadasCheckBox">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>terminadas</string>
          </property>
@@ -53,6 +68,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="entregadasCheckBox">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>entregadas</string>
          </property>
@@ -63,6 +83,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="anuladasCheckBox">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>anuladas</string>
          </property>
@@ -92,9 +117,9 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QPushButton" name="pendientesPushButton">
+     <widget class="QPushButton" name="proveedoresPushButton">
       <property name="text">
-       <string>PushButton</string>
+       <string>proveedores</string>
       </property>
      </widget>
     </item>
@@ -146,8 +171,12 @@
         <property name="editable">
          <bool>true</bool>
         </property>
-        <property name="currentText">
-         <string>Todos</string>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>cliente</string>
         </property>
        </widget>
       </item>
@@ -160,7 +189,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1018</width>
+     <width>1416</width>
      <height>35</height>
     </rect>
    </property>
