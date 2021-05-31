@@ -8,7 +8,6 @@
 
 # import sys
 
-# select cliente from pedidos where fecha BETWEEN "2021-01-01" and "2021-02-02"
 
 import sys
 from PyQt5.QtCore import *
@@ -63,7 +62,6 @@ class PedidoDialog(QDialog):
         # lleno los items correspondientes
         # id = 0 implica nuevo pedido
         if self.id == 0:
-            print('pedido nuevo')
             self.fechaDateEdit.setDate(QDate.currentDate())
             self.precioLineEdit.setText('0')
             estadoItem = self.estadoListWidget.findItems('pendiente', Qt.MatchExactly)
@@ -180,32 +178,46 @@ class SumasSaldosDialog(QDialog):
         self.initUI()
 
     def initUI(self):
-        self.sumasSaldosTableWidget.setColumnCount(5)
+        self.setWindowTitle(devuelvoNombreProveedor(self.id))
+        self.sumasSaldosTableWidget.setColumnCount(6)
         self.sumasSaldosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Fecha", "Concepto", "Debe", "Haber", "Saldo"])
-        # self.proveedoresTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
+        self.sumasSaldosTableWidget.itemDoubleClicked.connect(self.movimiento)
         query = QSqlQuery("SELECT * FROM deudas WHERE proveedor = '%s'" % self.id)
         saldo = 0
         while query.next():        
             rows = self.sumasSaldosTableWidget.rowCount()
             self.sumasSaldosTableWidget.setRowCount(rows + 1)
+            self.sumasSaldosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
             fecha = datetime.strptime(query.value(2), "%Y-%m-%d %H:%M:%S")
             fechap = fecha.strftime("%d-%m-%Y")
-            self.sumasSaldosTableWidget.setItem(rows, 0, QTableWidgetItem(fechap))
-            self.sumasSaldosTableWidget.setItem(rows, 1, QTableWidgetItem(query.value(3)))
+            self.sumasSaldosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
+            self.sumasSaldosTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(3)))
             sumaItem = QTableWidgetItem(str(query.value(4)))
             sumaItem.setTextAlignment(Qt.AlignRight)
             if query.value(4) >= 0:
-                self.sumasSaldosTableWidget.setItem(rows, 2, sumaItem)
-            else:
                 self.sumasSaldosTableWidget.setItem(rows, 3, sumaItem)
+            else:
+                self.sumasSaldosTableWidget.setItem(rows, 4, sumaItem)
             saldo += query.value(4)
             saldoItem = QTableWidgetItem(str(saldo))
             saldoItem.setTextAlignment(Qt.AlignRight)
-            self.sumasSaldosTableWidget.setItem(rows, 4, saldoItem)
+            self.sumasSaldosTableWidget.setItem(rows, 5, saldoItem)
 
         self.sumasSaldosTableWidget.scrollToBottom()
         self.sumasSaldosTableWidget.resizeColumnsToContents()
+
+    def movimiento(self):
+        # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
+        self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems())
+        if self.mov.exec_() == QDialog.Accepted:
+            print("aceptado")
+            # row = int(self.pedidosTableWidget.selectedItems()[0].text())
+            # for i in range(len(self.pedido.returnValues)):
+                # self.pedidosTableWidget.selectedItems()[i].setText(self.pedido.returnValues[i])
+
+
+        self.show()
 
 
 class ProveedoresWindow(QMainWindow):
@@ -237,9 +249,36 @@ class ProveedoresWindow(QMainWindow):
         self.sumasSaldos = SumasSaldosDialog(self.proveedoresTableWidget.selectedItems()[0].text())
         self.sumasSaldos.show()
 
+class Movimiento(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("movimiento.ui", self)
+        self.id = id
+        self.returnValues = []
+        self.initUI()
 
+    def initUI(self):
+        pass 
 
+        # lleno los items correspondientes
+        # id = 0 implica nuevo pedido
+        if self.id == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.precioLineEdit.setText('0')
+        else:
+            dialist = self.id[1].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaDateEdit.setDate(dia)
+            self.conceptoLineEdit.setText(self.id[2].text())
+            importe = int(self.id[3].text())
+            if importe >= 0:
+                self.debeRadioButton.setChecked(True)
+            else:
+                self.haberRadioButton.setChecked(True)
+                importe = importe * (-1)
+            self.importeLineEdit.setText(str(importe))
 
+ 
 class InfomesasWindow(QMainWindow):
     def __init__(self):
         super().__init__()
