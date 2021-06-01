@@ -183,6 +183,11 @@ class SumasSaldosDialog(QDialog):
         self.sumasSaldosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
         self.sumasSaldosTableWidget.itemDoubleClicked.connect(self.movimiento)
+        self.cargarTabla()
+        
+
+    def cargarTabla(self):
+        self.sumasSaldosTableWidget.setRowCount(0)
         query = QSqlQuery("SELECT * FROM deudas WHERE proveedor = '%s'" % self.id)
         saldo = 0
         while query.next():        
@@ -198,6 +203,7 @@ class SumasSaldosDialog(QDialog):
             if query.value(4) >= 0:
                 self.sumasSaldosTableWidget.setItem(rows, 3, sumaItem)
             else:
+                sumaItem.setText(sumaItem.text()[1:]) # le saco el signo negativo
                 self.sumasSaldosTableWidget.setItem(rows, 4, sumaItem)
             saldo += query.value(4)
             saldoItem = QTableWidgetItem(str(saldo))
@@ -207,17 +213,21 @@ class SumasSaldosDialog(QDialog):
         self.sumasSaldosTableWidget.scrollToBottom()
         self.sumasSaldosTableWidget.resizeColumnsToContents()
 
+
+
     def movimiento(self):
         # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
-        self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems())
+        self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems(), self.id)
         if self.mov.exec_() == QDialog.Accepted:
             print("aceptado")
+            self.cargarTabla()
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
-            # for i in range(len(self.pedido.returnValues)):
-                # self.pedidosTableWidget.selectedItems()[i].setText(self.pedido.returnValues[i])
-
+            # for i in range(len(self.mov.returnValues)):
+                # self.sumasSaldosTableWidget.selectedItems()[i].setText(self.mov.returnValues[i])
 
         self.show()
+
+
 
 
 class ProveedoresWindow(QMainWindow):
@@ -250,16 +260,14 @@ class ProveedoresWindow(QMainWindow):
         self.sumasSaldos.show()
 
 class Movimiento(QDialog):
-    def __init__(self, id):
+    def __init__(self, id, provId):
         super().__init__()
         uic.loadUi("movimiento.ui", self)
         self.id = id
-        self.returnValues = []
+        self.provId = provId
         self.initUI()
 
     def initUI(self):
-        pass 
-
         # lleno los items correspondientes
         # id = 0 implica nuevo pedido
         if self.id == 0:
@@ -270,13 +278,41 @@ class Movimiento(QDialog):
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
             self.fechaDateEdit.setDate(dia)
             self.conceptoLineEdit.setText(self.id[2].text())
-            importe = int(self.id[3].text())
-            if importe >= 0:
+
+            # for i in range(5):
+                # print(self.id[i].text())
+            querySigno = QSqlQuery("SELECT importe FROM deudas WHERE idDeuda = '%i'" % int(self.id[0].text()))
+            querySigno.first()
+            
+            if querySigno.value(0) >= 0:
                 self.debeRadioButton.setChecked(True)
             else:
                 self.haberRadioButton.setChecked(True)
-                importe = importe * (-1)
+            importe = int(self.id[3].text())
             self.importeLineEdit.setText(str(importe))
+
+        self.dialogButtonBox.accepted.connect(self.save)
+
+    def save(self):
+        query = QSqlQuery()
+        if self.id == 0:
+            query.prepare("INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe")
+        else:
+            query.prepare("UPDATE deudas SET proveedor=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idDeuda = :idDeuda")
+            query.bindValue(":idDeuda", int(self.id[0].text()))
+        query.bindValue(":proveedor", self.provId)
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+
+        query.bindValue(":concepto", self.conceptoLineEdit.text())
+        importe = int(self.importeLineEdit.text())
+        if self.haberRadioButton.isChecked() == True:
+          importe = importe * (-1) 
+        query.bindValue(":importe", importe)
+        query.exec_()
+
+
 
  
 class InfomesasWindow(QMainWindow):
