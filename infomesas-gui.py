@@ -179,6 +179,8 @@ class SumasSaldosDialog(QDialog):
 
     def initUI(self):
         self.setWindowTitle(devuelvoNombreProveedor(self.id))
+        self.nuevoPushButton.clicked.connect(self.nuevoMovimiento)
+        self.salirPushButton.clicked.connect(self.accept)
         self.sumasSaldosTableWidget.setColumnCount(6)
         self.sumasSaldosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
@@ -220,13 +222,17 @@ class SumasSaldosDialog(QDialog):
         self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems(), self.id)
         if self.mov.exec_() == QDialog.Accepted:
             print("aceptado")
-            self.cargarTabla()
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
             # for i in range(len(self.mov.returnValues)):
                 # self.sumasSaldosTableWidget.selectedItems()[i].setText(self.mov.returnValues[i])
 
         self.show()
 
+    def nuevoMovimiento(self):
+        self.mov = Movimiento(0, self.id)
+        if self.mov.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+ 
 
 
 
@@ -242,6 +248,15 @@ class ProveedoresWindow(QMainWindow):
         self.proveedoresTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.proveedoresTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Saldo"])
         self.proveedoresTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.cargarTabla()
+
+    def sumasSaldosShow(self):
+        self.sumasSaldos = SumasSaldosDialog(self.proveedoresTableWidget.selectedItems()[0].text())
+        if self.sumasSaldos.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def cargarTabla(self):
+        self.proveedoresTableWidget.setRowCount(0)
         query = QSqlQuery("SELECT * FROM proveedores")
         while query.next():        
             rows = self.proveedoresTableWidget.rowCount()
@@ -255,9 +270,6 @@ class ProveedoresWindow(QMainWindow):
         self.proveedoresTableWidget.resizeColumnsToContents()
 
 
-    def sumasSaldosShow(self):
-        self.sumasSaldos = SumasSaldosDialog(self.proveedoresTableWidget.selectedItems()[0].text())
-        self.sumasSaldos.show()
 
 class Movimiento(QDialog):
     def __init__(self, id, provId):
@@ -272,7 +284,7 @@ class Movimiento(QDialog):
         # id = 0 implica nuevo pedido
         if self.id == 0:
             self.fechaDateEdit.setDate(QDate.currentDate())
-            self.precioLineEdit.setText('0')
+            self.importeLineEdit.setText('0')
         else:
             dialist = self.id[1].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
@@ -296,7 +308,7 @@ class Movimiento(QDialog):
     def save(self):
         query = QSqlQuery()
         if self.id == 0:
-            query.prepare("INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe")
+            query.prepare("INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)")
         else:
             query.prepare("UPDATE deudas SET proveedor=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idDeuda = :idDeuda")
             query.bindValue(":idDeuda", int(self.id[0].text()))
@@ -304,7 +316,6 @@ class Movimiento(QDialog):
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
         query.bindValue(":fecha", diaString)
-
         query.bindValue(":concepto", self.conceptoLineEdit.text())
         importe = int(self.importeLineEdit.text())
         if self.haberRadioButton.isChecked() == True:
@@ -312,6 +323,12 @@ class Movimiento(QDialog):
         query.bindValue(":importe", importe)
         query.exec_()
 
+        # actualizo saldo en tabla proveedores
+        queryImportes = QSqlQuery("SELECT importe FROM deudas WHERE Proveedor = '%s'" % self.provId)
+        saldo = 0
+        while queryImportes.next():
+            saldo += queryImportes.value(0)
+        queryProveedor = QSqlQuery("UPDATE proveedores SET saldo = '%s' WHERE idProveedor = '%s'" % (saldo, self.provId))
 
 
  
@@ -319,7 +336,6 @@ class InfomesasWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("infomesasmain.ui", self)
-
         self.initUI()
 
     def initUI(self):

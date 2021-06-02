@@ -18,8 +18,8 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>851</width>
-     <height>571</height>
+     <width>761</width>
+     <height>551</height>
     </rect>
    </property>
    <property name="editTriggers">
@@ -31,6 +31,32 @@
    <attribute name="verticalHeaderVisible">
     <bool>false</bool>
    </attribute>
+  </widget>
+  <widget class="QPushButton" name="nuevoPushButton">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>500</y>
+     <width>102</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Nuevo</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="salirPushButton">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>560</y>
+     <width>102</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Salir</string>
+   </property>
   </widget>
  </widget>
  <resources/>
