@@ -15,6 +15,19 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0" colspan="3">
+     <widget class="QTableWidget" name="pedidosTableWidget">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
@@ -99,30 +112,17 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="0" colspan="3">
-     <widget class="QTableWidget" name="pedidosTableWidget">
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="proveedoresPushButton">
+      <property name="text">
+       <string>Proveedores</string>
       </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
      </widget>
     </item>
     <item row="2" column="2">
      <widget class="QPushButton" name="nuevoPushButton">
       <property name="text">
        <string>nuevo</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="proveedoresPushButton">
-      <property name="text">
-       <string>proveedores</string>
       </property>
      </widget>
     </item>
@@ -184,6 +184,13 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="clientesPushButton">
+      <property name="text">
+       <string>Clientes</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
