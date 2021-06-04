@@ -17,6 +17,10 @@ from PyQt5.QtSql import *
 from PyQt5 import uic
 from datetime import datetime, timedelta
 import calendar
+import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
+# https://www.mfitzp.com/tutorials/qresource-system/
+
+
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
