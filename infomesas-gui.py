@@ -432,7 +432,7 @@ class InfomesasWindow(QMainWindow):
         self.clienteComboBox.currentTextChanged.connect(self.vistaChanged)
         self.proveedoresPushButton.clicked.connect(self.showProveedores)
         self.clientesPushButton.clicked.connect(self.showClientes)
-
+        self.productosSeguidosPushButton.clicked.connect(self.showProductosSeguidos)
 
 
         # lleno pedidosTableWidget
@@ -530,6 +530,10 @@ class InfomesasWindow(QMainWindow):
         self.cliente = ClientesWindow()
         self.cliente.show()
 
+    def showProductosSeguidos(self):
+        self.productosSeguidos = ProductosSeguidosWindow()
+        self.productosSeguidos.show()
+
 
     def closeEvent(self, event):
         con.close()
@@ -572,6 +576,67 @@ class InfomesasWindow(QMainWindow):
 
         self.visualizarQuery(queryString)
 
+
+
+
+class ProductosSeguidosWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("productosSeguidos.ui", self)
+        self.initUI()
+
+    def initUI(self):
+        self.productosSeguidosTableWidget.setColumnCount(5)
+        self.productosSeguidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.productosSeguidosTableWidget.setHorizontalHeaderLabels(["ID", "Descripcion", "Fecha", "Proveedor", "Precio"])
+        self.productosSeguidosTableWidget.itemDoubleClicked.connect(self.historialPreciosShow)
+        self.cargarTabla()
+
+    def historialPreciosShow(self):
+        self.historialPrecios = HistorialPreciosDialog(self.productosSeguidosTableWidget.selectedItems())
+        if self.historialPrecios.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def cargarTabla(self):
+        self.productosSeguidosTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM productosSeguidos")
+        while query.next():        
+            rows = self.productosSeguidosTableWidget.rowCount()
+            self.productosSeguidosTableWidget.setRowCount(rows + 1)
+            self.productosSeguidosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            self.productosSeguidosTableWidget.setItem(rows, 1, QTableWidgetItem(query.value(1)))
+            queryPrecio = QSqlQuery("SELECT * FROM productosSeguidosPrecios WHERE idProducto = '%s'" % query.value(0))
+            queryPrecio.last()
+            if queryPrecio.value(1):
+                fecha = datetime.strptime(queryPrecio.value(4), "%Y-%m-%d %H:%M:%S")
+                fechap = fecha.strftime("%d-%m-%Y")
+                self.productosSeguidosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
+                prov = devuelvoNombreProveedor(queryPrecio.value(3))
+                self.productosSeguidosTableWidget.setItem(rows, 3, QTableWidgetItem(prov))
+                precioItem = QTableWidgetItem(str(queryPrecio.value(2)))
+                precioItem.setTextAlignment(Qt.AlignRight)
+                self.productosSeguidosTableWidget.setItem(rows, 4, precioItem)
+        
+        self.productosSeguidosTableWidget.resizeColumnsToContents()
+
+class HistorialPreciosDialog(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("historialPrecios.ui", self)
+        self.id = id
+        self.initUI()
+
+    def initUI(self):
+        # lleno los items correspondientes
+        dialist = self.id[2].text().split('-')
+        dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+        self.fechaDateEdit.setDate(dia)
+        self.proveedoresComboBox.addItems(llenoProveedores())
+        self.proveedoresComboBox.setCurrentText(self.id[3].text())
+        self.descripcionLineEdit.setText(self.id[1].text())
+        self.importeLineEdit.setText(self.id[4].text())
+
+ 
  
 def llenoClientes():
     clientes = []
@@ -581,6 +646,16 @@ def llenoClientes():
         clientes.append(query.value(0))
     clientes.sort()
     return(clientes)
+
+def llenoProveedores():
+    proveedores = []
+    proveedores.append(" [elegir]")
+    query = QSqlQuery("SELECT nombre FROM proveedores")
+    while query.next():
+        proveedores.append(query.value(0))
+    proveedores.sort()
+    return(proveedores)
+
 
 def devuelvoIdCliente(nombre):
     queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % nombre)
