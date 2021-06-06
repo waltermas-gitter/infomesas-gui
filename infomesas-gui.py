@@ -630,7 +630,12 @@ class HistorialPreciosDialog(QDialog):
 
     def initUI(self):
         self.dialogButtonBox.accepted.connect(self.save)
-        # lleno los items correspondientes
+        self.historialPreciosTableWidget.setColumnCount(4)
+        self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
+        # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.historialPreciosShow)
+
+       # lleno los items correspondientes
         self.proveedoresComboBox.addItems(llenoProveedores())
         queryProductos = QSqlQuery("SELECT * FROM productosSeguidos")
         productos = []
@@ -650,6 +655,25 @@ class HistorialPreciosDialog(QDialog):
             self.importeLineEdit.setText(self.id[4].text())
             self.descripcionLineEdit.setText(self.id[1].text())
             self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
+
+            self.cargarTabla()
+
+
+    def cargarTabla(self):
+        self.historialPreciosTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM productosSeguidosPrecios WHERE idProducto = '%s'" % self.id[0].text())
+        while query.next():        
+            rows = self.historialPreciosTableWidget.rowCount()
+            self.historialPreciosTableWidget.setRowCount(rows + 1)
+            self.historialPreciosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            self.historialPreciosTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreProveedor(query.value(3))))
+            fecha = datetime.strptime(query.value(4), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m-%Y")
+            self.historialPreciosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
+            self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
+                    
+
+
     def save(self):
         # query = QSqlQuery()
         # if self.id == 0:
