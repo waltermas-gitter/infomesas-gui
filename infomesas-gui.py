@@ -2,12 +2,6 @@
 
 # https://realpython.com/python-pyqt-database/
 
-# from PyQt5 import QtWidgets, uic
-# from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox, QTableWidgetItem
-# from PyQt5.QtSql import QSqlDatabase, QSqlQuery
-
-# import sys
-
 
 import sys
 from PyQt5.QtCore import *
@@ -619,6 +613,8 @@ class ProductosSeguidosWindow(QMainWindow):
         
         self.productosSeguidosTableWidget.resizeColumnsToContents()
 
+
+
 class HistorialPreciosDialog(QDialog):
     def __init__(self, id):
         super().__init__()
@@ -627,6 +623,7 @@ class HistorialPreciosDialog(QDialog):
         self.initUI()
 
     def initUI(self):
+        self.dialogButtonBox.accepted.connect(self.save)
         # lleno los items correspondientes
         dialist = self.id[2].text().split('-')
         dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
@@ -635,6 +632,27 @@ class HistorialPreciosDialog(QDialog):
         self.proveedoresComboBox.setCurrentText(self.id[3].text())
         self.descripcionLineEdit.setText(self.id[1].text())
         self.importeLineEdit.setText(self.id[4].text())
+
+    def save(self):
+        # query = QSqlQuery()
+        # if self.id == 0:
+        #     query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
+        # else:
+        #     query.prepare("UPDATE productosSeguidosPrecios SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
+        query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
+        dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
+        query.first()
+        queryPS = QSqlQuery()
+        queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
+        queryPS.bindValue(":precio", self.importeLineEdit.text())
+        queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        queryPS.bindValue(":fecha", diaString)
+        queryPS.bindValue(":idProductoPrecio", query.value(0))
+        queryPS.exec_()
 
  
  
@@ -667,6 +685,10 @@ def devuelvoNombreCliente(id):
     queryCliente.first()
     return(queryCliente.value(0))
 
+def devuelvoIdProveedor(nombre):
+    queryProveedor = QSqlQuery("SELECT idProveedor FROM proveedores WHERE nombre = '%s'" % nombre)
+    queryProveedor.first()
+    return(queryProveedor.value(0))
 
 def devuelvoNombreProveedor(id):
     queryProveedor = QSqlQuery("SELECT nombre FROM proveedores WHERE idProveedor = '%s'" % id)

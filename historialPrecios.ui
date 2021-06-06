@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Historial precios</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="dialogButtonBox">
    <property name="geometry">
     <rect>
      <x>350</x>
@@ -85,7 +85,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>dialogButtonBox</sender>
    <signal>accepted()</signal>
    <receiver>historialPreciosDialog</receiver>
    <slot>accept()</slot>
@@ -101,7 +101,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>dialogButtonBox</sender>
    <signal>rejected()</signal>
    <receiver>historialPreciosDialog</receiver>
    <slot>reject()</slot>
