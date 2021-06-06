@@ -32,8 +32,8 @@
   <widget class="QDateEdit" name="fechaDateEdit">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
+     <x>370</x>
+     <y>30</y>
      <width>149</width>
      <height>38</height>
     </rect>
@@ -74,11 +74,27 @@
   <widget class="QComboBox" name="proveedoresComboBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>20</y>
+     <x>550</x>
+     <y>30</y>
      <width>141</width>
      <height>38</height>
     </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="productosSeguidosComboBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>311</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="editable">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

@@ -580,6 +580,7 @@ class ProductosSeguidosWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        self.nuevoPushButton.clicked.connect(self.nuevoPrecio)
         self.productosSeguidosTableWidget.setColumnCount(5)
         self.productosSeguidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.productosSeguidosTableWidget.setHorizontalHeaderLabels(["ID", "Descripcion", "Fecha", "Proveedor", "Precio"])
@@ -612,6 +613,11 @@ class ProductosSeguidosWindow(QMainWindow):
                 self.productosSeguidosTableWidget.setItem(rows, 4, precioItem)
         
         self.productosSeguidosTableWidget.resizeColumnsToContents()
+        
+    def nuevoPrecio(self):
+        self.nuevoPrecio = HistorialPreciosDialog(0)
+        if self.nuevoPrecio.exec_() == QDialog.Accepted:
+            self.cargarTabla()
 
 
 
@@ -625,34 +631,65 @@ class HistorialPreciosDialog(QDialog):
     def initUI(self):
         self.dialogButtonBox.accepted.connect(self.save)
         # lleno los items correspondientes
-        dialist = self.id[2].text().split('-')
-        dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
-        self.fechaDateEdit.setDate(dia)
         self.proveedoresComboBox.addItems(llenoProveedores())
-        self.proveedoresComboBox.setCurrentText(self.id[3].text())
-        self.descripcionLineEdit.setText(self.id[1].text())
-        self.importeLineEdit.setText(self.id[4].text())
+        queryProductos = QSqlQuery("SELECT * FROM productosSeguidos")
+        productos = []
+        productos.append('[nuevo]')
+        while queryProductos.next():
+            productos.append(queryProductos.value(1))
+        self.productosSeguidosComboBox.addItems(productos)
 
+        if self.id == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.importeLineEdit.setText('0')
+        else:
+            dialist = self.id[2].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaDateEdit.setDate(dia)
+            self.proveedoresComboBox.setCurrentText(self.id[3].text())
+            self.importeLineEdit.setText(self.id[4].text())
+            self.descripcionLineEdit.setText(self.id[1].text())
+            self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
     def save(self):
         # query = QSqlQuery()
         # if self.id == 0:
         #     query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
         # else:
         #     query.prepare("UPDATE productosSeguidosPrecios SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
-        query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
-        dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
-        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
-        query.first()
-        queryPS = QSqlQuery()
-        queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
-        queryPS.bindValue(":precio", self.importeLineEdit.text())
-        queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-        dia = self.fechaDateEdit.date().toPyDate()
-        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        queryPS.bindValue(":fecha", diaString)
-        queryPS.bindValue(":idProductoPrecio", query.value(0))
-        queryPS.exec_()
+        if self.id == 0:
+            if self.productosSeguidosComboBox.currentText() == '[nuevo]':
+                query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % self.descripcionLineEdit.text())
+            # print(query.lastInsertId())
+                productoId = query.lastInsertId()
+            else:
+                productoId = self.id[0].text()
+
+            queryPS = QSqlQuery() 
+            queryPS.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+            queryPS.bindValue(":idProducto", productoId)
+            queryPS.bindValue(":precio", self.importeLineEdit.text())
+            queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+            dia = self.fechaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            queryPS.bindValue(":fecha", diaString)
+            queryPS.exec_()
+
+        else:
+            query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
+            
+            dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
+            query.first()
+            queryPS = QSqlQuery()
+            queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
+            queryPS.bindValue(":precio", self.importeLineEdit.text())
+            queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+            dia = self.fechaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            queryPS.bindValue(":fecha", diaString)
+            queryPS.bindValue(":idProductoPrecio", query.value(0))
+            queryPS.exec_()
 
  
  
