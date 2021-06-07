@@ -28,377 +28,11 @@ if not con.open():
         "Database Error: %s" % con.lastError().databaseText(),
     )
     sys.exit(1)
-    
 
 
 
 
-class PedidoDialog(QDialog):
-    def __init__(self, id):
-        super().__init__()
-        uic.loadUi("pedidoDialog.ui", self)
-        self.id = id
-        self.returnValues = []
-        self.initUI()
 
-    def initUI(self):
-        clientes = llenoClientes()
-        self.clienteComboBox.addItems(clientes)
-        query = QSqlQuery("SELECT modelo FROM modelos")
-        while query.next():
-            self.modeloListWidget.addItem(query.value(0))
-        query = QSqlQuery("SELECT chapa FROM chapas")
-        while query.next():
-            self.chapaListWidget.addItem(query.value(0))
-        estados = ['pendiente', 'en produccion', 'terminada', 'entregada', 'anulada']
-        self.estadoListWidget.addItems(estados)
-        query = QSqlQuery("SELECT nombre FROM lugaresEntrega")
-        while query.next():
-            self.lugarEntregaComboBox.addItem(query.value(0))
-
-
-        # lleno los items correspondientes
-        # id = 0 implica nuevo pedido
-        if self.id == 0:
-            self.fechaDateEdit.setDate(QDate.currentDate())
-            self.precioLineEdit.setText('0')
-            estadoItem = self.estadoListWidget.findItems('pendiente', Qt.MatchExactly)
-            self.estadoListWidget.setCurrentItem(estadoItem[0])
-
-        else:
-            dialist = self.id[1].text().split('-')
-            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
-            self.fechaDateEdit.setDate(dia)
-            self.clienteComboBox.setCurrentText(self.id[2].text())
-            modeloItem = self.modeloListWidget.findItems(self.id[3].text(), Qt.MatchExactly)
-            self.modeloListWidget.setCurrentItem(modeloItem[0])
-            chapaItem = self.chapaListWidget.findItems(self.id[4].text(), Qt.MatchExactly)
-            self.chapaListWidget.setCurrentItem(chapaItem[0])
-            self.notasPlainTextEdit.setPlainText(self.id[5].text())
-            self.medidaCerradaSpinBox.setValue(int(self.id[6].text()))
-            self.medidaAbiertaSpinBox.setValue(int(self.id[7].text()))
-            self.anchoSpinBox.setValue(int(self.id[8].text()))
-            self.precioLineEdit.setText(self.id[9].text())
-            estadoItem = self.estadoListWidget.findItems(self.id[10].text(), Qt.MatchExactly)
-            self.estadoListWidget.setCurrentItem(estadoItem[0])
-            if self.id[11].text() != '':
-                dialist = self.id[11].text().split('-')
-                dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
-                self.fechaEntregaDateEdit.setDate(dia)
-                self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
-
-            else:
-                self.fechaEntregaDateEdit.setDate(QDate.currentDate())
-                self.fechaEntregaDateEdit.setEnabled(False)
-                self.lugarEntregaComboBox.setEnabled(False)
-
-            # self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
-
-        self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
-        self.dialogButtonBox.accepted.connect(self.save)
-
-    def cambioEstado(self):
-        if self.estadoListWidget.currentItem().text() == 'entregada':
-            self.fechaEntregaDateEdit.setEnabled(True)
-            self.lugarEntregaComboBox.setEnabled(True)
-        else:
-            self.fechaEntregaDateEdit.setEnabled(False)
-            self.lugarEntregaComboBox.setEnabled(False)
- 
-
-
-    def save(self):
-        query = QSqlQuery()
-        if self.id == 0:
-            query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
-            self.returnValues.append(0)
-        else:
-            query.prepare("UPDATE pedidos SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
-            query.bindValue(":idPedido", int(self.id[0].text()))
-            self.returnValues.append(self.id[0].text())
-
-        dia = self.fechaDateEdit.date().toPyDate()
-        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        query.bindValue(":fecha", diaString)
-        # queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % self.clienteComboBox.currentText())
-        # queryCliente.first()
-        # query.bindValue(":cliente", queryCliente.value(0))
-        query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
-        modelo = self.modeloListWidget.currentItem().text()
-        queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
-        queryModelo.first()
-        query.bindValue(":modelo", queryModelo.value(0))
-        chapa = self.chapaListWidget.currentItem().text()
-        queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
-        queryChapa.first()
-        query.bindValue(":chapa", queryChapa.value(0))
-        query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
-        query.bindValue(":medidaCerrada", self.medidaCerradaSpinBox.value())
-        query.bindValue(":medidaAbierta", self.medidaAbiertaSpinBox.value())
-        query.bindValue(":medidaAncho", self.anchoSpinBox.value())
-        query.bindValue(":precio", int(self.precioLineEdit.text()))
-        query.bindValue(":estado", self.estadoListWidget.currentItem().text())
-        if self.fechaEntregaDateEdit.isEnabled() == True:
-            dia = self.fechaEntregaDateEdit.date().toPyDate()
-            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-            query.bindValue(":fechaEntrega", diaString)
-            queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.lugarEntregaComboBox.currentText())
-            queryEntrega.first()
-            query.bindValue(":lugarEntrega", queryEntrega.value(0))
-        query.exec_()
-
-        # self.returnValues.append(self.id[0].text())
-        dia = self.fechaDateEdit.date().toPyDate()
-        diaString = datetime.strftime(dia, "%d-%m-%Y")
-        self.returnValues.append(diaString)
-        self.returnValues.append(self.clienteComboBox.currentText())
-        self.returnValues.append(self.modeloListWidget.currentItem().text())
-        self.returnValues.append(self.chapaListWidget.currentItem().text())
-        self.returnValues.append(self.notasPlainTextEdit.toPlainText())
-        self.returnValues.append(str(self.medidaCerradaSpinBox.value()))
-        self.returnValues.append(str(self.medidaAbiertaSpinBox.value()))
-        self.returnValues.append(str(self.anchoSpinBox.value()))
-        self.returnValues.append(self.precioLineEdit.text())
-        self.returnValues.append(self.estadoListWidget.currentItem().text())
-        if self.fechaEntregaDateEdit.isEnabled() == True:
-            dia = self.fechaEntregaDateEdit.date().toPyDate()
-            diaString = datetime.strftime(dia, "%d-%m-%Y")
-            self.returnValues.append(diaString)
-            self.returnValues.append(self.lugarEntregaComboBox.currentText())
-
-
-class SumasSaldosDialog(QDialog):
-    def __init__(self, id, esProveedor):  #esProveedor=True proveedor, sino es cliente
-        super().__init__()
-        uic.loadUi("sumasSaldos.ui", self)
-        self.id = id
-        self.esProveedor = esProveedor
-        # self.returnValues = []
-        self.initUI()
-
-    def initUI(self):
-        if self.esProveedor == True:
-            self.setWindowTitle(devuelvoNombreProveedor(self.id))
-        else:
-            self.setWindowTitle(devuelvoNombreCliente(self.id))
-        self.nuevoPushButton.clicked.connect(self.nuevoMovimiento)
-        self.salirPushButton.clicked.connect(self.accept)
-        self.sumasSaldosTableWidget.setColumnCount(6)
-        self.sumasSaldosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
-        self.sumasSaldosTableWidget.itemDoubleClicked.connect(self.movimiento)
-        self.cargarTabla()
-        
-
-    def cargarTabla(self):
-        self.sumasSaldosTableWidget.setRowCount(0)
-        if self.esProveedor == True:
-            queryString = "SELECT * FROM deudas WHERE proveedor = '%s'" % self.id
-        else:
-            queryString = "SELECT * FROM cuentasCorrientes WHERE cliente = '%s'" % self.id
-        query = QSqlQuery(queryString)
-        saldo = 0
-        while query.next():        
-            rows = self.sumasSaldosTableWidget.rowCount()
-            self.sumasSaldosTableWidget.setRowCount(rows + 1)
-            self.sumasSaldosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            fecha = datetime.strptime(query.value(2), "%Y-%m-%d %H:%M:%S")
-            fechap = fecha.strftime("%d-%m-%Y")
-            self.sumasSaldosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
-            self.sumasSaldosTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(3)))
-            sumaItem = QTableWidgetItem(str(query.value(4)))
-            sumaItem.setTextAlignment(Qt.AlignRight)
-            if query.value(4) >= 0:
-                self.sumasSaldosTableWidget.setItem(rows, 3, sumaItem)
-            else:
-                sumaItem.setText(sumaItem.text()[1:]) # le saco el signo negativo
-                self.sumasSaldosTableWidget.setItem(rows, 4, sumaItem)
-            saldo += query.value(4)
-            saldoItem = QTableWidgetItem(str(saldo))
-            saldoItem.setTextAlignment(Qt.AlignRight)
-            self.sumasSaldosTableWidget.setItem(rows, 5, saldoItem)
-
-        self.sumasSaldosTableWidget.scrollToBottom()
-        self.sumasSaldosTableWidget.resizeColumnsToContents()
-
-
-
-    def movimiento(self):
-        # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
-        self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems(), self.id, self.esProveedor)
-        if self.mov.exec_() == QDialog.Accepted:
-            print("aceptado")
-            self.cargarTabla()
-            # row = int(self.pedidosTableWidget.selectedItems()[0].text())
-            # for i in range(len(self.mov.returnValues)):
-                # self.sumasSaldosTableWidget.selectedItems()[i].setText(self.mov.returnValues[i])
-
-        # self.show()
-
-    def nuevoMovimiento(self):
-        self.mov = Movimiento(0, self.id, self.esProveedor)
-        if self.mov.exec_() == QDialog.Accepted:
-            self.cargarTabla()
- 
-
-
-
-class ProveedoresWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi("proveedores.ui", self)
-
-        self.initUI()
-
-    def initUI(self):
-        self.proveedoresTableWidget.setColumnCount(3)
-        self.proveedoresTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.proveedoresTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Saldo"])
-        self.proveedoresTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
-        self.cargarTabla()
-
-    def sumasSaldosShow(self):
-        self.sumasSaldos = SumasSaldosDialog(self.proveedoresTableWidget.selectedItems()[0].text(), True)
-        if self.sumasSaldos.exec_() == QDialog.Accepted:
-            self.cargarTabla()
-
-    def cargarTabla(self):
-        self.proveedoresTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM proveedores")
-        while query.next():        
-            rows = self.proveedoresTableWidget.rowCount()
-            self.proveedoresTableWidget.setRowCount(rows + 1)
-            self.proveedoresTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            self.proveedoresTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreProveedor(query.value(0))))
-            saldo = QTableWidgetItem(str(query.value(5)))
-            saldo.setTextAlignment(Qt.AlignRight)
-            self.proveedoresTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
-
-        self.proveedoresTableWidget.resizeColumnsToContents()
-
-
-class ClientesWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi("clientes.ui", self)
-
-        self.initUI()
-
-    def initUI(self):
-        self.clientesTableWidget.setColumnCount(3)
-        self.clientesTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.clientesTableWidget.setHorizontalHeaderLabels(["ID", "Cliente", "Saldo"])
-        self.clientesTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
-        self.cargarTabla()
-
-    def sumasSaldosShow(self):
-        self.sumasSaldos = SumasSaldosDialog(self.clientesTableWidget.selectedItems()[0].text(), False)
-        if self.sumasSaldos.exec_() == QDialog.Accepted:
-            self.cargarTabla()
-
-    def cargarTabla(self):
-        self.clientesTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM clientes")
-        while query.next():        
-            rows = self.clientesTableWidget.rowCount()
-            self.clientesTableWidget.setRowCount(rows + 1)
-            self.clientesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            self.clientesTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreCliente(query.value(0))))
-            saldo = QTableWidgetItem(str(query.value(5)))
-            saldo.setTextAlignment(Qt.AlignRight)
-            self.clientesTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
-
-        self.clientesTableWidget.resizeColumnsToContents()
-
-
-
-
-class Movimiento(QDialog):
-    def __init__(self, id, provId, esProveedor):
-        super().__init__()
-        uic.loadUi("movimiento.ui", self)
-        self.id = id
-        self.provId = provId
-        self.esProveedor = esProveedor
-        self.initUI()
-
-    def initUI(self):
-        # lleno los items correspondientes
-        # id = 0 implica nuevo pedido
-        if self.id == 0:
-            self.fechaDateEdit.setDate(QDate.currentDate())
-            self.importeLineEdit.setText('0')
-        else:
-            dialist = self.id[1].text().split('-')
-            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
-            self.fechaDateEdit.setDate(dia)
-            self.conceptoLineEdit.setText(self.id[2].text())
-
-            # for i in range(5):
-                # print(self.id[i].text())
-            if self.esProveedor == True:
-                queryString = "SELECT importe FROM deudas WHERE idDeuda = '%i'" % int(self.id[0].text())
-            else:
-                queryString = "SELECT importe FROM cuentasCorrientes WHERE idcc = '%i'" % int(self.id[0].text())
-            querySigno = QSqlQuery(queryString)
-            querySigno.first()
-            
-            if querySigno.value(0) >= 0:
-                self.debeRadioButton.setChecked(True)
-            else:
-                self.haberRadioButton.setChecked(True)
-            importe = int(self.id[3].text())
-            self.importeLineEdit.setText(str(importe))
-
-        self.dialogButtonBox.accepted.connect(self.save)
-
-    def save(self):
-        query = QSqlQuery()
-        
-        if self.id == 0:
-            if self.esProveedor == True:
-                queryString = "INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
-            else:
-                queryString = "INSERT INTO cuentasCorrientes (cliente, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
-            query.prepare(queryString)
-        
-        else:
-            if self.esProveedor == True:
-                queryString = "UPDATE deudas SET proveedor=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idDeuda = :idDeuda"
-            else:
-                queryString = "UPDATE cuentasCorrientes SET cliente=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idcc = :idDeuda"
-            query.prepare(queryString)
-            query.bindValue(":idDeuda", int(self.id[0].text()))
-
-        query.bindValue(":proveedor", self.provId)
-        dia = self.fechaDateEdit.date().toPyDate()
-        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        query.bindValue(":fecha", diaString)
-        query.bindValue(":concepto", self.conceptoLineEdit.text())
-        importe = int(self.importeLineEdit.text())
-        if self.haberRadioButton.isChecked() == True:
-          importe = importe * (-1) 
-        query.bindValue(":importe", importe)
-        query.exec_()
-
-        if self.esProveedor == True:
-            # actualizo saldo en tabla proveedores
-            queryImportes = QSqlQuery("SELECT importe FROM deudas WHERE Proveedor = '%s'" % self.provId)
-            saldo = 0
-            while queryImportes.next():
-                saldo += queryImportes.value(0)
-            queryProveedor = QSqlQuery("UPDATE proveedores SET saldo = '%s' WHERE idProveedor = '%s'" % (saldo, self.provId))
-        else:
-            # actualizo saldo en tabla clientes
-            queryImportes = QSqlQuery("SELECT importe FROM cuentasCorrientes WHERE cliente = '%s'" % self.provId)
-            saldo = 0
-            while queryImportes.next():
-                saldo += queryImportes.value(0)
-            queryProveedor = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, self.provId))
-
-
-
- 
 class InfomesasWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -573,6 +207,390 @@ class InfomesasWindow(QMainWindow):
 
 
 
+
+
+class PedidoDialog(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("pedidoDialog.ui", self)
+        self.id = id
+        self.returnValues = []
+        self.initUI()
+
+    def initUI(self):
+        clientes = llenoClientes()
+        self.clienteComboBox.addItems(clientes)
+        query = QSqlQuery("SELECT modelo FROM modelos")
+        while query.next():
+            self.modeloListWidget.addItem(query.value(0))
+        query = QSqlQuery("SELECT chapa FROM chapas")
+        while query.next():
+            self.chapaListWidget.addItem(query.value(0))
+        estados = ['pendiente', 'en produccion', 'terminada', 'entregada', 'anulada']
+        self.estadoListWidget.addItems(estados)
+        query = QSqlQuery("SELECT nombre FROM lugaresEntrega")
+        while query.next():
+            self.lugarEntregaComboBox.addItem(query.value(0))
+
+
+        # lleno los items correspondientes
+        # id = 0 implica nuevo pedido
+        if self.id == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.precioLineEdit.setText('0')
+            estadoItem = self.estadoListWidget.findItems('pendiente', Qt.MatchExactly)
+            self.estadoListWidget.setCurrentItem(estadoItem[0])
+
+        else:
+            dialist = self.id[1].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaDateEdit.setDate(dia)
+            self.clienteComboBox.setCurrentText(self.id[2].text())
+            modeloItem = self.modeloListWidget.findItems(self.id[3].text(), Qt.MatchExactly)
+            self.modeloListWidget.setCurrentItem(modeloItem[0])
+            chapaItem = self.chapaListWidget.findItems(self.id[4].text(), Qt.MatchExactly)
+            self.chapaListWidget.setCurrentItem(chapaItem[0])
+            self.notasPlainTextEdit.setPlainText(self.id[5].text())
+            self.medidaCerradaSpinBox.setValue(int(self.id[6].text()))
+            self.medidaAbiertaSpinBox.setValue(int(self.id[7].text()))
+            self.anchoSpinBox.setValue(int(self.id[8].text()))
+            self.precioLineEdit.setText(self.id[9].text())
+            estadoItem = self.estadoListWidget.findItems(self.id[10].text(), Qt.MatchExactly)
+            self.estadoListWidget.setCurrentItem(estadoItem[0])
+            if self.id[11].text() != '':
+                dialist = self.id[11].text().split('-')
+                dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+                self.fechaEntregaDateEdit.setDate(dia)
+                self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
+
+            else:
+                self.fechaEntregaDateEdit.setDate(QDate.currentDate())
+                self.fechaEntregaDateEdit.setEnabled(False)
+                self.lugarEntregaComboBox.setEnabled(False)
+
+            # self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
+
+        self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
+        self.dialogButtonBox.accepted.connect(self.save)
+
+    def cambioEstado(self):
+        if self.estadoListWidget.currentItem().text() == 'entregada':
+            self.fechaEntregaDateEdit.setEnabled(True)
+            self.lugarEntregaComboBox.setEnabled(True)
+        else:
+            self.fechaEntregaDateEdit.setEnabled(False)
+            self.lugarEntregaComboBox.setEnabled(False)
+ 
+
+
+    def save(self):
+        query = QSqlQuery()
+        if self.id == 0:
+            query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
+            self.returnValues.append(0)
+        else:
+            query.prepare("UPDATE pedidos SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
+            query.bindValue(":idPedido", int(self.id[0].text()))
+            self.returnValues.append(self.id[0].text())
+
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+        # queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % self.clienteComboBox.currentText())
+        # queryCliente.first()
+        # query.bindValue(":cliente", queryCliente.value(0))
+        query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
+        modelo = self.modeloListWidget.currentItem().text()
+        queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
+        queryModelo.first()
+        query.bindValue(":modelo", queryModelo.value(0))
+        chapa = self.chapaListWidget.currentItem().text()
+        queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
+        queryChapa.first()
+        query.bindValue(":chapa", queryChapa.value(0))
+        query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
+        query.bindValue(":medidaCerrada", self.medidaCerradaSpinBox.value())
+        query.bindValue(":medidaAbierta", self.medidaAbiertaSpinBox.value())
+        query.bindValue(":medidaAncho", self.anchoSpinBox.value())
+        query.bindValue(":precio", int(self.precioLineEdit.text()))
+        query.bindValue(":estado", self.estadoListWidget.currentItem().text())
+        if self.fechaEntregaDateEdit.isEnabled() == True:
+            dia = self.fechaEntregaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            query.bindValue(":fechaEntrega", diaString)
+            queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.lugarEntregaComboBox.currentText())
+            queryEntrega.first()
+            query.bindValue(":lugarEntrega", queryEntrega.value(0))
+        query.exec_()
+
+        # self.returnValues.append(self.id[0].text())
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%d-%m-%Y")
+        self.returnValues.append(diaString)
+        self.returnValues.append(self.clienteComboBox.currentText())
+        self.returnValues.append(self.modeloListWidget.currentItem().text())
+        self.returnValues.append(self.chapaListWidget.currentItem().text())
+        self.returnValues.append(self.notasPlainTextEdit.toPlainText())
+        self.returnValues.append(str(self.medidaCerradaSpinBox.value()))
+        self.returnValues.append(str(self.medidaAbiertaSpinBox.value()))
+        self.returnValues.append(str(self.anchoSpinBox.value()))
+        self.returnValues.append(self.precioLineEdit.text())
+        self.returnValues.append(self.estadoListWidget.currentItem().text())
+        if self.fechaEntregaDateEdit.isEnabled() == True:
+            dia = self.fechaEntregaDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%d-%m-%Y")
+            self.returnValues.append(diaString)
+            self.returnValues.append(self.lugarEntregaComboBox.currentText())
+
+
+
+
+
+class SumasSaldosDialog(QDialog):
+    def __init__(self, id, esProveedor):  #esProveedor=True proveedor, sino es cliente
+        super().__init__()
+        uic.loadUi("sumasSaldos.ui", self)
+        self.id = id
+        self.esProveedor = esProveedor
+        # self.returnValues = []
+        self.initUI()
+
+    def initUI(self):
+        if self.esProveedor == True:
+            self.setWindowTitle(devuelvoNombreProveedor(self.id))
+        else:
+            self.setWindowTitle(devuelvoNombreCliente(self.id))
+        self.nuevoPushButton.clicked.connect(self.nuevoMovimiento)
+        self.salirPushButton.clicked.connect(self.accept)
+        self.sumasSaldosTableWidget.setColumnCount(6)
+        self.sumasSaldosTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
+        self.sumasSaldosTableWidget.itemDoubleClicked.connect(self.movimiento)
+        self.cargarTabla()
+        
+
+    def cargarTabla(self):
+        self.sumasSaldosTableWidget.setRowCount(0)
+        if self.esProveedor == True:
+            queryString = "SELECT * FROM deudas WHERE proveedor = '%s'" % self.id
+        else:
+            queryString = "SELECT * FROM cuentasCorrientes WHERE cliente = '%s'" % self.id
+        query = QSqlQuery(queryString)
+        saldo = 0
+        while query.next():        
+            rows = self.sumasSaldosTableWidget.rowCount()
+            self.sumasSaldosTableWidget.setRowCount(rows + 1)
+            self.sumasSaldosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            fecha = datetime.strptime(query.value(2), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m-%Y")
+            self.sumasSaldosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
+            self.sumasSaldosTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(3)))
+            sumaItem = QTableWidgetItem(str(query.value(4)))
+            sumaItem.setTextAlignment(Qt.AlignRight)
+            if query.value(4) >= 0:
+                self.sumasSaldosTableWidget.setItem(rows, 3, sumaItem)
+            else:
+                sumaItem.setText(sumaItem.text()[1:]) # le saco el signo negativo
+                self.sumasSaldosTableWidget.setItem(rows, 4, sumaItem)
+            saldo += query.value(4)
+            saldoItem = QTableWidgetItem(str(saldo))
+            saldoItem.setTextAlignment(Qt.AlignRight)
+            self.sumasSaldosTableWidget.setItem(rows, 5, saldoItem)
+
+        self.sumasSaldosTableWidget.scrollToBottom()
+        self.sumasSaldosTableWidget.resizeColumnsToContents()
+
+
+
+    def movimiento(self):
+        # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
+        self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems(), self.id, self.esProveedor)
+        if self.mov.exec_() == QDialog.Accepted:
+            print("aceptado")
+            self.cargarTabla()
+            # row = int(self.pedidosTableWidget.selectedItems()[0].text())
+            # for i in range(len(self.mov.returnValues)):
+                # self.sumasSaldosTableWidget.selectedItems()[i].setText(self.mov.returnValues[i])
+
+        # self.show()
+
+    def nuevoMovimiento(self):
+        self.mov = Movimiento(0, self.id, self.esProveedor)
+        if self.mov.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+ 
+
+
+
+
+
+
+class ProveedoresWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("proveedores.ui", self)
+
+        self.initUI()
+
+    def initUI(self):
+        self.proveedoresTableWidget.setColumnCount(3)
+        self.proveedoresTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.proveedoresTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Saldo"])
+        self.proveedoresTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.cargarTabla()
+
+    def sumasSaldosShow(self):
+        self.sumasSaldos = SumasSaldosDialog(self.proveedoresTableWidget.selectedItems()[0].text(), True)
+        if self.sumasSaldos.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def cargarTabla(self):
+        self.proveedoresTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM proveedores")
+        while query.next():        
+            rows = self.proveedoresTableWidget.rowCount()
+            self.proveedoresTableWidget.setRowCount(rows + 1)
+            self.proveedoresTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            self.proveedoresTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreProveedor(query.value(0))))
+            saldo = QTableWidgetItem(str(query.value(5)))
+            saldo.setTextAlignment(Qt.AlignRight)
+            self.proveedoresTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
+
+        self.proveedoresTableWidget.resizeColumnsToContents()
+
+
+
+
+
+
+class ClientesWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("clientes.ui", self)
+
+        self.initUI()
+
+    def initUI(self):
+        self.clientesTableWidget.setColumnCount(3)
+        self.clientesTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.clientesTableWidget.setHorizontalHeaderLabels(["ID", "Cliente", "Saldo"])
+        self.clientesTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.cargarTabla()
+
+    def sumasSaldosShow(self):
+        self.sumasSaldos = SumasSaldosDialog(self.clientesTableWidget.selectedItems()[0].text(), False)
+        if self.sumasSaldos.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def cargarTabla(self):
+        self.clientesTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM clientes")
+        while query.next():        
+            rows = self.clientesTableWidget.rowCount()
+            self.clientesTableWidget.setRowCount(rows + 1)
+            self.clientesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            self.clientesTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreCliente(query.value(0))))
+            saldo = QTableWidgetItem(str(query.value(5)))
+            saldo.setTextAlignment(Qt.AlignRight)
+            self.clientesTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
+
+        self.clientesTableWidget.resizeColumnsToContents()
+
+
+
+
+
+
+
+class Movimiento(QDialog):
+    def __init__(self, id, provId, esProveedor):
+        super().__init__()
+        uic.loadUi("movimiento.ui", self)
+        self.id = id
+        self.provId = provId
+        self.esProveedor = esProveedor
+        self.initUI()
+
+    def initUI(self):
+        # lleno los items correspondientes
+        # id = 0 implica nuevo pedido
+        if self.id == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.importeLineEdit.setText('0')
+        else:
+            dialist = self.id[1].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaDateEdit.setDate(dia)
+            self.conceptoLineEdit.setText(self.id[2].text())
+
+            # for i in range(5):
+                # print(self.id[i].text())
+            if self.esProveedor == True:
+                queryString = "SELECT importe FROM deudas WHERE idDeuda = '%i'" % int(self.id[0].text())
+            else:
+                queryString = "SELECT importe FROM cuentasCorrientes WHERE idcc = '%i'" % int(self.id[0].text())
+            querySigno = QSqlQuery(queryString)
+            querySigno.first()
+            
+            if querySigno.value(0) >= 0:
+                self.debeRadioButton.setChecked(True)
+            else:
+                self.haberRadioButton.setChecked(True)
+            importe = int(self.id[3].text())
+            self.importeLineEdit.setText(str(importe))
+
+        self.dialogButtonBox.accepted.connect(self.save)
+
+    def save(self):
+        query = QSqlQuery()
+        
+        if self.id == 0:
+            if self.esProveedor == True:
+                queryString = "INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
+            else:
+                queryString = "INSERT INTO cuentasCorrientes (cliente, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
+            query.prepare(queryString)
+        
+        else:
+            if self.esProveedor == True:
+                queryString = "UPDATE deudas SET proveedor=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idDeuda = :idDeuda"
+            else:
+                queryString = "UPDATE cuentasCorrientes SET cliente=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idcc = :idDeuda"
+            query.prepare(queryString)
+            query.bindValue(":idDeuda", int(self.id[0].text()))
+
+        query.bindValue(":proveedor", self.provId)
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+        query.bindValue(":concepto", self.conceptoLineEdit.text())
+        importe = int(self.importeLineEdit.text())
+        if self.haberRadioButton.isChecked() == True:
+          importe = importe * (-1) 
+        query.bindValue(":importe", importe)
+        query.exec_()
+
+        if self.esProveedor == True:
+            # actualizo saldo en tabla proveedores
+            queryImportes = QSqlQuery("SELECT importe FROM deudas WHERE Proveedor = '%s'" % self.provId)
+            saldo = 0
+            while queryImportes.next():
+                saldo += queryImportes.value(0)
+            queryProveedor = QSqlQuery("UPDATE proveedores SET saldo = '%s' WHERE idProveedor = '%s'" % (saldo, self.provId))
+        else:
+            # actualizo saldo en tabla clientes
+            queryImportes = QSqlQuery("SELECT importe FROM cuentasCorrientes WHERE cliente = '%s'" % self.provId)
+            saldo = 0
+            while queryImportes.next():
+                saldo += queryImportes.value(0)
+            queryProveedor = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, self.provId))
+
+
+
+ 
+
+
+
 class ProductosSeguidosWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -629,34 +647,34 @@ class HistorialPreciosDialog(QDialog):
         self.initUI()
 
     def initUI(self):
-        self.dialogButtonBox.accepted.connect(self.save)
+        # self.dialogButtonBox.accepted.connect(self.save)
         self.historialPreciosTableWidget.setColumnCount(4)
         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
-        # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.historialPreciosShow)
+        # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.nuevoPrecioShow)
+        self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
+        self.dialogButtonBox.accepted.connect(self.close)
 
        # lleno los items correspondientes
-        self.proveedoresComboBox.addItems(llenoProveedores())
-        queryProductos = QSqlQuery("SELECT * FROM productosSeguidos")
-        productos = []
-        productos.append('[nuevo]')
-        while queryProductos.next():
-            productos.append(queryProductos.value(1))
-        self.productosSeguidosComboBox.addItems(productos)
+        
+        # productos = []
+        # productos.append('[nuevo]')
+        # while queryProductos.next():
+        #     productos.append(queryProductos.value(1))
+        # self.productosSeguidosComboBox.addItems(productos)
 
-        if self.id == 0:
-            self.fechaDateEdit.setDate(QDate.currentDate())
-            self.importeLineEdit.setText('0')
-        else:
-            dialist = self.id[2].text().split('-')
-            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
-            self.fechaDateEdit.setDate(dia)
-            self.proveedoresComboBox.setCurrentText(self.id[3].text())
-            self.importeLineEdit.setText(self.id[4].text())
-            self.descripcionLineEdit.setText(self.id[1].text())
-            self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
+        # if self.id == 0:
+        #     self.fechaDateEdit.setDate(QDate.currentDate())
+        #     self.importeLineEdit.setText('0')
+        # else:
+            
+            # self.fechaDateEdit.setDate(dia)
+            # self.proveedoresComboBox.setCurrentText(self.id[3].text())
+            # self.importeLineEdit.setText(self.id[4].text())
+            # self.descripcionLineEdit.setText(self.id[1].text())
+            # self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
 
-            self.cargarTabla()
+        self.cargarTabla()
 
 
     def cargarTabla(self):
@@ -671,51 +689,63 @@ class HistorialPreciosDialog(QDialog):
             fechap = fecha.strftime("%d-%m-%Y")
             self.historialPreciosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
             self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
-                    
+
+    def nuevoPrecioShow(self):
+        self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
+        if self.nuevoPrecio.exec_() == QDialog.Accepted:
+            self.cargarTabla()
 
 
-    def save(self):
-        # query = QSqlQuery()
-        # if self.id == 0:
-        #     query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
-        # else:
-        #     query.prepare("UPDATE productosSeguidosPrecios SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
-        if self.id == 0:
-            if self.productosSeguidosComboBox.currentText() == '[nuevo]':
-                query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % self.descripcionLineEdit.text())
-            # print(query.lastInsertId())
-                productoId = query.lastInsertId()
-            else:
-                productoId = self.id[0].text()
+    #     if self.id == 0:
+    #         if self.productosSeguidosComboBox.currentText() == '[nuevo]':
+    #             query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % self.descripcionLineEdit.text())
+    #         # print(query.lastInsertId())
+    #             productoId = query.lastInsertId()
+    #         else:
+    #             productoId = self.id[0].text()
 
-            queryPS = QSqlQuery() 
-            queryPS.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
-            queryPS.bindValue(":idProducto", productoId)
-            queryPS.bindValue(":precio", self.importeLineEdit.text())
-            queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-            dia = self.fechaDateEdit.date().toPyDate()
-            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-            queryPS.bindValue(":fecha", diaString)
-            queryPS.exec_()
+    #         queryPS = QSqlQuery() 
+    #         queryPS.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+    #         queryPS.bindValue(":idProducto", productoId)
+    #         queryPS.bindValue(":precio", self.importeLineEdit.text())
+    #         queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+    #         dia = self.fechaDateEdit.date().toPyDate()
+    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+    #         queryPS.bindValue(":fecha", diaString)
+    #         queryPS.exec_()
 
-        else:
-            query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
+    #     else:
+    #         query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
             
-            dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
-            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-            query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
-            query.first()
-            queryPS = QSqlQuery()
-            queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
-            queryPS.bindValue(":precio", self.importeLineEdit.text())
-            queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-            dia = self.fechaDateEdit.date().toPyDate()
-            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-            queryPS.bindValue(":fecha", diaString)
-            queryPS.bindValue(":idProductoPrecio", query.value(0))
-            queryPS.exec_()
+    #         dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
+    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+    #         query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
+    #         query.first()
+    #         queryPS = QSqlQuery()
+    #         queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
+    #         queryPS.bindValue(":precio", self.importeLineEdit.text())
+    #         queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+    #         dia = self.fechaDateEdit.date().toPyDate()
+    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+    #         queryPS.bindValue(":fecha", diaString)
+    #         queryPS.bindValue(":idProductoPrecio", query.value(0))
+    #         queryPS.exec_()
 
- 
+
+class NuevoPrecioDialog(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("historialPreciosMov.ui", self)
+        self.id = id
+        self.initUI()
+
+    def initUI(self):
+        self.fechaDateEdit.setDate(QDate.currentDate())
+        self.importeLineEdit.setText('0')
+
+
+
+
  
 def llenoClientes():
     clientes = []
