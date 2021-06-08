@@ -22,6 +22,9 @@
      <height>521</height>
     </rect>
    </property>
+   <attribute name="verticalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
   </widget>
   <widget class="QDialogButtonBox" name="dialogButtonBox">
    <property name="geometry">

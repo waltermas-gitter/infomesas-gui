@@ -148,7 +148,8 @@ class InfomesasWindow(QMainWindow):
     def nuevoPedido(self):
         self.pedido = PedidoDialog(0)
         if self.pedido.exec_() == QDialog.Accepted:
-            print("aceptado")
+            pass
+
 
     def showProveedores(self):
         self.prov = ProveedoresWindow()
@@ -648,12 +649,13 @@ class HistorialPreciosDialog(QDialog):
 
     def initUI(self):
         # self.dialogButtonBox.accepted.connect(self.save)
+        self.setWindowTitle(self.id[1].text())
         self.historialPreciosTableWidget.setColumnCount(4)
         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
         # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.nuevoPrecioShow)
         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
-        self.dialogButtonBox.accepted.connect(self.close)
+        self.dialogButtonBox.accepted.connect(self.accept)
 
        # lleno los items correspondientes
         
@@ -691,7 +693,8 @@ class HistorialPreciosDialog(QDialog):
             self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
 
     def nuevoPrecioShow(self):
-        self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
+        # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
+        self.nuevoPrecio = NuevoPrecioDialog(self.id)
         if self.nuevoPrecio.exec_() == QDialog.Accepted:
             self.cargarTabla()
 
@@ -742,7 +745,23 @@ class NuevoPrecioDialog(QDialog):
     def initUI(self):
         self.fechaDateEdit.setDate(QDate.currentDate())
         self.importeLineEdit.setText('0')
+        proveedores = llenoProveedores()
+        self.setWindowTitle(self.id[1].text())
+        self.proveedoresComboBox.addItems(proveedores)
+        self.dialogButtonBox.accepted.connect(self.save)
 
+
+    def save(self):
+        query = QSqlQuery() 
+        query.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+        query.bindValue(":idProducto", self.id[0].text())
+        query.bindValue(":precio", self.importeLineEdit.text())
+        query.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+        query.exec_()
+        self.accept()
 
 
 
@@ -758,7 +777,7 @@ def llenoClientes():
 
 def llenoProveedores():
     proveedores = []
-    proveedores.append(" [elegir]")
+    # proveedores.append(" [elegir]")
     query = QSqlQuery("SELECT nombre FROM proveedores")
     while query.next():
         proveedores.append(query.value(0))
