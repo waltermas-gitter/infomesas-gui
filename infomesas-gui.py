@@ -599,7 +599,7 @@ class ProductosSeguidosWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.nuevoPushButton.clicked.connect(self.nuevoPrecio)
+        self.nuevoPushButton.clicked.connect(self.nuevoProducto)
         self.productosSeguidosTableWidget.setColumnCount(5)
         self.productosSeguidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.productosSeguidosTableWidget.setHorizontalHeaderLabels(["ID", "Descripcion", "Fecha", "Proveedor", "Precio"])
@@ -633,11 +633,14 @@ class ProductosSeguidosWindow(QMainWindow):
         
         self.productosSeguidosTableWidget.resizeColumnsToContents()
         
-    def nuevoPrecio(self):
-        self.nuevoPrecio = HistorialPreciosDialog(0)
-        if self.nuevoPrecio.exec_() == QDialog.Accepted:
+    def nuevoProducto(self):
+        descripcion, okPressed = QInputDialog.getText(self, "Nuevo producto","Descripcion", QLineEdit.Normal, "")
+        if okPressed and descripcion != '':
+            query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % descripcion) 
             self.cargarTabla()
 
+
+        
 
 
 class HistorialPreciosDialog(QDialog):
