@@ -61,7 +61,7 @@ class InfomesasWindow(QMainWindow):
         self.proveedoresPushButton.clicked.connect(self.showProveedores)
         self.clientesPushButton.clicked.connect(self.showClientes)
         self.productosSeguidosPushButton.clicked.connect(self.showProductosSeguidos)
-
+        self.chequesPushButton.clicked.connect(self.showCheques)
 
         # lleno pedidosTableWidget
         # self.visualizarQuery("SELECT * FROM pedidos")
@@ -162,6 +162,11 @@ class InfomesasWindow(QMainWindow):
     def showProductosSeguidos(self):
         self.productosSeguidos = ProductosSeguidosWindow()
         self.productosSeguidos.show()
+
+    def showCheques(self):
+        self.cheques = ChequesWindow()
+        self.cheques.show()
+
 
 
     def closeEvent(self, event):
@@ -766,7 +771,57 @@ class NuevoPrecioDialog(QDialog):
         query.exec_()
         self.accept()
 
+class ChequesWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("cheques.ui", self)
 
+        self.initUI()
+
+    def initUI(self):
+        self.chequesTableWidget.setColumnCount(9)
+        self.chequesTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.chequesTableWidget.setHorizontalHeaderLabels(["ID", "Recibido", "Cliente", "Fecha", "Banco", "Numero", "Importe", "Entregado", "Proveedor"])
+        self.chequesTableWidget.itemDoubleClicked.connect(self.editarCheque)
+        self.cargarTabla()
+
+    def cargarTabla(self):
+        self.chequesTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM cheques")
+        while query.next():        
+            rows = self.chequesTableWidget.rowCount()
+            self.chequesTableWidget.setRowCount(rows + 1)
+            self.chequesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m-%Y")
+            self.chequesTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
+            self.chequesTableWidget.setItem(rows, 2, QTableWidgetItem(devuelvoNombreCliente(query.value(2))))
+            fecha = datetime.strptime(query.value(3), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m-%Y")
+            self.chequesTableWidget.setItem(rows, 3, QTableWidgetItem(fechap))
+            self.chequesTableWidget.setItem(rows, 4, QTableWidgetItem(query.value(4)))
+            self.chequesTableWidget.setItem(rows, 5, QTableWidgetItem(str(query.value(5))))
+            importe = QTableWidgetItem(str(query.value(6)))
+            importe.setTextAlignment(Qt.AlignRight)
+            self.chequesTableWidget.setItem(rows, 6, QTableWidgetItem(importe))
+            if query.value(7):
+                fecha = datetime.strptime(query.value(7), "%Y-%m-%d %H:%M:%S")
+                fechap = fecha.strftime("%d-%m-%Y")
+                proveedorWidget = QTableWidgetItem(devuelvoNombreProveedor(query.value(8)))
+            else:
+                fechap = None
+                proveedorWidget = QTableWidgetItem('disponible')
+                proveedorWidget.setForeground(QBrush(QColor('green')))
+
+            self.chequesTableWidget.setItem(rows, 7, QTableWidgetItem(fechap))
+            self.chequesTableWidget.setItem(rows, 8, proveedorWidget)
+            
+ 
+
+        self.chequesTableWidget.resizeColumnsToContents()
+
+    def editarCheque(self):
+        pass
 
  
 def llenoClientes():

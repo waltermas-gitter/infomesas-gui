@@ -14,37 +14,33 @@
    <string>Clientes</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTableWidget" name="clientesTableWidget">
-    <property name="geometry">
-     <rect>
-      <x>35</x>
-      <y>11</y>
-      <width>321</width>
-      <height>521</height>
-     </rect>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::NoEditTriggers</set>
-    </property>
-    <property name="tabKeyNavigation">
-     <bool>false</bool>
-    </property>
-    <property name="showDropIndicator" stdset="0">
-     <bool>false</bool>
-    </property>
-    <property name="dragDropOverwriteMode">
-     <bool>false</bool>
-    </property>
-    <property name="selectionMode">
-     <enum>QAbstractItemView::SingleSelection</enum>
-    </property>
-    <attribute name="horizontalHeaderVisible">
-     <bool>true</bool>
-    </attribute>
-    <attribute name="verticalHeaderVisible">
-     <bool>false</bool>
-    </attribute>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTableWidget" name="clientesTableWidget">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="tabKeyNavigation">
+       <bool>false</bool>
+      </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>false</bool>
+      </property>
+      <property name="dragDropOverwriteMode">
+       <bool>false</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
