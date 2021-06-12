@@ -783,6 +783,7 @@ class ChequesWindow(QMainWindow):
         self.chequesTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.chequesTableWidget.setHorizontalHeaderLabels(["ID", "Recibido", "Cliente", "Fecha", "Banco", "Numero", "Importe", "Entregado", "Proveedor"])
         self.chequesTableWidget.itemDoubleClicked.connect(self.editarCheque)
+        self.nuevoPushButton.clicked.connect(self.nuevoCheque)
         self.cargarTabla()
 
     def cargarTabla(self):
@@ -821,7 +822,98 @@ class ChequesWindow(QMainWindow):
         self.chequesTableWidget.resizeColumnsToContents()
 
     def editarCheque(self):
-        pass
+        self.cheque = ChequeDialog(self.chequesTableWidget.selectedItems())
+        if self.cheque.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def nuevoCheque(self):
+        self.cheque = ChequeDialog(0)
+        if self.cheque.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+
+
+
+
+
+class ChequeDialog(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("chequeDialog.ui", self)
+        self.id = id
+        self.initUI()
+
+    def initUI(self):
+        self.proveedorComboBox.currentTextChanged.connect(self.chequeEntregado)
+        self.dialogButtonBox.accepted.connect(self.save)
+        clientes = llenoClientes()
+        self.clienteComboBox.addItems(clientes)
+ 
+        proveedores = llenoProveedores()
+        self.proveedorComboBox.addItems(proveedores)
+
+        if self.id == 0:
+            self.recibidoDateEdit.setDate(QDate.currentDate())
+            self.fechaChequeDateEdit.setDate(QDate.currentDate())
+            self.fechaEntregadoDateEdit.setDate(QDate.currentDate())
+            self.fechaEntregadoDateEdit.setEnabled(False)
+            self.proveedorComboBox.setCurrentText("[elegir]")
+
+        else:
+            dialist = self.id[1].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.recibidoDateEdit.setDate(dia)
+            self.clienteComboBox.setCurrentText(self.id[2].text())
+            dialist = self.id[3].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaChequeDateEdit.setDate(dia)
+            self.bancoLineEdit.setText(self.id[4].text())
+            self.numeroLineEdit.setText(self.id[5].text())
+            self.importeLineEdit.setText(self.id[6].text())
+            if self.id[7].text() != '':
+                dialist = self.id[7].text().split('-')
+                dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+                self.fechaEntregadoDateEdit.setDate(dia)
+                self.proveedorComboBox.setCurrentText(self.id[8].text())
+            else:
+                self.fechaEntregadoDateEdit.setDate(QDate.currentDate())
+                self.fechaEntregadoDateEdit.setEnabled(False)
+                self.proveedorComboBox.setCurrentText("[elegir]")
+
+    def chequeEntregado(self):
+        if self.proveedorComboBox.currentText() != "[elegir]":
+            self.fechaEntregadoDateEdit.setEnabled(True)
+
+    def save(self):
+        query = QSqlQuery()
+        if self.id == 0:
+            query.prepare("INSERT INTO cheques (fechaRecibido, cliente, fechaCheque, banco, numero, importe, fechaEntregado, entregadoA) VALUES (:fechaRecibido, :cliente, :fechaCheque, :banco, :numero, :importe, :fechaEntregado, :entregadoA)")
+        else:
+            query.prepare("UPDATE cheques SET fechaRecibido=:fechaRecibido, cliente=:cliente, fechaCheque=:fechaCheque, banco=:banco, importe=:importe, fechaEntregado=:fechaEntregado, entregadoA=:entregadoA WHERE idCheque=:idCheque")
+            query.bindValue(":idCheque", int(self.id[0].text()))
+        dia = self.recibidoDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fechaRecibido", diaString)
+        query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
+        dia = self.fechaChequeDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fechaCheque", diaString)
+        query.bindValue(":banco", self.bancoLineEdit.text())
+        query.bindValue(":numero", self.numeroLineEdit.text())
+        query.bindValue(":importe", int(self.importeLineEdit.text()))
+        if self.fechaEntregadoDateEdit.isEnabled() == True:
+            dia = self.fechaEntregadoDateEdit.date().toPyDate()
+            diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+            query.bindValue(":fechaEntregado", diaString)
+            query.bindValue(":entregadoA", devuelvoIdProveedor(self.proveedorComboBox.currentText()))
+        query.exec_()
+                
+
+
+ 
+        
+            
+
 
  
 def llenoClientes():
