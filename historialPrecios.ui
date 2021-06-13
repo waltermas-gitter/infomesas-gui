@@ -6,52 +6,40 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>796</width>
-    <height>685</height>
+    <width>517</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Historial precios</string>
   </property>
-  <widget class="QTableWidget" name="historialPreciosTableWidget">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>20</y>
-     <width>501</width>
-     <height>521</height>
-    </rect>
-   </property>
-   <attribute name="verticalHeaderVisible">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QDialogButtonBox" name="dialogButtonBox">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>580</y>
-     <width>208</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="nuevoPushButton">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>460</y>
-     <width>121</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Nuevo precio</string>
-   </property>
-  </widget>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTableWidget" name="historialPreciosTableWidget">
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="nuevoPushButton">
+       <property name="text">
+        <string>Nuevo precio</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="okPushButton">
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

@@ -6,105 +6,75 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>436</width>
-    <height>295</height>
+    <width>272</width>
+    <height>244</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Nuevo precio</string>
   </property>
-  <widget class="QDialogButtonBox" name="dialogButtonBox">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>190</y>
-     <width>341</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="fechaDateEdit">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>30</y>
-     <width>149</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="displayFormat">
-    <string>dd-MM-yy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="importeLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>140</y>
-     <width>71</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="proveedoresComboBox">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>30</y>
-     <width>141</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="editable">
-    <bool>true</bool>
-   </property>
-  </widget>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Fecha:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QDateEdit" name="fechaDateEdit">
+     <property name="displayFormat">
+      <string>dd-MM-yy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="proveedoresComboBox">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Proveedor:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Importe:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="importeLineEdit">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QPushButton" name="okPushButton">
+     <property name="text">
+      <string>Ok</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QPushButton" name="cancelPushButton">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>dialogButtonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>historialPreciosDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dialogButtonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>historialPreciosDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

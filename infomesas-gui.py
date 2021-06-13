@@ -489,7 +489,6 @@ class ClientesWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("clientes.ui", self)
-
         self.initUI()
 
     def initUI(self):
@@ -515,7 +514,6 @@ class ClientesWindow(QMainWindow):
             saldo = QTableWidgetItem(str(query.value(5)))
             saldo.setTextAlignment(Qt.AlignRight)
             self.clientesTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
-
         self.clientesTableWidget.resizeColumnsToContents()
 
 
@@ -561,7 +559,10 @@ class Movimiento(QDialog):
             importe = int(self.id[3].text())
             self.importeLineEdit.setText(str(importe))
 
-        self.dialogButtonBox.accepted.connect(self.save)
+        # self.dialogButtonBox.accepted.connect(self.save)
+        self.okPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
+
 
     def save(self):
         query = QSqlQuery()
@@ -606,7 +607,7 @@ class Movimiento(QDialog):
             while queryImportes.next():
                 saldo += queryImportes.value(0)
             queryProveedor = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, self.provId))
-
+        self.accept()
 
 
  
@@ -679,7 +680,8 @@ class HistorialPreciosDialog(QDialog):
         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
         # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.nuevoPrecioShow)
         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
-        self.dialogButtonBox.accepted.connect(self.accept)
+        # self.dialogButtonBox.accepted.connect(self.accept)
+        self.okPushButton.clicked.connect(self.accept)
 
        # lleno los items correspondientes
         
@@ -772,7 +774,9 @@ class NuevoPrecioDialog(QDialog):
         proveedores = llenoProveedores()
         self.setWindowTitle(self.id[1].text())
         self.proveedoresComboBox.addItems(proveedores)
-        self.dialogButtonBox.accepted.connect(self.save)
+        # self.dialogButtonBox.accepted.connect(self.save)
+        self.okPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
 
 
     def save(self):
@@ -791,7 +795,6 @@ class ChequesWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("cheques.ui", self)
-
         self.initUI()
 
     def initUI(self):
@@ -803,6 +806,7 @@ class ChequesWindow(QMainWindow):
         self.cargarTabla()
 
     def cargarTabla(self):
+        saldo = 0
         self.chequesTableWidget.setRowCount(0)
         query = QSqlQuery("SELECT * FROM cheques")
         while query.next():        
@@ -829,6 +833,7 @@ class ChequesWindow(QMainWindow):
                 fechap = None
                 proveedorWidget = QTableWidgetItem('disponible')
                 proveedorWidget.setForeground(QBrush(QColor('green')))
+                saldo += query.value(6)
 
             self.chequesTableWidget.setItem(rows, 7, QTableWidgetItem(fechap))
             self.chequesTableWidget.setItem(rows, 8, proveedorWidget)
@@ -836,6 +841,8 @@ class ChequesWindow(QMainWindow):
  
 
         self.chequesTableWidget.resizeColumnsToContents()
+        self.statusbar.showMessage("Total disponible: %s" % saldo)
+
 
     def editarCheque(self):
         self.cheque = ChequeDialog(self.chequesTableWidget.selectedItems())
