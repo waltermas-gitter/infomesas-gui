@@ -278,6 +278,7 @@ class PedidoDialog(QDialog):
 
         self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
         self.dialogButtonBox.accepted.connect(self.save)
+        # self.dialogButtonBox.clicked.connect(self.save)
 
     def cambioEstado(self):
         if self.estadoListWidget.currentItem().text() == 'entregada':
@@ -288,8 +289,15 @@ class PedidoDialog(QDialog):
             self.lugarEntregaComboBox.setEnabled(False)
  
 
-
     def save(self):
+        # checks
+        if self.modeloListWidget.currentRow() == -1:
+            mensaje("modelo no seleccionado")
+            return
+
+
+
+        #save
         query = QSqlQuery()
         if self.id == 0:
             query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
@@ -955,6 +963,14 @@ def devuelvoNombreProveedor(id):
     queryProveedor.first()
     return(queryProveedor.value(0))
 
+def mensaje(texto):
+    msgBox = QMessageBox()
+    msgBox.setIcon(QMessageBox.Information)
+    msgBox.setText(texto)
+    msgBox.setWindowTitle("Error")
+    msgBox.setStandardButtons(QMessageBox.Ok)
+    msgBox.exec()
+    
 
     
 def window():
