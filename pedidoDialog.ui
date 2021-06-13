@@ -196,50 +196,37 @@
     </layout>
    </item>
    <item row="4" column="3">
-    <widget class="QDialogButtonBox" name="dialogButtonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QPushButton" name="okPushButton">
+     <property name="text">
+      <string>Ok</string>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QPushButton" name="cancelPushButton">
+     <property name="text">
+      <string>Cancel</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fechaDateEdit</tabstop>
+  <tabstop>clienteComboBox</tabstop>
+  <tabstop>modeloListWidget</tabstop>
+  <tabstop>chapaListWidget</tabstop>
+  <tabstop>notasPlainTextEdit</tabstop>
+  <tabstop>medidaCerradaSpinBox</tabstop>
+  <tabstop>medidaAbiertaSpinBox</tabstop>
+  <tabstop>anchoSpinBox</tabstop>
+  <tabstop>precioLineEdit</tabstop>
+  <tabstop>estadoListWidget</tabstop>
+  <tabstop>fechaEntregaDateEdit</tabstop>
+  <tabstop>lugarEntregaComboBox</tabstop>
+  <tabstop>okPushButton</tabstop>
+  <tabstop>cancelPushButton</tabstop>
+ </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>dialogButtonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>pedidoDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dialogButtonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>pedidoDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

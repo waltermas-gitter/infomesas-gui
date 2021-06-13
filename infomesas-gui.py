@@ -68,7 +68,7 @@ class InfomesasWindow(QMainWindow):
         self.vistaChanged()
 
 
-    def visualizarQuery(self,queryString):
+    def visualizarQuery(self, queryString):
         self.pedidosTableWidget.setRowCount(0)
         query = QSqlQuery(queryString)
         while query.next():        
@@ -148,7 +148,7 @@ class InfomesasWindow(QMainWindow):
     def nuevoPedido(self):
         self.pedido = PedidoDialog(0)
         if self.pedido.exec_() == QDialog.Accepted:
-            pass
+            self.vistaChanged()
 
 
     def showProveedores(self):
@@ -277,8 +277,9 @@ class PedidoDialog(QDialog):
             # self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
 
         self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
-        self.dialogButtonBox.accepted.connect(self.save)
-        # self.dialogButtonBox.clicked.connect(self.save)
+        self.okPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
+
 
     def cambioEstado(self):
         if self.estadoListWidget.currentItem().text() == 'entregada':
@@ -294,6 +295,13 @@ class PedidoDialog(QDialog):
         if self.modeloListWidget.currentRow() == -1:
             mensaje("modelo no seleccionado")
             return
+        if self.chapaListWidget.currentRow() == -1:
+            mensaje("chapa no seleccionada")
+            return
+        if self.clienteComboBox.currentText() == " [elegir]":
+            mensaje("cliente no seleccionado")
+            return
+
 
 
 
@@ -355,7 +363,7 @@ class PedidoDialog(QDialog):
             diaString = datetime.strftime(dia, "%d-%m-%Y")
             self.returnValues.append(diaString)
             self.returnValues.append(self.lugarEntregaComboBox.currentText())
-
+        self.accept()
 
 
 
@@ -853,7 +861,9 @@ class ChequeDialog(QDialog):
 
     def initUI(self):
         self.proveedorComboBox.currentTextChanged.connect(self.chequeEntregado)
-        self.dialogButtonBox.accepted.connect(self.save)
+        # self.dialogButtonBox.accepted.connect(self.save)
+        self.okPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
         clientes = llenoClientes()
         self.clienteComboBox.addItems(clientes)
  
@@ -893,6 +903,23 @@ class ChequeDialog(QDialog):
             self.fechaEntregadoDateEdit.setEnabled(True)
 
     def save(self):
+        # check
+        if self.clienteComboBox.currentText() == " [elegir]":
+            mensaje("cliente no seleccionado")
+            return
+        if self.bancoLineEdit.text() == '':
+            mensaje("banco no seleccionado")
+            return
+        if self.numeroLineEdit.text() == '':
+            mensaje("numero no seleccionado")
+            return
+        if self.importeLineEdit.text() == '':
+            mensaje("importe no seleccionado")
+            return
+
+
+
+        #save
         query = QSqlQuery()
         if self.id == 0:
             query.prepare("INSERT INTO cheques (fechaRecibido, cliente, fechaCheque, banco, numero, importe, fechaEntregado, entregadoA) VALUES (:fechaRecibido, :cliente, :fechaCheque, :banco, :numero, :importe, :fechaEntregado, :entregadoA)")
@@ -915,7 +942,8 @@ class ChequeDialog(QDialog):
             query.bindValue(":fechaEntregado", diaString)
             query.bindValue(":entregadoA", devuelvoIdProveedor(self.proveedorComboBox.currentText()))
         query.exec_()
-                
+        self.accept()
+
 
 
  
