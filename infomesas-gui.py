@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 
 # https://realpython.com/python-pyqt-database/
+# lista de precios en pedidos
+# filtro en productos seguidos
+# web
+# push
+# recordar vista al empezar
+
 
 
 import sys
