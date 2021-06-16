@@ -18,6 +18,7 @@ from PyQt5 import uic
 from datetime import datetime, timedelta
 import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
+import re
 # https://www.mfitzp.com/tutorials/qresource-system/
 
 
@@ -285,6 +286,9 @@ class PedidoDialog(QDialog):
         self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
+        self.filterListaLineEdit.textChanged.connect(self.mostrarLista)
+        self.ultimaLista=open('ultimalista.txt').readlines()
+        # self.mostrarLista()
 
 
     def cambioEstado(self):
@@ -370,8 +374,16 @@ class PedidoDialog(QDialog):
             self.returnValues.append(diaString)
             self.returnValues.append(self.lugarEntregaComboBox.currentText())
         self.accept()
-
-
+    
+    def mostrarLista(self):
+        filtradoLista = []
+        for item in self.ultimaLista:
+            if self.filterListaLineEdit.text() in item:
+                filtradoLista.append(item)
+        filtradoString = ''.join(filtradoLista)
+        self.listaPlainTextEdit.setPlainText(filtradoString)
+        
+            
 
 
 class SumasSaldosDialog(QDialog):
