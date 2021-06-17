@@ -220,9 +220,8 @@ class InfomesasWindow(QMainWindow):
         self.visualizarQuery(queryString)
 
     def pushear(self):
-        stdouterr = os.popen("./actualizar.sh")[1].read()
-        # os.system("./actualizar.sh")
-        print(stdouterr)
+        # stdouterr = os.popen("./actualizar.sh")[1].read()
+        os.system("gnome-terminal -e ./actualizar.sh &" )
 
 
 
