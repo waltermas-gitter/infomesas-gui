@@ -181,7 +181,7 @@
           <string>entregadas</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -196,7 +196,7 @@
           <string>anuladas</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -210,6 +210,20 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="2">
+     <widget class="QPushButton" name="pushPushButton">
+      <property name="text">
+       <string>Push</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QPushButton" name="salirPushButton">
+      <property name="text">
+       <string>Salir</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -218,7 +232,7 @@
      <x>0</x>
      <y>0</y>
      <width>1416</width>
-     <height>35</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">

@@ -9,7 +9,7 @@
 
 
 
-import sys
+import os, sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -69,6 +69,8 @@ class InfomesasWindow(QMainWindow):
         self.clientesPushButton.clicked.connect(self.showClientes)
         self.productosSeguidosPushButton.clicked.connect(self.showProductosSeguidos)
         self.chequesPushButton.clicked.connect(self.showCheques)
+        self.salirPushButton.clicked.connect(self.close)
+        self.pushPushButton.clicked.connect(self.pushear)
 
         # lleno pedidosTableWidget
         # self.visualizarQuery("SELECT * FROM pedidos")
@@ -217,6 +219,10 @@ class InfomesasWindow(QMainWindow):
 
         self.visualizarQuery(queryString)
 
+    def pushear(self):
+        stdouterr = os.popen("./actualizar.sh")[1].read()
+        # os.system("./actualizar.sh")
+        print(stdouterr)
 
 
 
