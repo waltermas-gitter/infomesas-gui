@@ -74,10 +74,10 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="minimum">
-        <number>80</number>
+        <number>0</number>
        </property>
        <property name="maximum">
-        <number>350</number>
+        <number>400</number>
        </property>
        <property name="singleStep">
         <number>10</number>
@@ -100,10 +100,10 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="minimum">
-        <number>80</number>
+        <number>0</number>
        </property>
        <property name="maximum">
-        <number>350</number>
+        <number>400</number>
        </property>
        <property name="singleStep">
         <number>10</number>
@@ -132,7 +132,7 @@
         <number>350</number>
        </property>
        <property name="singleStep">
-        <number>10</number>
+        <number>5</number>
        </property>
        <property name="value">
         <number>85</number>
@@ -150,6 +150,13 @@
       <widget class="QLineEdit" name="precioLineEdit">
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="calcularPushButton">
+       <property name="text">
+        <string>Calcular</string>
        </property>
       </widget>
      </item>
@@ -228,6 +235,9 @@
    </item>
    <item row="4" column="2">
     <widget class="QPushButton" name="okPushButton">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="text">
       <string>Ok</string>
      </property>

@@ -149,7 +149,6 @@ class InfomesasWindow(QMainWindow):
     def editarPedido(self):
         self.pedido = PedidoDialog(self.pedidosTableWidget.selectedItems())
         if self.pedido.exec_() == QDialog.Accepted:
-            print("aceptado")
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
             for i in range(len(self.pedido.returnValues)):
                 self.pedidosTableWidget.selectedItems()[i].setText(self.pedido.returnValues[i])
@@ -292,6 +291,9 @@ class PedidoDialog(QDialog):
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
         self.filterListaLineEdit.textChanged.connect(self.mostrarLista)
+        # self.precioLineEdit.returnPressed.connect(self.calcular)
+        self.calcularPushButton.clicked.connect(self.calcular)
+
         self.ultimaLista=open('ultimalista.txt').readlines()
         # self.mostrarLista()
 
@@ -304,6 +306,15 @@ class PedidoDialog(QDialog):
             self.fechaEntregaDateEdit.setEnabled(False)
             self.lugarEntregaComboBox.setEnabled(False)
  
+    def calcular(self):
+        res = eval(self.precioLineEdit.text())
+        self.precioLineEdit.setText(str(res))
+        
+    # def keyPressEvent(self, event):     
+    #     print(event)
+
+    #     event.ignore()
+
 
     def save(self):
         # checks
@@ -316,8 +327,11 @@ class PedidoDialog(QDialog):
         if self.clienteComboBox.currentText() == " [elegir]":
             mensaje("cliente no seleccionado")
             return
-
-
+        try:
+            res = int(self.precioLineEdit.text())
+        except:
+            mensaje("importe no correcto")
+            return
 
 
         #save
@@ -451,7 +465,6 @@ class SumasSaldosDialog(QDialog):
         # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
         self.mov = Movimiento(self.sumasSaldosTableWidget.selectedItems(), self.id, self.esProveedor)
         if self.mov.exec_() == QDialog.Accepted:
-            print("aceptado")
             self.cargarTabla()
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
             # for i in range(len(self.mov.returnValues)):
@@ -649,6 +662,8 @@ class ProductosSeguidosWindow(QMainWindow):
         self.productosSeguidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.productosSeguidosTableWidget.setHorizontalHeaderLabels(["ID", "Descripcion", "Fecha", "Proveedor", "Precio"])
         self.productosSeguidosTableWidget.itemDoubleClicked.connect(self.historialPreciosShow)
+        # self.filtroLineEdit.textChanged.connect(self.cargarTabla)
+        self.filtroLineEdit.textChanged.connect(self.cargarTabla)
         self.cargarTabla()
 
     def historialPreciosShow(self):
@@ -658,7 +673,9 @@ class ProductosSeguidosWindow(QMainWindow):
 
     def cargarTabla(self):
         self.productosSeguidosTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM productosSeguidos")
+        filtro = "%" + self.filtroLineEdit.text() + "%"
+        print(filtro)
+        query = QSqlQuery("SELECT * FROM productosSeguidos WHERE descripcion LIKE '%s' ORDER BY descripcion ASC" % filtro)
         while query.next():        
             rows = self.productosSeguidosTableWidget.rowCount()
             self.productosSeguidosTableWidget.setRowCount(rows + 1)
@@ -683,7 +700,6 @@ class ProductosSeguidosWindow(QMainWindow):
         if okPressed and descripcion != '':
             query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % descripcion) 
             self.cargarTabla()
-
 
         
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>874</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="0" column="0" rowspan="2">
      <widget class="QTableWidget" name="productosSeguidosTableWidget">
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -41,6 +41,39 @@
      </widget>
     </item>
     <item row="0" column="1">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLineEdit" name="filtroLineEdit">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>156</width>
+         <height>34</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>0</y>
+         <width>40</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Filtro:</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
      <widget class="QPushButton" name="nuevoPushButton">
       <property name="text">
        <string>Nuevo producto</string>
@@ -54,8 +87,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>35</height>
+     <width>874</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>
