@@ -78,6 +78,9 @@ class InfomesasWindow(QMainWindow):
 
 
     def visualizarQuery(self, queryString):
+        contadorPendientes = 0
+        contadorEnProduccion = 0
+        contadorTerminadas = 0
         self.pedidosTableWidget.setRowCount(0)
         query = QSqlQuery(queryString)
         while query.next():        
@@ -118,10 +121,13 @@ class InfomesasWindow(QMainWindow):
             if query.value(10) == 'pendiente':
                 # estado.setForeground(QBrush(QColor(0, 255, 0)))
                 estado.setForeground(QBrush(QColor('green')))
+                contadorPendientes += 1
             elif query.value(10) == 'en produccion':                
                 estado.setForeground(QBrush(QColor('brown')))
+                contadorEnProduccion += 1
             elif query.value(10) == 'terminada':                
                 estado.setForeground(QBrush(QColor(200,160,50)))
+                contadorTerminadas += 1
             self.pedidosTableWidget.setItem(rows, 10, estado)
             if query.value(11):
                 fecha = datetime.strptime(query.value(11), "%Y-%m-%d %H:%M:%S")
@@ -141,7 +147,8 @@ class InfomesasWindow(QMainWindow):
         # self.pedidosTableWidget.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
         self.pedidosTableWidget.setColumnWidth(5, 150)
         self.pedidosTableWidget.scrollToBottom()
-        self.statusbar.showMessage("%i registros" % self.pedidosTableWidget.rowCount())
+        mensajeStatus = "%i registros. %i pendientes, %i en produccion, %i terminadas" % (self.pedidosTableWidget.rowCount(), contadorPendientes, contadorEnProduccion, contadorTerminadas)
+        self.statusbar.showMessage(mensajeStatus)
 
 
 
