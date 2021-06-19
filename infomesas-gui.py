@@ -25,6 +25,7 @@ import generar_pedidos_jinja
 import generar_precios_jinja
 import generar_soldini_jinja
 import generar_deudas_jinja
+import generar_cc_jinja
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
@@ -235,6 +236,7 @@ class InfomesasWindow(QMainWindow):
         generar_precios_jinja.main()
         generar_soldini_jinja.main()
         generar_deudas_jinja.main()
+        generar_cc_jinja.main()
         os.system("gnome-terminal -e ./actualizar.sh &" )
 
 
