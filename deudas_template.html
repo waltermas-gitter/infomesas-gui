@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/infomesasicon.png">
+<style>
+
+</style>
+</head>
+<body>
+
+{% for item in data %}
+<p>{{ item[0] }} {{item[1]}}</p>
+{% endfor %}
+<p></p>
+
+<p>Total: {{ total }}</p>
+</body>
+</html>
+

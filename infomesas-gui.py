@@ -18,10 +18,13 @@ from PyQt5 import uic
 from datetime import datetime, timedelta
 import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
-import re
+# import re
 # https://www.mfitzp.com/tutorials/qresource-system/
-
-
+import generar_cheques_jinja
+import generar_pedidos_jinja
+import generar_precios_jinja
+import generar_soldini_jinja
+import generar_deudas_jinja
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
@@ -227,6 +230,11 @@ class InfomesasWindow(QMainWindow):
 
     def pushear(self):
         # stdouterr = os.popen("./actualizar.sh")[1].read()
+        generar_cheques_jinja.main()
+        generar_pedidos_jinja.main()
+        generar_precios_jinja.main()
+        generar_soldini_jinja.main()
+        generar_deudas_jinja.main()
         os.system("gnome-terminal -e ./actualizar.sh &" )
 
 

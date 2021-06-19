@@ -23,12 +23,18 @@ tr:nth-child(even) {
 <body>
 
 <table>
-	{% for pedido in pedidos %}
+	{% for cheque in cheques %}
 	<tr>
-		{% for item in pedido %}
+		{% for item in cheque %}
+		{% if item == 'disponible' %}
+		<td style="color:green">
+				{{ item }}
+			</td>
+		{% else %}
 			<td >
 				{{ item }}
 			</td>
+		{% endif %}	
 		{% endfor %}
     	</tr>
   {% endfor %}
