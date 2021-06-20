@@ -15,7 +15,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtSql import *
 from PyQt5 import uic
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
 # import re
@@ -59,9 +59,9 @@ class InfomesasWindow(QMainWindow):
         self.entregadasCheckBox.stateChanged.connect(self.vistaChanged)
         self.anuladasCheckBox.stateChanged.connect(self.vistaChanged)
 
-        self.pedidosTableWidget.setColumnCount(13)
+        self.pedidosTableWidget.setColumnCount(14)
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "cerrada", "abierta", "ancho", "Precio", "Estado", "F.entrega", "L.entrega"])
+        self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "cerrada", "abierta", "ancho", "Precio", "Estado", "F.entrega", "L.entrega", "Demora"])
         self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
         self.hastaDateEdit.setDate(QDate.currentDate())
         self.desdeDateEdit.dateChanged.connect(self.vistaChanged)
@@ -91,9 +91,9 @@ class InfomesasWindow(QMainWindow):
             rows = self.pedidosTableWidget.rowCount()
             self.pedidosTableWidget.setRowCount(rows + 1)
             self.pedidosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
+            fechaPedido = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
             # fechap = "%s-%s-%s" % (fecha.day, fecha.month, fecha.year)
-            fechap = fecha.strftime("%d-%m-%Y")
+            fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
             queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = %s" % query.value(2))
             queryCliente.first()
@@ -146,7 +146,10 @@ class InfomesasWindow(QMainWindow):
             else:
                 lugarEntrega = ''
             self.pedidosTableWidget.setItem(rows, 12, QTableWidgetItem(lugarEntrega))
-
+            demora = datetime.today() - fechaPedido 
+            if query.value(10) == 'pendiente' or query.value(10) == 'en produccion':
+                self.pedidosTableWidget.setItem(rows, 13, QTableWidgetItem(str(demora.days)))
+ 
         self.pedidosTableWidget.resizeColumnsToContents()
         # self.pedidosTableWidget.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
         self.pedidosTableWidget.setColumnWidth(5, 150)
@@ -521,7 +524,7 @@ class ProveedoresWindow(QMainWindow):
 
     def cargarTabla(self):
         self.proveedoresTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM proveedores")
+        query = QSqlQuery("SELECT * FROM proveedores ORDER BY nombre ASC")
         while query.next():        
             rows = self.proveedoresTableWidget.rowCount()
             self.proveedoresTableWidget.setRowCount(rows + 1)
@@ -558,7 +561,7 @@ class ClientesWindow(QMainWindow):
 
     def cargarTabla(self):
         self.clientesTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM clientes")
+        query = QSqlQuery("SELECT * FROM clientes ORDER BY nombre ASC")
         while query.next():        
             rows = self.clientesTableWidget.rowCount()
             self.clientesTableWidget.setRowCount(rows + 1)
