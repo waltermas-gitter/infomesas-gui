@@ -19,10 +19,10 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="5" column="0">
-     <widget class="QPushButton" name="productosSeguidosPushButton">
+    <item row="4" column="0">
+     <widget class="QPushButton" name="clientesPushButton">
       <property name="text">
-       <string>Productos seguidos</string>
+       <string>Clientes</string>
       </property>
      </widget>
     </item>
@@ -85,17 +85,17 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="nuevoPushButton">
+    <item row="4" column="2">
+     <widget class="QPushButton" name="pushPushButton">
       <property name="text">
-       <string>Nuevo pedido</string>
+       <string>Push</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="proveedoresPushButton">
+    <item row="6" column="0">
+     <widget class="QPushButton" name="productosSeguidosPushButton">
       <property name="text">
-       <string>Proveedores</string>
+       <string>Productos seguidos</string>
       </property>
      </widget>
     </item>
@@ -112,10 +112,10 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="clientesPushButton">
+    <item row="5" column="0">
+     <widget class="QPushButton" name="chequesPushButton">
       <property name="text">
-       <string>Clientes</string>
+       <string>Cheques</string>
       </property>
      </widget>
     </item>
@@ -203,24 +203,31 @@
       </layout>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="chequesPushButton">
+    <item row="2" column="2">
+     <widget class="QPushButton" name="nuevoPushButton">
       <property name="text">
-       <string>Cheques</string>
+       <string>Nuevo pedido</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="proveedoresPushButton">
+      <property name="text">
+       <string>Proveedores</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QPushButton" name="salirPushButton">
+      <property name="text">
+       <string>Salir</string>
       </property>
      </widget>
     </item>
     <item row="3" column="2">
-     <widget class="QPushButton" name="pushPushButton">
+     <widget class="QPushButton" name="notasPushButton">
       <property name="text">
-       <string>Push</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
-     <widget class="QPushButton" name="salirPushButton">
-      <property name="text">
-       <string>Salir</string>
+       <string>Notas</string>
       </property>
      </widget>
     </item>

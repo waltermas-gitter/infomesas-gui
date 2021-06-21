@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 
 # https://realpython.com/python-pyqt-database/
-# lista de precios en pedidos
-# filtro en productos seguidos
-# web
-# push
-# recordar vista al empezar
-
-
 
 import os, sys
 from PyQt5.QtCore import *
@@ -75,6 +68,7 @@ class InfomesasWindow(QMainWindow):
         self.chequesPushButton.clicked.connect(self.showCheques)
         self.salirPushButton.clicked.connect(self.close)
         self.pushPushButton.clicked.connect(self.pushear)
+        self.notasPushButton.clicked.connect(self.showNotas)
 
         # lleno pedidosTableWidget
         # self.visualizarQuery("SELECT * FROM pedidos")
@@ -189,6 +183,9 @@ class InfomesasWindow(QMainWindow):
         self.cheques = ChequesWindow()
         self.cheques.show()
 
+    def showNotas(self):
+        self.notas = NotasWindow()
+        self.notas.show()
 
 
     def closeEvent(self, event):
@@ -784,40 +781,7 @@ class HistorialPreciosDialog(QDialog):
             self.cargarTabla()
 
 
-    #     if self.id == 0:
-    #         if self.productosSeguidosComboBox.currentText() == '[nuevo]':
-    #             query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % self.descripcionLineEdit.text())
-    #         # print(query.lastInsertId())
-    #             productoId = query.lastInsertId()
-    #         else:
-    #             productoId = self.id[0].text()
 
-    #         queryPS = QSqlQuery() 
-    #         queryPS.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
-    #         queryPS.bindValue(":idProducto", productoId)
-    #         queryPS.bindValue(":precio", self.importeLineEdit.text())
-    #         queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-    #         dia = self.fechaDateEdit.date().toPyDate()
-    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-    #         queryPS.bindValue(":fecha", diaString)
-    #         queryPS.exec_()
-
-    #     else:
-    #         query = QSqlQuery("UPDATE productosSeguidos SET descripcion = '%s' WHERE idProducto = '%s'" % (self.descripcionLineEdit.text(), self.id[0].text()))
-            
-    #         dia = datetime.strptime(self.id[2].text(),"%d-%m-%Y")
-    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-    #         query = QSqlQuery("SELECT idProductoPrecio FROM productosSeguidosPrecios WHERE idProducto = '%s' AND proveedor = '%s' AND fecha = '%s'" % (self.id[0].text(), devuelvoIdProveedor(self.id[3].text()), diaString))
-    #         query.first()
-    #         queryPS = QSqlQuery()
-    #         queryPS.prepare("UPDATE productosSeguidosPrecios SET precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
-    #         queryPS.bindValue(":precio", self.importeLineEdit.text())
-    #         queryPS.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-    #         dia = self.fechaDateEdit.date().toPyDate()
-    #         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-    #         queryPS.bindValue(":fecha", diaString)
-    #         queryPS.bindValue(":idProductoPrecio", query.value(0))
-    #         queryPS.exec_()
 
 
 class NuevoPrecioDialog(QDialog):
@@ -1013,8 +977,89 @@ class ChequeDialog(QDialog):
 
 
  
+class NotasWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("notas.ui", self)
+        self.initUI()
+
+    def initUI(self):
+        self.nuevoPushButton.clicked.connect(self.nuevaNota)
+        self.eliminarPushButton.clicked.connect(self.eliminarNota)
+        self.notasTableWidget.setColumnCount(2)
+        self.notasTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.notasTableWidget.setHorizontalHeaderLabels(["ID", "Titulo"])
+        self.notasTableWidget.itemDoubleClicked.connect(self.notaShow)
+        self.cargarTabla()
+
+    def notaShow(self):
+        self.nota = NotaDialog(self.notasTableWidget.selectedItems())
+        if self.nota.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def cargarTabla(self):
+        self.notasTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM notas ORDER BY titulo ASC")
+        while query.next():        
+            rows = self.notasTableWidget.rowCount()
+            self.notasTableWidget.setRowCount(rows + 1)
+            self.notasTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            self.notasTableWidget.setItem(rows, 1, QTableWidgetItem(query.value(1)))
+        self.notasTableWidget.resizeColumnsToContents()
         
+    def nuevaNota(self):
+        self.nota = NotaDialog(0)
+        if self.nota.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+    
+    def eliminarNota(self):
+        if len(self.notasTableWidget.selectedItems()) == 0:
+            mensaje("no hay nota seleccionada")
+            return
+
+        reply = QMessageBox.question(self, 'Eliminar', 'Esta seguro de eliminar esta nota?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            query = QSqlQuery("DELETE FROM notas WHERE idNota = %s" % self.notasTableWidget.selectedItems()[0].text())
+            self.cargarTabla()
             
+       
+class NotaDialog(QDialog):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi("nota.ui", self)
+        self.id = id
+        self.initUI()
+
+    def initUI(self):
+        if self.id == 0:
+            self.tituloLineEdit.setText("nueva nota")
+        else:
+            self.tituloLineEdit.setText(self.id[1].text())
+            query = QSqlQuery("SELECT nota FROM notas WHERE idNota = %s" % self.id[0].text())
+            query.first()
+            self.notaPlainTextEdit.setPlainText(query.value(0))
+        # self.setWindowTitle(self.id[1].text())
+        self.guardarPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
+        self.tituloLineEdit.textChanged.connect(self.actualizarTitulo)
+
+    def actualizarTitulo(self):
+        self.setWindowTitle(self.tituloLineEdit.text())
+
+
+    def save(self):
+        query = QSqlQuery() 
+        if self.id == 0:
+            query.prepare("INSERT INTO notas (titulo, nota) VALUES (:titulo, :nota)")
+        else:
+            query.prepare("UPDATE notas SET titulo=:titulo, nota=:nota WHERE idNota=:idNota")
+            query.bindValue(":idNota", self.id[0].text())
+        query.bindValue(":titulo", self.tituloLineEdit.text())
+        query.bindValue(":nota", self.notaPlainTextEdit.toPlainText())
+        query.exec_()
+        self.accept()
+
+           
 
 
  
