@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1416</width>
-    <height>631</height>
+    <width>1090</width>
+    <height>803</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,71 +19,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0">
-     <widget class="QPushButton" name="clientesPushButton">
+    <item row="6" column="2">
+     <widget class="QPushButton" name="salirPushButton">
       <property name="text">
-       <string>Clientes</string>
+       <string>Salir</string>
       </property>
      </widget>
-    </item>
-    <item row="0" column="1">
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>desde:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QDateEdit" name="desdeDateEdit">
-        <property name="displayFormat">
-         <string>MM/yy</string>
-        </property>
-        <property name="calendarPopup">
-         <bool>true</bool>
-        </property>
-        <property name="date">
-         <date>
-          <year>2020</year>
-          <month>1</month>
-          <day>1</day>
-         </date>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>hasta:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDateEdit" name="hastaDateEdit">
-        <property name="displayFormat">
-         <string>MM/yy</string>
-        </property>
-        <property name="calendarPopup">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="clienteComboBox">
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>cliente</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
     <item row="4" column="2">
      <widget class="QPushButton" name="pushPushButton">
@@ -92,30 +33,10 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QPushButton" name="productosSeguidosPushButton">
+    <item row="2" column="0">
+     <widget class="QPushButton" name="proveedoresPushButton">
       <property name="text">
-       <string>Productos seguidos</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="3">
-     <widget class="QTableWidget" name="pedidosTableWidget">
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QPushButton" name="chequesPushButton">
-      <property name="text">
-       <string>Cheques</string>
+       <string>Proveedores</string>
       </property>
      </widget>
     </item>
@@ -203,6 +124,72 @@
       </layout>
      </widget>
     </item>
+    <item row="0" column="1">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>desde:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDateEdit" name="desdeDateEdit">
+        <property name="displayFormat">
+         <string>MM/yy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2020</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>hasta:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDateEdit" name="hastaDateEdit">
+        <property name="displayFormat">
+         <string>MM/yy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="clienteComboBox">
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>cliente</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="7" column="0">
+     <widget class="QPushButton" name="productosSeguidosPushButton">
+      <property name="text">
+       <string>Productos seguidos</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="2">
      <widget class="QPushButton" name="nuevoPushButton">
       <property name="text">
@@ -210,21 +197,34 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="proveedoresPushButton">
+    <item row="1" column="0" colspan="3">
+     <widget class="QTableWidget" name="pedidosTableWidget">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="clientesPushButton">
       <property name="text">
-       <string>Proveedores</string>
+       <string>Clientes</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="2">
-     <widget class="QPushButton" name="salirPushButton">
+    <item row="6" column="0">
+     <widget class="QPushButton" name="chequesPushButton">
       <property name="text">
-       <string>Salir</string>
+       <string>Cheques</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="2">
+    <item row="5" column="0">
      <widget class="QPushButton" name="notasPushButton">
       <property name="text">
        <string>Notas</string>
@@ -238,7 +238,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1416</width>
+     <width>1090</width>
      <height>31</height>
     </rect>
    </property>
