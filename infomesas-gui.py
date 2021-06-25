@@ -19,6 +19,12 @@ import generar_precios_jinja
 import generar_soldini_jinja
 import generar_deudas_jinja
 import generar_cc_jinja
+import soldini_deuda
+
+from functools import partial
+
+
+
 
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
@@ -69,6 +75,11 @@ class InfomesasWindow(QMainWindow):
         self.salirPushButton.clicked.connect(self.close)
         self.pushPushButton.clicked.connect(self.pushear)
         self.notasPushButton.clicked.connect(self.showNotas)
+        self.soloPendientesPushButton.clicked.connect(partial(self.solo, self.pendientesCheckBox))
+        self.soloEnProduccionPushButton.clicked.connect(partial(self.solo, self.enproduccionCheckBox))
+        self.soloTerminadasPushButton.clicked.connect(partial(self.solo, self.terminadasCheckBox))
+        self.soloEntregadasPushButton.clicked.connect(partial(self.solo, self.entregadasCheckBox))
+        self.soloAnuladasPushButton.clicked.connect(partial(self.solo, self.anuladasCheckBox))
 
         # lleno pedidosTableWidget
         # self.visualizarQuery("SELECT * FROM pedidos")
@@ -219,15 +230,19 @@ class InfomesasWindow(QMainWindow):
         ultimoDiaMes = calendar.monthrange(int(datetime.strftime(diaHasta,"%y")), int(datetime.strftime(diaHasta,"%m")))[1]
         diaHastaString = diaHastaString + str(ultimoDiaMes)
         queryStringFecha = "SELECT * FROM pedidos WHERE (fecha BETWEEN '" + diaDesdeString + "'AND '" + diaHastaString + "') AND ("
-        
         queryString = queryStringFecha + queryString + ")"
         if self.clienteComboBox.currentText() != " [elegir]":
             queryString = queryString + " AND cliente=" + str(devuelvoIdCliente(self.clienteComboBox.currentText()))
-
-        # print(queryString)
-
-
         self.visualizarQuery(queryString)
+
+    def solo(self, soloItem):
+        self.pendientesCheckBox.setChecked(False)
+        self.enproduccionCheckBox.setChecked(False)
+        self.terminadasCheckBox.setChecked(False)
+        self.entregadasCheckBox.setChecked(False)
+        self.anuladasCheckBox.setChecked(False)
+        soloItem.setChecked(True)
+
 
     def pushear(self):
         # stdouterr = os.popen("./actualizar.sh")[1].read()
@@ -449,6 +464,8 @@ class SumasSaldosDialog(QDialog):
         self.sumasSaldosTableWidget.setRowCount(0)
         if self.esProveedor == True:
             queryString = "SELECT * FROM deudas WHERE proveedor = '%s'" % self.id
+            if int(self.id) == 1:
+                self.presentarDeudaSoldini()
         else:
             queryString = "SELECT * FROM cuentasCorrientes WHERE cliente = '%s'" % self.id
         query = QSqlQuery(queryString)
@@ -475,6 +492,11 @@ class SumasSaldosDialog(QDialog):
 
         self.sumasSaldosTableWidget.scrollToBottom()
         self.sumasSaldosTableWidget.resizeColumnsToContents()
+
+    def presentarDeudaSoldini(self):
+        deudaSoldini = soldini_deuda.main()
+        self.soldiniListWidget.clear()
+        self.soldiniListWidget.addItems(deudaSoldini)
 
 
 
@@ -512,6 +534,7 @@ class ProveedoresWindow(QMainWindow):
         self.proveedoresTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.proveedoresTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Saldo"])
         self.proveedoresTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.salirPushButton.clicked.connect(self.close)
         self.cargarTabla()
 
     def sumasSaldosShow(self):
@@ -549,6 +572,7 @@ class ClientesWindow(QMainWindow):
         self.clientesTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.clientesTableWidget.setHorizontalHeaderLabels(["ID", "Cliente", "Saldo"])
         self.clientesTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.salirPushButton.clicked.connect(self.close)
         self.cargarTabla()
 
     def sumasSaldosShow(self):
@@ -826,6 +850,7 @@ class ChequesWindow(QMainWindow):
         self.chequesTableWidget.setHorizontalHeaderLabels(["ID", "Recibido", "Cliente", "Fecha", "Banco", "Numero", "Importe", "Entregado", "Proveedor"])
         self.chequesTableWidget.itemDoubleClicked.connect(self.editarCheque)
         self.nuevoPushButton.clicked.connect(self.nuevoCheque)
+        self.salirPushButton.clicked.connect(self.close)
         self.cargarTabla()
 
     def cargarTabla(self):
