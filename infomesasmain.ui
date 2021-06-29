@@ -19,19 +19,156 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="4">
-     <widget class="QPushButton" name="pushPushButton">
-      <property name="text">
-       <string>Push</string>
-      </property>
-     </widget>
+    <item row="0" column="0">
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="pendientesCheckBox">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>pendientes</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="soloPendientesPushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/chain.png</normaloff>:/icons/chain.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="enproduccionCheckBox">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>en produccion</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="soloEnProduccionPushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/chain.png</normaloff>:/icons/chain.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="terminadasCheckBox">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>terminadas</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="soloTerminadasPushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/chain.png</normaloff>:/icons/chain.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="notasPushButton">
-      <property name="text">
-       <string>Notas</string>
+    <item row="0" column="1">
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="entregadasCheckBox">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>entregadas</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="soloEntregadasPushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/chain.png</normaloff>:/icons/chain.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="anuladasCheckBox">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>anuladas</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="soloAnuladasPushButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/chain.png</normaloff>:/icons/chain.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="2">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item row="0" column="3">
      <layout class="QFormLayout" name="formLayout">
@@ -76,13 +213,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="clienteComboBox">
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -90,83 +220,100 @@
         </property>
        </widget>
       </item>
-     </layout>
-    </item>
-    <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QPushButton" name="soloPendientesPushButton">
-        <property name="text">
-         <string>⚓️</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="soloEnProduccionPushButton">
-        <property name="text">
-         <string>⚓️</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="soloTerminadasPushButton">
-        <property name="text">
-         <string>⚓️</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="soloEntregadasPushButton">
-        <property name="text">
-         <string>⚓️</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="soloAnuladasPushButton">
-        <property name="text">
-         <string>⚓️</string>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="clienteComboBox">
+        <property name="editable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="6" column="0" colspan="2">
-     <widget class="QPushButton" name="productosSeguidosPushButton">
-      <property name="text">
-       <string>Productos seguidos</string>
-      </property>
-     </widget>
+    <item row="2" column="0" colspan="2">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="proveedoresPushButton">
+        <property name="text">
+         <string>Proveedores</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="notasPushButton">
+        <property name="text">
+         <string>Notas</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/note.png</normaloff>:/icons/note.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="clientesPushButton">
+        <property name="text">
+         <string>Clientes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="chequesPushButton">
+        <property name="text">
+         <string>Cheques</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/cheque.png</normaloff>:/icons/cheque.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QPushButton" name="productosSeguidosPushButton">
+        <property name="text">
+         <string>Productos seguidos</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="clientesPushButton">
-      <property name="text">
-       <string>Clientes</string>
-      </property>
-     </widget>
+    <item row="2" column="3">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="nuevoPushButton">
+        <property name="text">
+         <string>Nuevo pedido</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushPushButton">
+        <property name="text">
+         <string>Push</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/github.png</normaloff>:/icons/github.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="salirPushButton">
+        <property name="text">
+         <string>Salir</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item row="2" column="4">
-     <widget class="QPushButton" name="nuevoPushButton">
-      <property name="text">
-       <string>Nuevo pedido</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QPushButton" name="chequesPushButton">
-      <property name="text">
-       <string>Cheques</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="4">
-     <widget class="QPushButton" name="salirPushButton">
-      <property name="text">
-       <string>Salir</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="5">
+    <item row="1" column="0" colspan="4">
      <widget class="QTableWidget" name="pedidosTableWidget">
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -178,110 +325,6 @@
        <bool>false</bool>
       </attribute>
      </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QCheckBox" name="pendientesCheckBox">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>pendientes</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="enproduccionCheckBox">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>en produccion</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="terminadasCheckBox">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>terminadas</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="entregadasCheckBox">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>entregadas</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="anuladasCheckBox">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>anuladas</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QPushButton" name="proveedoresPushButton">
-      <property name="text">
-       <string>Proveedores</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>

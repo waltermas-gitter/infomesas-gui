@@ -60,6 +60,10 @@
         <property name="text">
          <string>Salir</string>
         </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
+        </property>
        </widget>
       </item>
      </layout>
@@ -78,6 +82,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="iconosResource.qrc"/>
+ </resources>
  <connections/>
 </ui>
