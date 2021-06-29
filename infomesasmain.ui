@@ -19,6 +19,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>20</number>
+    </property>
+    <property name="rightMargin">
+     <number>20</number>
+    </property>
     <item row="0" column="0">
      <layout class="QFormLayout" name="formLayout_2">
       <item row="0" column="0">
@@ -343,12 +349,24 @@
     </property>
     <addaction name="actionSalir"/>
    </widget>
+   <widget class="QMenu" name="menuInformes">
+    <property name="title">
+     <string>Informes</string>
+    </property>
+    <addaction name="actionImprimirPendientes"/>
+   </widget>
    <addaction name="menuArchivo"/>
+   <addaction name="menuInformes"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSalir">
    <property name="text">
     <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionImprimirPendientes">
+   <property name="text">
+    <string>Imprimir pendientes</string>
    </property>
   </action>
  </widget>

@@ -8,6 +8,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtSql import *
 from PyQt5 import uic
+from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from datetime import datetime, timedelta, date
 import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
@@ -51,6 +52,7 @@ class InfomesasWindow(QMainWindow):
 
     def initUI(self):
         self.actionSalir.triggered.connect(self.close)
+        self.actionImprimirPendientes.triggered.connect(self.imprimirPendientes)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -100,17 +102,17 @@ class InfomesasWindow(QMainWindow):
             # fechap = "%s-%s-%s" % (fecha.day, fecha.month, fecha.year)
             fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
-            queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = %s" % query.value(2))
-            queryCliente.first()
+            # queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = %s" % query.value(2))
+            # queryCliente.first()
  
-            self.pedidosTableWidget.setItem(rows, 2, QTableWidgetItem(str(queryCliente.value(0))))
-            queryModelo = QSqlQuery("SELECT modelo FROM modelos WHERE idModelo = '%s'" % query.value(3))
-            queryModelo.first()
-            self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(queryModelo.value(0)))
+            self.pedidosTableWidget.setItem(rows, 2, QTableWidgetItem(devuelvoNombreCliente(query.value(2))))
+            # queryModelo = QSqlQuery("SELECT modelo FROM modelos WHERE idModelo = '%s'" % query.value(3))
+            # queryModelo.first()
+            self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(devuelvoNombreModelo(query.value(3))))
 
-            queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % query.value(4))
-            queryChapa.first()
-            self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(str(queryChapa.value(0))))
+            # queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % query.value(4))
+            # queryChapa.first()
+            self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(devuelvoNombreChapa(query.value(4))))
 
 
             self.pedidosTableWidget.setItem(rows, 5, QTableWidgetItem(str(query.value(5))))
@@ -253,6 +255,24 @@ class InfomesasWindow(QMainWindow):
         generar_deudas_jinja.main()
         generar_cc_jinja.main()
         os.system("gnome-terminal -e ./actualizar.sh &" )
+
+    def imprimirPendientes(self):
+        texto = ''
+        query = QSqlQuery("SELECT * FROM pedidos WHERE estado='pendiente'")
+        while query.next():
+            fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m")
+            lineaPendiente = fechap + ' ' 
+            lineaPendiente += devuelvoNombreCliente(query.value(2)) + ' ' 
+            lineaPendiente += devuelvoNombreModelo(query.value(3)) + ' '
+            lineaPendiente += devuelvoNombreChapa(query.value(4)) + ' ['
+            lineaPendiente += str(query.value(6)) + '-' + str(query.value(7)) + '*' + str(query.value(8)) + '] '
+            lineaPendiente += query.value(5) + ' '
+            lineaPendiente += ' \n' 
+            texto = texto + lineaPendiente
+        self.pendientesWindow = PrintingWindow(texto)
+        self.pendientesWindow.show()
+
 
 
 
@@ -1087,7 +1107,31 @@ class NotaDialog(QDialog):
            
 
 
+
+class PrintingWindow(QMainWindow):
+    def __init__(self, texto):
+        super().__init__()
+        uic.loadUi("printing.ui", self)
+        self.texto = texto
+        self.initUI()
+
+    def initUI(self):
+        self.textoPlainTextEdit.setPlainText(self.texto)
+        self.salirPushButton.clicked.connect(self.close)
+        self.imprimirPushButton.clicked.connect(self.print_file)
  
+#print dialog method
+    def print_file(self):
+        printer = QPrinter()
+        dialog = QPrintDialog(printer, self)
+        if dialog.exec_() == QPrintDialog.Accepted:
+            self.textoPlainTextEdit.print_(printer)
+
+
+
+
+
+
 def llenoClientes():
     clientes = []
     clientes.append(" [elegir]")
@@ -1127,6 +1171,16 @@ def devuelvoNombreProveedor(id):
     queryProveedor.first()
     return(queryProveedor.value(0))
 
+def devuelvoNombreModelo(id):
+    queryModelo = QSqlQuery("SELECT modelo FROM modelos WHERE idModelo = '%s'" % id)
+    queryModelo.first()
+    return(queryModelo.value(0))
+
+def devuelvoNombreChapa(id):
+    queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % id)
+    queryChapa.first()
+    return(queryChapa.value(0))
+ 
 def mensaje(texto):
     msgBox = QMessageBox()
     msgBox.setIcon(QMessageBox.Information)
