@@ -21,6 +21,7 @@ import generar_soldini_jinja
 import generar_deudas_jinja
 import generar_cc_jinja
 import soldini_deuda
+import generar_pendientes_jinja
 
 from functools import partial
 
@@ -230,8 +231,10 @@ class InfomesasWindow(QMainWindow):
         diaHasta = self.hastaDateEdit.date().toPyDate()
         diaHastaString = datetime.strftime(diaHasta, "%Y-%m-")
         ultimoDiaMes = calendar.monthrange(int(datetime.strftime(diaHasta,"%y")), int(datetime.strftime(diaHasta,"%m")))[1]
-        diaHastaString = diaHastaString + str(ultimoDiaMes)
-        queryStringFecha = "SELECT * FROM pedidos WHERE (fecha BETWEEN '" + diaDesdeString + "'AND '" + diaHastaString + "') AND ("
+        diaHastaString = diaHastaString + str(ultimoDiaMes) + " 23:59:59"
+
+        # queryStringFecha = "SELECT * FROM pedidos WHERE (fecha BETWEEN '" + diaDesdeString + "'AND '" + diaHastaString + "') AND ("
+        queryStringFecha = "SELECT * FROM pedidos WHERE (fecha >= '" + diaDesdeString + "'AND fecha <= '" + diaHastaString + "') AND ("
         queryString = queryStringFecha + queryString + ")"
         if self.clienteComboBox.currentText() != " [elegir]":
             queryString = queryString + " AND cliente=" + str(devuelvoIdCliente(self.clienteComboBox.currentText()))
@@ -254,15 +257,18 @@ class InfomesasWindow(QMainWindow):
         generar_soldini_jinja.main()
         generar_deudas_jinja.main()
         generar_cc_jinja.main()
+        generar_pendientes_jinja.main()
         os.system("gnome-terminal -e ./actualizar.sh &" )
 
     def imprimirPendientes(self):
         texto = ''
+        orden = 0
         query = QSqlQuery("SELECT * FROM pedidos WHERE estado='pendiente'")
         while query.next():
+            orden += 1
             fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
             fechap = fecha.strftime("%d-%m")
-            lineaPendiente = fechap + ' ' 
+            lineaPendiente = str(orden) + '- ' + fechap + ' ' 
             lineaPendiente += devuelvoNombreCliente(query.value(2)) + ' ' 
             lineaPendiente += devuelvoNombreModelo(query.value(3)) + ' '
             lineaPendiente += devuelvoNombreChapa(query.value(4)) + ' ['
@@ -1031,6 +1037,7 @@ class NotasWindow(QMainWindow):
     def initUI(self):
         self.nuevoPushButton.clicked.connect(self.nuevaNota)
         self.eliminarPushButton.clicked.connect(self.eliminarNota)
+        self.salirPushButton.clicked.connect(self.close)
         self.notasTableWidget.setColumnCount(2)
         self.notasTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.notasTableWidget.setHorizontalHeaderLabels(["ID", "Titulo"])
