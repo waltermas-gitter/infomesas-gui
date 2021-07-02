@@ -24,8 +24,8 @@ import soldini_deuda
 import generar_pendientes_jinja
 
 from functools import partial
-
-
+import pyqtgraph as pg
+import informe_pedidos
 
 
 # Create the connection
@@ -54,6 +54,7 @@ class InfomesasWindow(QMainWindow):
     def initUI(self):
         self.actionSalir.triggered.connect(self.close)
         self.actionImprimirPendientes.triggered.connect(self.imprimirPendientes)
+        self.actionPedidosPorMes.triggered.connect(self.pedidosPorMes)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -279,7 +280,9 @@ class InfomesasWindow(QMainWindow):
         self.pendientesWindow = PrintingWindow(texto)
         self.pendientesWindow.show()
 
-
+    def pedidosPorMes(self):
+        self.pedidosPorMes = PedidosPorMesWindow()
+        self.pedidosPorMes.show()
 
 
 
@@ -1133,6 +1136,28 @@ class PrintingWindow(QMainWindow):
         dialog = QPrintDialog(printer, self)
         if dialog.exec_() == QPrintDialog.Accepted:
             self.textoPlainTextEdit.print_(printer)
+
+
+
+
+class PedidosPorMesWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("informeGrafico.ui", self)
+        self.initUI()
+
+    def initUI(self):
+        totalesFecha, totalesMes = informe_pedidos.main()
+        widget = QWidget()
+        plot = pg.plot()
+        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        bargraph = pg.BarGraphItem(x = x, height = totalesMes, width = 0.6, brush ='g')
+        plot.addItem(bargraph)
+        layout = QGridLayout()
+        widget.setLayout(layout)
+        layout.addWidget(plot)
+        self.setCentralWidget(widget)
+
 
 
 

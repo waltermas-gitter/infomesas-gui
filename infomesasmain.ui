@@ -354,6 +354,7 @@
      <string>Informes</string>
     </property>
     <addaction name="actionImprimirPendientes"/>
+    <addaction name="actionPedidosPorMes"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuInformes"/>
@@ -367,6 +368,11 @@
   <action name="actionImprimirPendientes">
    <property name="text">
     <string>Imprimir pendientes</string>
+   </property>
+  </action>
+  <action name="actionPedidosPorMes">
+   <property name="text">
+    <string>Pedidos por mes</string>
    </property>
   </action>
  </widget>
