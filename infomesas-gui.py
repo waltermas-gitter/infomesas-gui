@@ -102,19 +102,13 @@ class InfomesasWindow(QMainWindow):
             self.pedidosTableWidget.setRowCount(rows + 1)
             self.pedidosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
             fechaPedido = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
-            # fechap = "%s-%s-%s" % (fecha.day, fecha.month, fecha.year)
             fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
-            # queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = %s" % query.value(2))
-            # queryCliente.first()
- 
-            self.pedidosTableWidget.setItem(rows, 2, QTableWidgetItem(devuelvoNombreCliente(query.value(2))))
-            # queryModelo = QSqlQuery("SELECT modelo FROM modelos WHERE idModelo = '%s'" % query.value(3))
-            # queryModelo.first()
+            cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(2)))
+            cliente.setForeground(devuelvoColorCliente(cliente.text()))
+                    
+            self.pedidosTableWidget.setItem(rows, 2, cliente)
             self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(devuelvoNombreModelo(query.value(3))))
-
-            # queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % query.value(4))
-            # queryChapa.first()
             self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(devuelvoNombreChapa(query.value(4))))
 
 
@@ -1209,6 +1203,26 @@ def devuelvoNombreCliente(id):
     queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = '%s'" % id)
     queryCliente.first()
     return(queryCliente.value(0))
+
+def devuelvoColorCliente(cliente):
+    if cliente == "Ernesto":
+        color = QBrush(QColor('green'))
+    elif cliente == "Raul":
+        color = QBrush(QColor('brown'))
+    elif cliente == "Maria Rosa":
+        color = QBrush(QColor('magenta'))
+    elif cliente == "Barzante":
+        color = QBrush(QColor('goldenrod'))
+    elif cliente == "Dalzotto":
+        color = QBrush(QColor('blue'))
+    elif cliente == "Guffanti":
+        color = QBrush(QColor('red'))
+    else:
+        color = QBrush(QColor('black'))
+    return color
+
+
+
 
 def devuelvoIdProveedor(nombre):
     queryProveedor = QSqlQuery("SELECT idProveedor FROM proveedores WHERE nombre = '%s'" % nombre)
