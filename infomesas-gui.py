@@ -24,7 +24,8 @@ import soldini_deuda
 import generar_pendientes_jinja
 
 from functools import partial
-import pyqtgraph as pg
+# import pyqtgraph as pg
+from PyQt5.QtChart import QChart, QChartView, QBarSet, QPercentBarSeries, QBarCategoryAxis, QHorizontalBarSeries, QValueAxis
 import informe_pedidos
 
 
@@ -1147,21 +1148,37 @@ class PedidosPorMesWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        totalesFecha, totalesMes = informe_pedidos.main()
-        widget = QWidget()
-        plot = pg.plot()
-        x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        bargraph = pg.BarGraphItem(x = x, height = totalesMes, width = 0.6, brush ='g')
-        plot.addItem(bargraph)
-        layout = QGridLayout()
-        widget.setLayout(layout)
-        layout.addWidget(plot)
-        self.setCentralWidget(widget)
+        categories, totalesMes = informe_pedidos.main()
+        set0 = QBarSet("Numero de pedidos")
+        # set0.append([1, 2, 3, 4, 5, 6])
+        set0.append(totalesMes)
+        # series = QPercentBarSeries()
+        series = QHorizontalBarSeries()
+        series.append(set0)
+        chart = QChart()
+        chart.addSeries(series)
+        # chart.setTitle("Percent Example")
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+ 
+        # categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+        axisY = QBarCategoryAxis()
+        axisY.append(categories)
+        chart.addAxis(axisY, Qt.AlignLeft)
+        series.attachAxis(axisY)
+        # chart.createDefaultAxes()
+        # chart.setAxisX(series, axisY)
+        axisX = QValueAxis()
+        chart.addAxis(axisX, Qt.AlignBottom)
+        series.attachAxis(axisX)
+        axisX.applyNiceNumbers()
 
-
-
-
-
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(Qt.AlignBottom)
+ 
+        chartView = QChartView(chart)
+        chartView.setRenderHint(QPainter.Antialiasing)
+ 
+        self.setCentralWidget(chartView)        
 
 
 def llenoClientes():

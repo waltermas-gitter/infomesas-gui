@@ -57,6 +57,27 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pyqtchart"
+version = "5.15.4"
+description = "Python bindings for the Qt Charts library"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+PyQt5 = ">=5.15.4"
+PyQt5-sip = ">=12.8,<13"
+PyQtChart-Qt5 = ">=5.15"
+
+[[package]]
+name = "pyqtchart-qt5"
+version = "5.15.2"
+description = "The subset of a Qt installation needed by PyQtChart."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "pyqtgraph"
 version = "0.12.1"
 description = "Scientific Graphics and GUI Library for Python"
@@ -89,7 +110,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f3b7d4b5afd6c94f9f40ba7f8cd4914a194e925d13546567f9e3fa89cfe2088a"
+content-hash = "c21a6906462e84876656ff56507ea24ed313836f5acdfa58af565a743e93d16c"
 
 [metadata.files]
 jinja2 = [
@@ -193,6 +214,19 @@ pyqt5-sip = [
     {file = "PyQt5_sip-12.9.0-cp39-cp39-win32.whl", hash = "sha256:4f8e05fe01d54275877c59018d8e82dcdd0bc5696053a8b830eecea3ce806121"},
     {file = "PyQt5_sip-12.9.0-cp39-cp39-win_amd64.whl", hash = "sha256:b09f4cd36a4831229fb77c424d89635fa937d97765ec90685e2f257e56a2685a"},
     {file = "PyQt5_sip-12.9.0.tar.gz", hash = "sha256:d3e4489d7c2b0ece9d203ae66e573939f7f60d4d29e089c9f11daa17cfeaae32"},
+]
+pyqtchart = [
+    {file = "PyQtChart-5.15.4-cp36.cp37.cp38.cp39-abi3-macosx_10_13_intel.whl", hash = "sha256:8d231181a97a376a9ea2569f0cc19862fe2c417db8e94d23189da07453dd8816"},
+    {file = "PyQtChart-5.15.4-cp36.cp37.cp38.cp39-abi3-manylinux2014_x86_64.whl", hash = "sha256:37183d5d897a3ef21a9aac9f3136fa428a0a89d8dee3317aca0459c418ca99a1"},
+    {file = "PyQtChart-5.15.4-cp36.cp37.cp38.cp39-none-win32.whl", hash = "sha256:fd70d6ba91df1533687623fa0dc0d07a4b120c45840e193c3a86172605583493"},
+    {file = "PyQtChart-5.15.4-cp36.cp37.cp38.cp39-none-win_amd64.whl", hash = "sha256:b5063b847e2837321e93b0f7b0ff89458918fb4f513b922c0c3d1dd27a165fb3"},
+    {file = "PyQtChart-5.15.4.tar.gz", hash = "sha256:e47750632851e105eabc27fdfa8180989d120b822181e512f6643b3c5c4d8074"},
+]
+pyqtchart-qt5 = [
+    {file = "PyQtChart_Qt5-5.15.2-py3-none-macosx_10_13_intel.whl", hash = "sha256:f13973a01b312dc2e35ca40cd1dfd6720fefafb46073ad4790390f48c937dbc4"},
+    {file = "PyQtChart_Qt5-5.15.2-py3-none-manylinux2014_x86_64.whl", hash = "sha256:2528a1e04f7eb05709a38c9086e5e284dd3bb6d37f3a4f73a1e9d16d8f84789c"},
+    {file = "PyQtChart_Qt5-5.15.2-py3-none-win32.whl", hash = "sha256:4b8f9cb056e37ab75393d9bcae650de269e00ce88e3267281d6358cd0b0e14cc"},
+    {file = "PyQtChart_Qt5-5.15.2-py3-none-win_amd64.whl", hash = "sha256:eb17156e78aebde61a7016749dd0af76a092543d39cccb1df2dee9db9f888327"},
 ]
 pyqtgraph = [
     {file = "pyqtgraph-0.12.1-py3-none-any.whl", hash = "sha256:174a57300751bc41148a654d735218f3d6c76590b3107c9a43b9514294045b80"},
