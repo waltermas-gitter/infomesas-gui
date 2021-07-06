@@ -723,6 +723,7 @@ class ProductosSeguidosWindow(QMainWindow):
 
     def initUI(self):
         self.nuevoPushButton.clicked.connect(self.nuevoProducto)
+        self.salirPushButton.clicked.connect(self.close)
         self.productosSeguidosTableWidget.setColumnCount(5)
         self.productosSeguidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.productosSeguidosTableWidget.setHorizontalHeaderLabels(["ID", "Descripcion", "Fecha", "Proveedor", "Precio"])
@@ -769,6 +770,105 @@ class ProductosSeguidosWindow(QMainWindow):
         
 
 
+# class HistorialPreciosDialog(QDialog):
+#     def __init__(self, id):
+#         super().__init__()
+#         uic.loadUi("historialPrecios.ui", self)
+#         self.id = id
+#         self.initUI()
+
+#     def initUI(self):
+#         # self.dialogButtonBox.accepted.connect(self.save)
+#         self.setWindowTitle(self.id[1].text())
+#         self.historialPreciosTableWidget.setColumnCount(4)
+#         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
+#         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
+#         self.historialPreciosTableWidget.itemDoubleClicked.connect(self.editMov)
+#         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
+#         # self.dialogButtonBox.accepted.connect(self.accept)
+#         self.okPushButton.clicked.connect(self.accept)
+
+#        # lleno los items correspondientes
+        
+#         # productos = []
+#         # productos.append('[nuevo]')
+#         # while queryProductos.next():
+#         #     productos.append(queryProductos.value(1))
+#         # self.productosSeguidosComboBox.addItems(productos)
+
+#         # if self.id == 0:
+#         #     self.fechaDateEdit.setDate(QDate.currentDate())
+#         #     self.importeLineEdit.setText('0')
+#         # else:
+            
+#             # self.fechaDateEdit.setDate(dia)
+#             # self.proveedoresComboBox.setCurrentText(self.id[3].text())
+#             # self.importeLineEdit.setText(self.id[4].text())
+#             # self.descripcionLineEdit.setText(self.id[1].text())
+#             # self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
+
+#         self.cargarTabla()
+#     def editMov(self):
+#         print('edit')
+
+
+
+#     def cargarTabla(self):
+#         self.historialPreciosTableWidget.setRowCount(0)
+#         query = QSqlQuery("SELECT * FROM productosSeguidosPrecios WHERE idProducto = '%s'" % self.id[0].text())
+#         while query.next():        
+#             rows = self.historialPreciosTableWidget.rowCount()
+#             self.historialPreciosTableWidget.setRowCount(rows + 1)
+#             self.historialPreciosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+#             self.historialPreciosTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreProveedor(query.value(3))))
+#             fecha = datetime.strptime(query.value(4), "%Y-%m-%d %H:%M:%S")
+#             fechap = fecha.strftime("%d-%m-%Y")
+#             self.historialPreciosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
+#             self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
+
+#     def nuevoPrecioShow(self):
+#         # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
+#         self.nuevoPrecio = NuevoPrecioDialog(self.id)
+#         if self.nuevoPrecio.exec_() == QDialog.Accepted:
+#             self.cargarTabla()
+
+
+
+
+
+
+
+# class NuevoPrecioDialog(QDialog):
+#     def __init__(self, id):
+#         super().__init__()
+#         uic.loadUi("historialPreciosMov.ui", self)
+#         self.id = id
+#         self.initUI()
+
+#     def initUI(self):
+#         self.fechaDateEdit.setDate(QDate.currentDate())
+#         self.importeLineEdit.setText('0')
+#         proveedores = llenoProveedores()
+#         self.setWindowTitle(self.id[1].text())
+#         self.proveedoresComboBox.addItems(proveedores)
+#         # self.dialogButtonBox.accepted.connect(self.save)
+#         self.okPushButton.clicked.connect(self.save)
+#         self.cancelPushButton.clicked.connect(self.reject)
+
+
+#     def save(self):
+#         query = QSqlQuery() 
+#         query.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+#         query.bindValue(":idProducto", self.id[0].text())
+#         query.bindValue(":precio", self.importeLineEdit.text())
+#         query.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
+#         dia = self.fechaDateEdit.date().toPyDate()
+#         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+#         query.bindValue(":fecha", diaString)
+#         query.exec_()
+#         self.accept()
+
+
 class HistorialPreciosDialog(QDialog):
     def __init__(self, id):
         super().__init__()
@@ -782,11 +882,10 @@ class HistorialPreciosDialog(QDialog):
         self.historialPreciosTableWidget.setColumnCount(4)
         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
-        # self.historialPreciosTableWidget.itemDoubleClicked.connect(self.nuevoPrecioShow)
+        self.historialPreciosTableWidget.itemDoubleClicked.connect(self.editMov)
         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
         # self.dialogButtonBox.accepted.connect(self.accept)
         self.okPushButton.clicked.connect(self.accept)
-
        # lleno los items correspondientes
         
         # productos = []
@@ -824,7 +923,12 @@ class HistorialPreciosDialog(QDialog):
 
     def nuevoPrecioShow(self):
         # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
-        self.nuevoPrecio = NuevoPrecioDialog(self.id)
+        self.nuevoPrecio = NuevoPrecioDialog(0, self.id)
+        if self.nuevoPrecio.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+    def editMov(self):
+        self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems(), self.id)
         if self.nuevoPrecio.exec_() == QDialog.Accepted:
             self.cargarTabla()
 
@@ -832,27 +936,42 @@ class HistorialPreciosDialog(QDialog):
 
 
 
+
+
 class NuevoPrecioDialog(QDialog):
-    def __init__(self, id):
+    def __init__(self, tablaAnterior, id):
         super().__init__()
         uic.loadUi("historialPreciosMov.ui", self)
+        self.tablaAnterior = tablaAnterior
         self.id = id
         self.initUI()
 
     def initUI(self):
-        self.fechaDateEdit.setDate(QDate.currentDate())
-        self.importeLineEdit.setText('0')
         proveedores = llenoProveedores()
         self.setWindowTitle(self.id[1].text())
         self.proveedoresComboBox.addItems(proveedores)
-        # self.dialogButtonBox.accepted.connect(self.save)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
+
+        if self.tablaAnterior == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.importeLineEdit.setText('0')
+        else:
+            dialist = self.tablaAnterior[2].text().split('-')
+            dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
+            self.fechaDateEdit.setDate(dia)
+            self.importeLineEdit.setText(self.tablaAnterior[3].text())
+            self.proveedoresComboBox.setCurrentText(self.tablaAnterior[1].text())
+
 
 
     def save(self):
         query = QSqlQuery() 
-        query.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+        if self.tablaAnterior == 0:
+            query.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
+        else:
+            query.prepare("UPDATE productosSeguidosPrecios SET idProducto=:idProducto, precio=:precio, proveedor=:proveedor, fecha=:fecha WHERE idProductoPrecio=:idProductoPrecio")
+            query.bindValue(":idProductoPrecio", self.tablaAnterior[0].text())
         query.bindValue(":idProducto", self.id[0].text())
         query.bindValue(":precio", self.importeLineEdit.text())
         query.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
@@ -861,6 +980,12 @@ class NuevoPrecioDialog(QDialog):
         query.bindValue(":fecha", diaString)
         query.exec_()
         self.accept()
+
+
+
+
+
+
 
 class ChequesWindow(QMainWindow):
     def __init__(self):
