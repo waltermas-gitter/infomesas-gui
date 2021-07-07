@@ -67,6 +67,8 @@ class InfomesasWindow(QMainWindow):
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "cerrada", "abierta", "ancho", "Precio", "Estado", "F.entrega", "L.entrega", "Demora"])
         self.pedidosTableWidget.itemDoubleClicked.connect(self.editarPedido)
+        self.pedidosTableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.pedidosTableWidget.customContextMenuRequested.connect(self.clienteSolo)
         self.hastaDateEdit.setDate(QDate.currentDate())
         self.desdeDateEdit.dateChanged.connect(self.vistaChanged)
         self.hastaDateEdit.dateChanged.connect(self.vistaChanged)
@@ -278,6 +280,13 @@ class InfomesasWindow(QMainWindow):
     def pedidosPorMes(self):
         self.pedidosPorMes = PedidosPorMesWindow()
         self.pedidosPorMes.show()
+
+    def clienteSolo(self):
+        if self.clienteComboBox.currentText() == " [elegir]":
+            self.clienteComboBox.setCurrentText(self.pedidosTableWidget.selectedItems()[2].text())
+        else:
+            self.clienteComboBox.setCurrentText(" [elegir]")
+
 
 
 
@@ -611,7 +620,9 @@ class ClientesWindow(QMainWindow):
             rows = self.clientesTableWidget.rowCount()
             self.clientesTableWidget.setRowCount(rows + 1)
             self.clientesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            self.clientesTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreCliente(query.value(0))))
+            cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(0)))
+            cliente.setForeground(devuelvoColorCliente(cliente.text()))
+            self.clientesTableWidget.setItem(rows, 1, cliente)
             saldo = QTableWidgetItem(str(query.value(5)))
             saldo.setTextAlignment(Qt.AlignRight)
             self.clientesTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
@@ -769,106 +780,6 @@ class ProductosSeguidosWindow(QMainWindow):
 
         
 
-
-# class HistorialPreciosDialog(QDialog):
-#     def __init__(self, id):
-#         super().__init__()
-#         uic.loadUi("historialPrecios.ui", self)
-#         self.id = id
-#         self.initUI()
-
-#     def initUI(self):
-#         # self.dialogButtonBox.accepted.connect(self.save)
-#         self.setWindowTitle(self.id[1].text())
-#         self.historialPreciosTableWidget.setColumnCount(4)
-#         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-#         self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
-#         self.historialPreciosTableWidget.itemDoubleClicked.connect(self.editMov)
-#         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
-#         # self.dialogButtonBox.accepted.connect(self.accept)
-#         self.okPushButton.clicked.connect(self.accept)
-
-#        # lleno los items correspondientes
-        
-#         # productos = []
-#         # productos.append('[nuevo]')
-#         # while queryProductos.next():
-#         #     productos.append(queryProductos.value(1))
-#         # self.productosSeguidosComboBox.addItems(productos)
-
-#         # if self.id == 0:
-#         #     self.fechaDateEdit.setDate(QDate.currentDate())
-#         #     self.importeLineEdit.setText('0')
-#         # else:
-            
-#             # self.fechaDateEdit.setDate(dia)
-#             # self.proveedoresComboBox.setCurrentText(self.id[3].text())
-#             # self.importeLineEdit.setText(self.id[4].text())
-#             # self.descripcionLineEdit.setText(self.id[1].text())
-#             # self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
-
-#         self.cargarTabla()
-#     def editMov(self):
-#         print('edit')
-
-
-
-#     def cargarTabla(self):
-#         self.historialPreciosTableWidget.setRowCount(0)
-#         query = QSqlQuery("SELECT * FROM productosSeguidosPrecios WHERE idProducto = '%s'" % self.id[0].text())
-#         while query.next():        
-#             rows = self.historialPreciosTableWidget.rowCount()
-#             self.historialPreciosTableWidget.setRowCount(rows + 1)
-#             self.historialPreciosTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-#             self.historialPreciosTableWidget.setItem(rows, 1, QTableWidgetItem(devuelvoNombreProveedor(query.value(3))))
-#             fecha = datetime.strptime(query.value(4), "%Y-%m-%d %H:%M:%S")
-#             fechap = fecha.strftime("%d-%m-%Y")
-#             self.historialPreciosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
-#             self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
-
-#     def nuevoPrecioShow(self):
-#         # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
-#         self.nuevoPrecio = NuevoPrecioDialog(self.id)
-#         if self.nuevoPrecio.exec_() == QDialog.Accepted:
-#             self.cargarTabla()
-
-
-
-
-
-
-
-# class NuevoPrecioDialog(QDialog):
-#     def __init__(self, id):
-#         super().__init__()
-#         uic.loadUi("historialPreciosMov.ui", self)
-#         self.id = id
-#         self.initUI()
-
-#     def initUI(self):
-#         self.fechaDateEdit.setDate(QDate.currentDate())
-#         self.importeLineEdit.setText('0')
-#         proveedores = llenoProveedores()
-#         self.setWindowTitle(self.id[1].text())
-#         self.proveedoresComboBox.addItems(proveedores)
-#         # self.dialogButtonBox.accepted.connect(self.save)
-#         self.okPushButton.clicked.connect(self.save)
-#         self.cancelPushButton.clicked.connect(self.reject)
-
-
-#     def save(self):
-#         query = QSqlQuery() 
-#         query.prepare("INSERT INTO productosSeguidosPrecios (idProducto, precio, proveedor, fecha) VALUES (:idProducto, :precio, :proveedor, :fecha)")
-#         query.bindValue(":idProducto", self.id[0].text())
-#         query.bindValue(":precio", self.importeLineEdit.text())
-#         query.bindValue(":proveedor", devuelvoIdProveedor(self.proveedoresComboBox.currentText()))
-#         dia = self.fechaDateEdit.date().toPyDate()
-#         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-#         query.bindValue(":fecha", diaString)
-#         query.exec_()
-#         self.accept()
-
-
 class HistorialPreciosDialog(QDialog):
     def __init__(self, id):
         super().__init__()
@@ -886,25 +797,6 @@ class HistorialPreciosDialog(QDialog):
         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
         # self.dialogButtonBox.accepted.connect(self.accept)
         self.okPushButton.clicked.connect(self.accept)
-       # lleno los items correspondientes
-        
-        # productos = []
-        # productos.append('[nuevo]')
-        # while queryProductos.next():
-        #     productos.append(queryProductos.value(1))
-        # self.productosSeguidosComboBox.addItems(productos)
-
-        # if self.id == 0:
-        #     self.fechaDateEdit.setDate(QDate.currentDate())
-        #     self.importeLineEdit.setText('0')
-        # else:
-            
-            # self.fechaDateEdit.setDate(dia)
-            # self.proveedoresComboBox.setCurrentText(self.id[3].text())
-            # self.importeLineEdit.setText(self.id[4].text())
-            # self.descripcionLineEdit.setText(self.id[1].text())
-            # self.productosSeguidosComboBox.setCurrentText(self.id[1].text())
-
         self.cargarTabla()
 
 
@@ -956,6 +848,9 @@ class NuevoPrecioDialog(QDialog):
         if self.tablaAnterior == 0:
             self.fechaDateEdit.setDate(QDate.currentDate())
             self.importeLineEdit.setText('0')
+            if len(self.id) != 2:
+                self.proveedoresComboBox.setCurrentText(self.id[3].text())
+
         else:
             dialist = self.tablaAnterior[2].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
