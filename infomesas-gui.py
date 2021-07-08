@@ -310,7 +310,7 @@ class PedidoDialog(QDialog):
             self.chapaListWidget.addItem(query.value(0))
         estados = ['pendiente', 'en produccion', 'terminada', 'entregada', 'anulada']
         self.estadoListWidget.addItems(estados)
-        query = QSqlQuery("SELECT nombre FROM lugaresEntrega")
+        query = QSqlQuery("SELECT nombre FROM lugaresEntrega ORDER BY nombre")
         while query.next():
             self.lugarEntregaComboBox.addItem(query.value(0))
 
@@ -365,6 +365,10 @@ class PedidoDialog(QDialog):
 
     def cambioEstado(self):
         if self.estadoListWidget.currentItem().text() == 'entregada':
+            if self.lugarEntregaComboBox.isEnabled() == False:
+                query = QSqlQuery("SELECT lugarEntrega FROM pedidos WHERE cliente = '%s' AND lugarEntrega IS NOT NULL ORDER BY fechaEntrega" % devuelvoIdCliente(self.clienteComboBox.currentText()))
+                query.last()
+                self.lugarEntregaComboBox.setCurrentText(devuelvoNombreLugarEntrega(query.value(0)))
             self.fechaEntregaDateEdit.setEnabled(True)
             self.lugarEntregaComboBox.setEnabled(True)
         else:
@@ -1265,6 +1269,11 @@ def devuelvoNombreChapa(id):
     queryChapa =  QSqlQuery("SELECT chapa FROM chapas WHERE idChapa = '%s'" % id)
     queryChapa.first()
     return(queryChapa.value(0))
+ 
+def devuelvoNombreLugarEntrega(id):
+    queryLugarEntrega = QSqlQuery("SELECT nombre FROM lugaresEntrega WHERE idLugarEntrega = '%s'" % id)
+    queryLugarEntrega.first()
+    return(queryLugarEntrega.value(0))
  
 def mensaje(texto):
     msgBox = QMessageBox()
