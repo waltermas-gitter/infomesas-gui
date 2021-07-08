@@ -771,6 +771,8 @@ class ProductosSeguidosWindow(QMainWindow):
                 self.productosSeguidosTableWidget.setItem(rows, 4, precioItem)
         
         self.productosSeguidosTableWidget.resizeColumnsToContents()
+        self.filtroLineEdit.setFocus()
+
         
     def nuevoProducto(self):
         descripcion, okPressed = QInputDialog.getText(self, "Nuevo producto","Descripcion", QLineEdit.Normal, "")

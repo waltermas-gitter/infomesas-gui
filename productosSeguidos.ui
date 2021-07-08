@@ -115,6 +115,12 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>filtroLineEdit</tabstop>
+  <tabstop>nuevoPushButton</tabstop>
+  <tabstop>salirPushButton</tabstop>
+  <tabstop>productosSeguidosTableWidget</tabstop>
+ </tabstops>
  <resources>
   <include location="iconosResource.qrc"/>
  </resources>
