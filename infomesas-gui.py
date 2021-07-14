@@ -55,6 +55,7 @@ class InfomesasWindow(QMainWindow):
     def initUI(self):
         self.actionSalir.triggered.connect(self.close)
         self.actionImprimirPendientes.triggered.connect(self.imprimirPendientes)
+        self.actionImprimirVistaActual.triggered.connect(self.imprimirVistaActual)
         self.actionPedidosPorMes.triggered.connect(self.pedidosPorMes)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
@@ -276,6 +277,28 @@ class InfomesasWindow(QMainWindow):
             texto = texto + lineaPendiente
         self.pendientesWindow = PrintingWindow(texto)
         self.pendientesWindow.show()
+
+    def imprimirVistaActual(self):
+        texto = ''
+        for row in range(0, self.pedidosTableWidget.rowCount()):
+            texto += str(row +1) + '- '
+            texto += self.pedidosTableWidget.item(row, 1).text() + ' '
+            texto += self.pedidosTableWidget.item(row, 2).text() + ' '
+            texto += self.pedidosTableWidget.item(row, 3).text() + ' '
+            texto += self.pedidosTableWidget.item(row, 4).text() + ' ['
+            texto += self.pedidosTableWidget.item(row, 6).text() + '-'
+            texto += self.pedidosTableWidget.item(row, 7).text() + '*'
+            texto += self.pedidosTableWidget.item(row, 8).text() + '] '
+            texto += self.pedidosTableWidget.item(row, 5).text() + ' ['
+            texto += self.pedidosTableWidget.item(row, 9).text() + '] '
+            texto += self.pedidosTableWidget.item(row, 10).text() 
+            texto += '\n'
+
+        self.pendientesWindow = PrintingWindow(texto)
+        self.pendientesWindow.show()
+
+
+
 
     def pedidosPorMes(self):
         self.pedidosPorMes = PedidosPorMesWindow()

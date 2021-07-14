@@ -353,6 +353,7 @@
     <property name="title">
      <string>Informes</string>
     </property>
+    <addaction name="actionImprimirVistaActual"/>
     <addaction name="actionImprimirPendientes"/>
     <addaction name="actionPedidosPorMes"/>
    </widget>
@@ -373,6 +374,11 @@
   <action name="actionPedidosPorMes">
    <property name="text">
     <string>Pedidos por mes</string>
+   </property>
+  </action>
+  <action name="actionImprimirVistaActual">
+   <property name="text">
+    <string>Imprimir vista actual</string>
    </property>
   </action>
  </widget>

@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <property name="rightMargin">
+     <number>20</number>
+    </property>
     <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
