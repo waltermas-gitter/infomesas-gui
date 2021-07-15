@@ -778,7 +778,7 @@ class ProductosSeguidosWindow(QMainWindow):
     def cargarTabla(self):
         self.productosSeguidosTableWidget.setRowCount(0)
         filtro = "%" + self.filtroLineEdit.text() + "%"
-        print(filtro)
+        # print(filtro)
         query = QSqlQuery("SELECT * FROM productosSeguidos WHERE descripcion LIKE '%s' ORDER BY descripcion ASC" % filtro)
         while query.next():        
             rows = self.productosSeguidosTableWidget.rowCount()
@@ -819,9 +819,9 @@ class HistorialPreciosDialog(QDialog):
     def initUI(self):
         # self.dialogButtonBox.accepted.connect(self.save)
         self.setWindowTitle(self.id[1].text())
-        self.historialPreciosTableWidget.setColumnCount(4)
+        self.historialPreciosTableWidget.setColumnCount(5)
         self.historialPreciosTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio"])
+        self.historialPreciosTableWidget.setHorizontalHeaderLabels(["ID", "Proveedor", "Fecha", "Precio", "Dif"])
         self.historialPreciosTableWidget.itemDoubleClicked.connect(self.editMov)
         self.nuevoPushButton.clicked.connect(self.nuevoPrecioShow)
         # self.dialogButtonBox.accepted.connect(self.accept)
@@ -841,6 +841,12 @@ class HistorialPreciosDialog(QDialog):
             fechap = fecha.strftime("%d-%m-%Y")
             self.historialPreciosTableWidget.setItem(rows, 2, QTableWidgetItem(fechap))
             self.historialPreciosTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(2))))
+            if rows > 0:
+                precioAnterior = int(self.historialPreciosTableWidget.item(rows-1, 3).text())
+                precioActual = int(self.historialPreciosTableWidget.item(rows, 3).text())
+                porcentaje = (precioActual * 100 / precioAnterior) - 100
+                self.historialPreciosTableWidget.setItem(rows, 4, QTableWidgetItem(str(round(porcentaje, 2))))
+
 
     def nuevoPrecioShow(self):
         # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())

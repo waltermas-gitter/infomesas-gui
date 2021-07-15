@@ -26,7 +26,7 @@ def main():
     #     print()
         precios.append((nombreProducto[0][1], precioMaximo[2]))
 
-
+    precios.sort()
     html_template_string = template.render(precios=precios)
     precios_file = open("precios.html", 'w').write(html_template_string)
 
