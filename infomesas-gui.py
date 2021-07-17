@@ -320,33 +320,31 @@ class InfomesasWindow(QMainWindow):
         query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
         fechaDT = datetime.strptime(self.pedidosTableWidget.selectedItems()[1].text(), "%d-%m-%Y")
         diaString = datetime.strftime(fechaDT, "%Y-%m-%d %H:%M:%S")
-        print(diaString)
-
-        # query.bindValue(":fecha", diaString)
-        # query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
-        # modelo = self.modeloListWidget.currentItem().text()
-        # queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
-        # queryModelo.first()
-        # query.bindValue(":modelo", queryModelo.value(0))
-        # chapa = self.chapaListWidget.currentItem().text()
-        # queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
-        # queryChapa.first()
-        # query.bindValue(":chapa", queryChapa.value(0))
-        # query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
-        # query.bindValue(":medidaCerrada", self.medidaCerradaSpinBox.value())
-        # query.bindValue(":medidaAbierta", self.medidaAbiertaSpinBox.value())
-        # query.bindValue(":medidaAncho", self.anchoSpinBox.value())
-        # query.bindValue(":precio", int(self.precioLineEdit.text()))
-        # query.bindValue(":estado", self.estadoListWidget.currentItem().text())
-        # if self.fechaEntregaDateEdit.isEnabled() == True:
-        #     dia = self.fechaEntregaDateEdit.date().toPyDate()
-        #     diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        #     query.bindValue(":fechaEntrega", diaString)
-        #     queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.lugarEntregaComboBox.currentText())
-        #     queryEntrega.first()
-        #     query.bindValue(":lugarEntrega", queryEntrega.value(0))
-        # query.exec_()
-
+        query.bindValue(":fecha", diaString)
+        query.bindValue(":cliente", devuelvoIdCliente(self.pedidosTableWidget.selectedItems()[2].text()))
+        modelo = self.pedidosTableWidget.selectedItems()[3].text()
+        queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
+        queryModelo.first()
+        query.bindValue(":modelo", queryModelo.value(0))
+        chapa = self.pedidosTableWidget.selectedItems()[4].text()
+        queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
+        queryChapa.first()
+        query.bindValue(":chapa", queryChapa.value(0))
+        query.bindValue(":notas", self.pedidosTableWidget.selectedItems()[5].text())
+        query.bindValue(":medidaCerrada", self.pedidosTableWidget.selectedItems()[6].text())
+        query.bindValue(":medidaAbierta", self.pedidosTableWidget.selectedItems()[7].text())
+        query.bindValue(":medidaAncho", self.pedidosTableWidget.selectedItems()[8].text())
+        query.bindValue(":precio", int(self.pedidosTableWidget.selectedItems()[9].text()))
+        query.bindValue(":estado", self.pedidosTableWidget.selectedItems()[10].text())
+        if self.pedidosTableWidget.selectedItems()[11].text() != '':
+            fechaDT = datetime.strptime(self.pedidosTableWidget.selectedItems()[11].text(), "%d-%m-%Y")
+            diaString = datetime.strftime(fechaDT, "%Y-%m-%d %H:%M:%S")
+            query.bindValue(":fechaEntrega", diaString)
+            queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.pedidosTableWidget.selectedItems()[12].text())
+            queryEntrega.first()
+            query.bindValue(":lugarEntrega", queryEntrega.value(0))
+        query.exec_()
+        self.vistaChanged()
 
 
 
@@ -708,6 +706,12 @@ class Movimiento(QDialog):
         self.initUI()
 
     def initUI(self):
+        self.pagoPushButton.clicked.connect(self.pago)
+        if self.esProveedor == True:
+            self.setWindowTitle(devuelvoNombreProveedor(self.provId))
+        else:
+            self.setWindowTitle(devuelvoNombreCliente(self.provId))
+
         # lleno los items correspondientes
         # id = 0 implica nuevo pedido
         if self.id == 0:
@@ -784,6 +788,13 @@ class Movimiento(QDialog):
                 saldo += queryImportes.value(0)
             queryProveedor = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, self.provId))
         self.accept()
+        
+    def pago(self):
+        self.haberRadioButton.setChecked(True)
+        self.conceptoLineEdit.setText("pago")
+        self.importeLineEdit.setFocus()
+        self.importeLineEdit.selectAll()
+
 
 
  
