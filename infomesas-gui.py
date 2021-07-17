@@ -57,6 +57,7 @@ class InfomesasWindow(QMainWindow):
         self.actionImprimirPendientes.triggered.connect(self.imprimirPendientes)
         self.actionImprimirVistaActual.triggered.connect(self.imprimirVistaActual)
         self.actionPedidosPorMes.triggered.connect(self.pedidosPorMes)
+        self.actionDuplicarPedido.triggered.connect(self.duplicarPedido)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -309,6 +310,42 @@ class InfomesasWindow(QMainWindow):
             self.clienteComboBox.setCurrentText(self.pedidosTableWidget.selectedItems()[2].text())
         else:
             self.clienteComboBox.setCurrentText(" [elegir]")
+
+    def duplicarPedido(self):
+        if len(self.pedidosTableWidget.selectedItems()) == 0:
+            mensaje('no hay pedido seleccionado')
+            return()
+
+        query = QSqlQuery()
+        query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
+        fechaDT = datetime.strptime(self.pedidosTableWidget.selectedItems()[1].text(), "%d-%m-%Y")
+        diaString = datetime.strftime(fechaDT, "%Y-%m-%d %H:%M:%S")
+        print(diaString)
+
+        # query.bindValue(":fecha", diaString)
+        # query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
+        # modelo = self.modeloListWidget.currentItem().text()
+        # queryModelo = QSqlQuery("SELECT idModelo FROM modelos WHERE modelo = '%s'" % modelo)
+        # queryModelo.first()
+        # query.bindValue(":modelo", queryModelo.value(0))
+        # chapa = self.chapaListWidget.currentItem().text()
+        # queryChapa = QSqlQuery("SELECT idChapa FROM chapas WHERE chapa = '%s'" % chapa)
+        # queryChapa.first()
+        # query.bindValue(":chapa", queryChapa.value(0))
+        # query.bindValue(":notas", self.notasPlainTextEdit.toPlainText())
+        # query.bindValue(":medidaCerrada", self.medidaCerradaSpinBox.value())
+        # query.bindValue(":medidaAbierta", self.medidaAbiertaSpinBox.value())
+        # query.bindValue(":medidaAncho", self.anchoSpinBox.value())
+        # query.bindValue(":precio", int(self.precioLineEdit.text()))
+        # query.bindValue(":estado", self.estadoListWidget.currentItem().text())
+        # if self.fechaEntregaDateEdit.isEnabled() == True:
+        #     dia = self.fechaEntregaDateEdit.date().toPyDate()
+        #     diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        #     query.bindValue(":fechaEntrega", diaString)
+        #     queryEntrega = QSqlQuery("SELECT idLugarEntrega FROM lugaresEntrega WHERE nombre = '%s'" % self.lugarEntregaComboBox.currentText())
+        #     queryEntrega.first()
+        #     query.bindValue(":lugarEntrega", queryEntrega.value(0))
+        # query.exec_()
 
 
 

@@ -357,8 +357,15 @@
     <addaction name="actionImprimirPendientes"/>
     <addaction name="actionPedidosPorMes"/>
    </widget>
+   <widget class="QMenu" name="menuUtilidades">
+    <property name="title">
+     <string>Utilidades</string>
+    </property>
+    <addaction name="actionDuplicarPedido"/>
+   </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuInformes"/>
+   <addaction name="menuUtilidades"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSalir">
@@ -379,6 +386,11 @@
   <action name="actionImprimirVistaActual">
    <property name="text">
     <string>Imprimir vista actual</string>
+   </property>
+  </action>
+  <action name="actionDuplicarPedido">
+   <property name="text">
+    <string>Duplicar pedido</string>
    </property>
   </action>
  </widget>
