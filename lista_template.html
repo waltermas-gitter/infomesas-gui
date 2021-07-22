@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/infomesasicon.png">
+<style>
+
+</style>
+</head>
+<body>
+
+<table>
+	{% for medida in nro100 %}
+	<tr>
+		{% for item in medida %}
+		<td>
+				{{ item }}
+			</td>
+		{% endfor %}
+    	</tr>
+  {% endfor %}
+
+
+</table>
+</body>
+</html>
+
