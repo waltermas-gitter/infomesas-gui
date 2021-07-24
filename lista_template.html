@@ -3,12 +3,38 @@
 <head>
 <link rel="icon" type="image/png" sizes="32x32" href="icons/infomesasicon.png">
 <style>
+	table, th, td {
+	  border-spacing: 20px 0;
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	  text-align: center;
+	}
+	p {
+	margin-bottom: 2px;
+	margin-top: 2px;
+	}
+.two-columns {
+    -webkit-column-count: 2;
+	}
 
 </style>
 </head>
 <body>
+	<div class="two-columns">
+<p>https://facebook.com/mesasmastrangelo</p>
+<p>LISTA DE PRECIOS 05/2021</p>
+<p>J.D.Peron 1283. Fabrica Gral. López 610. VGG</p>
+<p>Te: (0341)4921690 Cel: (0341)156627943</p>
+	</div>
+	</br>
 
-<table>
+
+<table style="width:30%">
+	<tr> 
+	<th>Nro 100 - Cubo</th>
+	<th>Fija</th>
+	<th>Trampa</th>
+	</tr>
 	{% for medida in nro100 %}
 	<tr>
 		{% for item in medida %}
@@ -18,6 +44,29 @@
 		{% endfor %}
     	</tr>
   {% endfor %}
+</table>
+</br>
+
+<table style="width:30%">
+	<tr> 
+	<th>Recta</th>
+	<th>Fija</th>
+	<th>Trampa</th>
+	</tr>
+	{% for medida in recta %}
+	<tr>
+		{% for item in medida %}
+		<td>
+			{% if item == None %}
+			&nbsp;
+			{% else %}
+				{{ item }}
+			{% endif %}
+			</td>
+		{% endfor %}
+    	</tr>
+  {% endfor %}
+
 
 
 </table>

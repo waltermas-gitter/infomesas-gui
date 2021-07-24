@@ -17,8 +17,13 @@ def main():
     nro100 = []
     for item in data:
         nro100.append((item[2], item[3], item[4]))
-    html_template_string = template.render(nro100=nro100)
-# print(html_template_string)
+    cur.execute("SELECT * from precios2 WHERE modelo='recta'")
+    data = cur.fetchall()
+    recta = []
+    for item in data:
+       recta.append((item[2], item[3], item[4]))
+    html_template_string = template.render(nro100=nro100, recta=recta)
+    # print(html_template_string)
 
     modelos_file = open("lista.html", 'w').write(html_template_string)
     
