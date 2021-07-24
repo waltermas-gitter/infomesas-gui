@@ -22,8 +22,29 @@ def main():
     recta = []
     for item in data:
        recta.append((item[2], item[3], item[4]))
-    html_template_string = template.render(nro100=nro100, recta=recta)
+    cur.execute("SELECT * from precios2 WHERE modelo='redonda'")
+    data = cur.fetchall()
+    redonda = []
+    for item in data:
+        redonda.append((item[2], item[3], item[4]))
+
+    cur.execute("SELECT * from precios2 WHERE modelo='escandinava' OR modelo='escandinava redonda'")
+    data = cur.fetchall()
+    escandinava = []
+    for item in data:
+       escandinava.append((item[2], item[3], item[4]))
+    # redonda.append((data[0][2], data[0][3], data[0][4]))
+
+    cur.execute("SELECT * from precios2 WHERE modelo='ratona' OR modelo='ratona escandinava'")
+    data = cur.fetchall()
+    ratona = []
+    for item in data:
+       ratona.append((item[2], item[3], item[4]))
+    # redonda.append((data[0][2], data[0][3], data[0][4]))
+ 
+    html_template_string = template.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona)
     # print(html_template_string)
+
 
     modelos_file = open("lista.html", 'w').write(html_template_string)
     

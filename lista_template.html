@@ -26,6 +26,7 @@
 <p>J.D.Peron 1283. Fabrica Gral. López 610. VGG</p>
 <p>Te: (0341)4921690 Cel: (0341)156627943</p>
 	</div>
+<p>ENCHAPADO EN ROBLE O CAOBA 10% MAS SOBRE LISTA</p>
 	</br>
 
 
@@ -66,10 +67,71 @@
 		{% endfor %}
     	</tr>
   {% endfor %}
-
-
-
 </table>
+  </br>
+
+<table style="width:30%">
+	<tr> 
+	<th>Redonda</th>
+	<th>Fija</th>
+	<th>Trampa</th>
+	</tr>
+	{% for medida in redonda %}
+	<tr>
+		{% for item in medida %}
+		<td>
+				{{ item }}
+			</td>
+		{% endfor %}
+    	</tr>
+	  {% endfor %}
+</table>
+</br>
+
+<table style="width:30%">
+	<tr> 
+	<th>Escandinava</th>
+	<th>Fija</th>
+	<th>Trampa</th>
+	</tr>
+	{% for medida in escandinava %}
+	<tr>
+		{% for item in medida %}
+		<td>
+			{% if item == None %}
+			&nbsp;
+			{% else %}
+				{{ item }}
+			{% endif %}
+			</td>
+		{% endfor %}
+    	</tr>
+  {% endfor %}
+</table>
+  </br>
+
+<table style="width:30%">
+	<tr> 
+	<th>Ratona</th>
+	<th>Fija</th>
+	<th>Trampa</th>
+	</tr>
+	{% for medida in ratona %}
+	<tr>
+		{% for item in medida %}
+		<td>
+			{% if item == None %}
+			&nbsp;
+			{% else %}
+				{{ item }}
+			{% endif %}
+			</td>
+		{% endfor %}
+    	</tr>
+  {% endfor %}
+</table>
+</br>
+
 </body>
 </html>
 

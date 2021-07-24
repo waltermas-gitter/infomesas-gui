@@ -1,0 +1,43 @@
+nro 100 - cubo 140*85 16600 13400
+nro 100 - cubo 160*85 17500 13900
+nro 100 - cubo 180*90 18400 14800
+nro 100 - cubo 200*90 19300 15600
+nro 100 - cubo 220*90 20400 16300
+recta 120*80 16600 13400
+recta 140*85 17500 14200
+recta 160*85 18400 15000
+recta 180*85 19300 15600
+recta 200*90 20400 16300
+recta 220*90 21300 17200
+recta 120*120 18300 14900
+recta 130*130 20400 16300
+recta 140*140  18100
+ con vidrios 2800 
+ con patas 10*10 3500 
+redonda 120 17200 13700
+moderna 120*80  13400
+moderna 140*85  14200
+moderna 160*85  15000
+moderna 180*85  15600
+moderna 200*90  16300
+moderna 220*90  17200
+moderna 120*120  14900
+moderna 130*130  16300
+moderna 140*140  18100
+escandinava 120*80  12000
+escandinava 140*85  12600
+escandinava 160*85  13100
+escandinava 180*85  14000
+escandinava 200*90  14700
+escandinava 220*90  15500
+escandinava redonda 120  14300
+ratona 80*60  5200 
+dressoire 100*30*90(alto)  8700 
+mesa lampara  4100 
+escandinava 60cm  3400 
+
+pata 120 8000
+pata 140 8500
+pata 160 9000
+pata 180 9500
+pata 140*140 10600
