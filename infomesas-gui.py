@@ -58,6 +58,9 @@ class InfomesasWindow(QMainWindow):
         self.actionImprimirVistaActual.triggered.connect(self.imprimirVistaActual)
         self.actionPedidosPorMes.triggered.connect(self.pedidosPorMes)
         self.actionDuplicarPedido.triggered.connect(self.duplicarPedido)
+        self.actionListaPrecios.triggered.connect(self.listaPrecios)
+        self.actionAumentar.triggered.connect(self.aumentar)
+
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -300,6 +303,31 @@ class InfomesasWindow(QMainWindow):
 
 
 
+    def listaPrecios(self):
+        texto = open("ultimalista.txt", "r").read()
+        self.listaWindow = PrintingWindow(texto)
+        self.listaWindow.show()
+
+    def aumentar(self):
+        porcentaje, ok = QInputDialog.getText(self, 'Aumento', 'Ingresa el porcentaje')
+        if ok:
+            porcentaje = int(porcentaje)/100 + 1
+            query = QSqlQuery("SELECT * FROM precios2")
+            while query.next():
+                if query.value(3):
+                    nuevoPrecio = int(round(query.value(3) * porcentaje, -2))
+                    print(nuevoPrecio)
+                    queryPrecio = QSqlQuery("UPDATE precios2 SET trampa='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
+
+                if query.value(4):
+                    nuevoPrecio = int(round(query.value(4) * porcentaje, -2))
+                    print(nuevoPrecio)
+                    queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
+
+
+
+
+
 
     def pedidosPorMes(self):
         self.pedidosPorMes = PedidosPorMesWindow()
@@ -528,6 +556,8 @@ class PedidoDialog(QDialog):
                 filtradoLista.append(item)
         filtradoString = ''.join(filtradoLista)
         self.listaPlainTextEdit.setPlainText(filtradoString)
+
+
         
             
 

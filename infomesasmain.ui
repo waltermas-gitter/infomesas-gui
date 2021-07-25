@@ -363,9 +363,17 @@
     </property>
     <addaction name="actionDuplicarPedido"/>
    </widget>
+   <widget class="QMenu" name="menuLista">
+    <property name="title">
+     <string>Lista</string>
+    </property>
+    <addaction name="actionListaPrecios"/>
+    <addaction name="actionAumentar"/>
+   </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuInformes"/>
    <addaction name="menuUtilidades"/>
+   <addaction name="menuLista"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSalir">
@@ -391,6 +399,16 @@
   <action name="actionDuplicarPedido">
    <property name="text">
     <string>Duplicar pedido</string>
+   </property>
+  </action>
+  <action name="actionListaPrecios">
+   <property name="text">
+    <string>Lista de precios</string>
+   </property>
+  </action>
+  <action name="actionAumentar">
+   <property name="text">
+    <string>Aumentar</string>
    </property>
   </action>
  </widget>

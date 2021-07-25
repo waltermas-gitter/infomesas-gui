@@ -8,7 +8,7 @@ import os
 def main():
     conn = sqlite3.connect('infomesas.db')
     cur = conn.cursor()
-    ultima_lista_file = open("ultimalista.txt", "w")
+    ultima_lista_file = open("ultimalista.txt", "a")
     cur.execute("SELECT * from precios2")
     data = cur.fetchall()
     for item in data:
