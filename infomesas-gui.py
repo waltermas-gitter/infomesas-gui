@@ -60,6 +60,8 @@ class InfomesasWindow(QMainWindow):
         self.actionDuplicarPedido.triggered.connect(self.duplicarPedido)
         self.actionListaPrecios.triggered.connect(self.listaPrecios)
         self.actionAumentar.triggered.connect(self.aumentar)
+        self.actionListaHtml.triggered.connect(self.listaHtml)
+        self.actionAbrirDB.triggered.connect(self.abrirDB)
 
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
@@ -324,8 +326,12 @@ class InfomesasWindow(QMainWindow):
                     print(nuevoPrecio)
                     queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
 
+    def listaHtml(self):
+        os.system("opera lista.html &")
+        # llamar a genera_lista_jinja.py cuando este el mes
 
-
+    def abrirDB(self):
+        os.system("xdg-open infomesas.db &")
 
 
 
@@ -970,6 +976,7 @@ class NuevoPrecioDialog(QDialog):
             self.fechaDateEdit.setDate(dia)
             self.importeLineEdit.setText(self.tablaAnterior[3].text())
             self.proveedoresComboBox.setCurrentText(self.tablaAnterior[1].text())
+        self.importeLineEdit.setFocus()
 
 
 
@@ -1214,6 +1221,7 @@ class NotaDialog(QDialog):
         self.initUI()
 
     def initUI(self):
+        self.guardarPushButton.setShortcut("Ctrl+Return")
         if self.id == 0:
             self.tituloLineEdit.setText("nueva nota")
         else:

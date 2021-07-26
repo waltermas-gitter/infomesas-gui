@@ -362,6 +362,7 @@
      <string>Utilidades</string>
     </property>
     <addaction name="actionDuplicarPedido"/>
+    <addaction name="actionAbrirDB"/>
    </widget>
    <widget class="QMenu" name="menuLista">
     <property name="title">
@@ -369,6 +370,7 @@
     </property>
     <addaction name="actionListaPrecios"/>
     <addaction name="actionAumentar"/>
+    <addaction name="actionListaHtml"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuInformes"/>
@@ -409,6 +411,16 @@
   <action name="actionAumentar">
    <property name="text">
     <string>Aumentar</string>
+   </property>
+  </action>
+  <action name="actionListaHtml">
+   <property name="text">
+    <string>Lista html</string>
+   </property>
+  </action>
+  <action name="actionAbrirDB">
+   <property name="text">
+    <string>Abrir base de datos</string>
    </property>
   </action>
  </widget>
