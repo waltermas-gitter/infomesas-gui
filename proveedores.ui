@@ -21,6 +21,9 @@
     <property name="rightMargin">
      <number>20</number>
     </property>
+    <property name="bottomMargin">
+     <number>20</number>
+    </property>
     <item>
      <widget class="QTableWidget" name="proveedoresTableWidget">
       <property name="editTriggers">
@@ -48,6 +51,9 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">

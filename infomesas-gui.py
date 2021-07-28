@@ -450,9 +450,8 @@ class PedidoDialog(QDialog):
         self.filterListaLineEdit.textChanged.connect(self.mostrarLista)
         # self.precioLineEdit.returnPressed.connect(self.calcular)
         self.calcularPushButton.clicked.connect(self.calcular)
-
         self.ultimaLista=open('ultimalista.txt').readlines()
-        # self.mostrarLista()
+        self.pasarAccPushButton.clicked.connect(self.pasarAcc)
 
 
     def cambioEstado(self):
@@ -563,9 +562,25 @@ class PedidoDialog(QDialog):
         filtradoString = ''.join(filtradoLista)
         self.listaPlainTextEdit.setPlainText(filtradoString)
 
+    def pasarAcc(self):
+        query = QSqlQuery()
+        query.prepare("INSERT INTO cuentasCorrientes (cliente, fecha, concepto, importe) VALUES (:cliente, :fecha, :concepto, :importe)")
+        query.bindValue(":cliente", devuelvoIdCliente(self.clienteComboBox.currentText()))
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+        concepto = "%s %s %s %s %s" % (self.modeloListWidget.currentItem().text(), self.chapaListWidget.currentItem().text(), self.medidaCerradaSpinBox.value(), self.medidaAbiertaSpinBox.value(), self.anchoSpinBox.value())
+        query.bindValue(":concepto", concepto)
+        query.bindValue(":importe", int(self.precioLineEdit.text()))
+        query.exec_()
+        #actualizo saldo en tabla clientes
+        queryImportes = QSqlQuery("SELECT importe FROM cuentasCorrientes WHERE cliente = '%s'" % devuelvoIdCliente(self.clienteComboBox.currentText()))
+        saldo = 0
+        while queryImportes.next():
+            saldo += queryImportes.value(0)
+        queryCliente = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, devuelvoIdCliente(self.clienteComboBox.currentText())))
 
-        
-            
+ 
 
 
 class SumasSaldosDialog(QDialog):
