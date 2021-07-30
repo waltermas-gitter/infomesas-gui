@@ -449,6 +449,7 @@ class PedidoDialog(QDialog):
         self.cancelPushButton.clicked.connect(self.reject)
         self.filterListaLineEdit.textChanged.connect(self.mostrarLista)
         # self.precioLineEdit.returnPressed.connect(self.calcular)
+        self.calcularPushButton.setShortcut("Ctrl+Return")
         self.calcularPushButton.clicked.connect(self.calcular)
         self.ultimaLista=open('ultimalista.txt').readlines()
         self.pasarAccPushButton.clicked.connect(self.pasarAcc)
@@ -467,7 +468,7 @@ class PedidoDialog(QDialog):
             self.lugarEntregaComboBox.setEnabled(False)
  
     def calcular(self):
-        res = eval(self.precioLineEdit.text())
+        res = round(eval(self.precioLineEdit.text()))
         self.precioLineEdit.setText(str(res))
         
     # def keyPressEvent(self, event):     
@@ -579,8 +580,8 @@ class PedidoDialog(QDialog):
         while queryImportes.next():
             saldo += queryImportes.value(0)
         queryCliente = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, devuelvoIdCliente(self.clienteComboBox.currentText())))
+        reply = QMessageBox.information(self, 'Confirmacion', 'Se ha actualizado cuentas corrientes',  QMessageBox.Ok)
 
- 
 
 
 class SumasSaldosDialog(QDialog):
