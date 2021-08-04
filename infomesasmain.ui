@@ -371,6 +371,7 @@
     <addaction name="actionListaPrecios"/>
     <addaction name="actionAumentar"/>
     <addaction name="actionListaHtml"/>
+    <addaction name="actionPresupuestosHtml"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuInformes"/>
@@ -421,6 +422,11 @@
   <action name="actionAbrirDB">
    <property name="text">
     <string>Abrir base de datos</string>
+   </property>
+  </action>
+  <action name="actionPresupuestosHtml">
+   <property name="text">
+    <string>Presupuestos html</string>
    </property>
   </action>
  </widget>

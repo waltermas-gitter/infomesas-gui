@@ -62,7 +62,7 @@ class InfomesasWindow(QMainWindow):
         self.actionAumentar.triggered.connect(self.aumentar)
         self.actionListaHtml.triggered.connect(self.listaHtml)
         self.actionAbrirDB.triggered.connect(self.abrirDB)
-
+        self.actionPresupuestosHtml.triggered.connect(self.presupuestosHtml)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -329,6 +329,8 @@ class InfomesasWindow(QMainWindow):
     def listaHtml(self):
         os.system("opera lista.html &")
         # llamar a genera_lista_jinja.py cuando este el mes
+    def presupuestosHtml(self):
+        os.system("opera https://drive.google.com/file/d/1yGTNuvgv2nC_jddTfmd-MrzfYJaWRDUV/view?usp=sharing &")
 
     def abrirDB(self):
         os.system("xdg-open infomesas.db &")
