@@ -94,6 +94,8 @@ class InfomesasWindow(QMainWindow):
         self.soloTerminadasPushButton.clicked.connect(partial(self.solo, self.terminadasCheckBox))
         self.soloEntregadasPushButton.clicked.connect(partial(self.solo, self.entregadasCheckBox))
         self.soloAnuladasPushButton.clicked.connect(partial(self.solo, self.anuladasCheckBox))
+        self.pedidosTableWidget.horizontalHeader().sectionClicked.connect(self.onHeaderClicked)
+        # self.pedidosTableWidget.setSortingEnabled(True)
 
         # lleno pedidosTableWidget
         # self.visualizarQuery("SELECT * FROM pedidos")
@@ -381,6 +383,13 @@ class InfomesasWindow(QMainWindow):
             query.bindValue(":lugarEntrega", queryEntrega.value(0))
         query.exec_()
         self.vistaChanged()
+
+
+    def onHeaderClicked(self, indice):
+        self.pedidosTableWidget.sortItems(indice, Qt.AscendingOrder)
+
+
+
 
 
 
