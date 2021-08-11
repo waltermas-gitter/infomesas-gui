@@ -29,6 +29,7 @@ from PyQt5.QtChart import QChart, QChartView, QBarSet, QPercentBarSeries, QBarCa
 import informe_pedidos
 
 
+
 # Create the connection
 con = QSqlDatabase.addDatabase("QSQLITE")
 con.setDatabaseName("infomesas.db")
