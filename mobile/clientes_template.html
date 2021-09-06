@@ -2,8 +2,26 @@
 <html>
 <head>
 <link rel="icon" type="image/png" sizes="32x32" href="../icons/infomesasicon.png">
+
+<style> 
+p {
+	text-align: center;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+
 	{% for cliente in clientes %}
-	<p>{{cliente}}</p>
+	<p><a class="button" href="https://waltermas-gitter.github.io/infomesas-gui/">{{cliente}}</a></p>
 		{% endfor %}
 </body>
 </html>
