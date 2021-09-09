@@ -25,8 +25,24 @@ p {
 <p style = "font-size:90px; text-align:center;">{{ cliente }}</p>
 	{% for pedido in pedidos %}
 	<p style = "font-size:60px;">{{ pedido[0] }} </p>
-	<p style = "font-size:60px;">{{ pedido[1] pedido[2]}} </p>
+	<p style = "font-size:60px;">{{ pedido[1] }} {{ pedido[2] }} </p>
+	<p style = "font-size:60px;">{{ pedido[4] }} - {{ pedido[5] }} * {{ pedido[6] }}</p>
+	<p style = "font-size:50px;">{{ pedido[3] }} </p>
+	<p style = "font-size:50px;">{{ pedido[7] }} </p>
+
+	{% if pedido[8] == 'en produccion' %}
+		<p style = "font-size:60px; color:brown;">{{ pedido[8] }} </p>
+	{% elif pedido[8] == 'pendiente' %}
+		<p style = "font-size:60px; color:green;">{{ pedido[8] }} </p>
+	{% elif pedido[8] == 'terminada' %}
+		<p style = "font-size:60px; color:yellow;">{{ pedido[8] }} </p>
+	{% else %}
+	<p style = "font-size:60px;">{{ pedido[8] }} {{ pedido[9] }} {{ pedido[10] }} </p>
+	{% endif %}
+
+	<!-- <p style = "font-size:50px;">-  -  -  -  -  - </p> -->
 	<hr>
+	<p> </p>
 	{% endfor %}
 </body>
 </html>
