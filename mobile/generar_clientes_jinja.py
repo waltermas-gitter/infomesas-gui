@@ -14,8 +14,7 @@ def main():
     clientes = []
     data = cur.fetchall()
     for item in data:
-        clientes.append(item[1])
-        print(item[1])
+        clientes.append((item[1], "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % item[1].replace(' ', '-')))
 
     html_template_string = template.render(clientes=clientes)
     # print(html_template_string)

@@ -24,7 +24,7 @@ p {
 </style>
 
 	{% for cliente in clientes %}
-	<p><a class="button" href="https://waltermas-gitter.github.io/infomesas-gui/">{{cliente}}</a></p>
+	<p><a class="button" href={{cliente[1]}}>{{cliente[0]}}</a></p>
 		{% endfor %}
 </body>
 </html>

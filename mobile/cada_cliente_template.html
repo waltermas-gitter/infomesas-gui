@@ -4,31 +4,45 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../icons/infomesasicon.png">
 
 <style> 
-p {
+.fecha {
+	background-color: blue;
+	color: white;
+	font-size:60px;
+	display: inline-block;
+}
+.texto {
 	font-family: Palatino;
-	<!-- font-size: 120; -->
-	<!-- text-align: center; -->
+	font-size: 60px;
 }
 
-<!-- .button { -->
-<!--   background-color: #4CAF50; /* Green */ -->
-<!--   border: none; -->
-<!--   color: white; -->
-<!--   padding: 15px 32px; -->
-<!--   text-align: center; -->
-<!--   text-decoration: none; -->
-<!--   display: inline-block; -->
-<!--   margin: 4px 2px; -->
-<!--   cursor: pointer; -->
+.button {
+  font-size: 120px;
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+hr {
+	color: blue;
+	height: 40px;
+	background: blue;
 }
 </style>
-<p style = "font-size:90px; text-align:center;">{{ cliente }}</p>
+
+<p class="button">{{ cliente }}</p>
+<hr><hr>
 	{% for pedido in pedidos %}
-	<p style = "font-size:60px;">{{ pedido[0] }} </p>
-	<p style = "font-size:60px;">{{ pedido[1] }} {{ pedido[2] }} </p>
-	<p style = "font-size:60px;">{{ pedido[4] }} - {{ pedido[5] }} * {{ pedido[6] }}</p>
-	<p style = "font-size:50px;">{{ pedido[3] }} </p>
-	<p style = "font-size:50px;">{{ pedido[7] }} </p>
+	<p class="fecha";>{{ pedido[0] }} </p>
+	<p class="texto">{{ pedido[1] }} {{ pedido[2] }} </p>
+	<p class="texto">{{ pedido[4] }} - {{ pedido[5] }} * {{ pedido[6] }}</p>
+	<p class="texto">{{ pedido[3] }} </p>
+	<p class="texto">{{ pedido[7] }} </p>
 
 	{% if pedido[8] == 'en produccion' %}
 		<p style = "font-size:60px; color:brown;">{{ pedido[8] }} </p>
@@ -37,12 +51,10 @@ p {
 	{% elif pedido[8] == 'terminada' %}
 		<p style = "font-size:60px; color:yellow;">{{ pedido[8] }} </p>
 	{% else %}
-	<p style = "font-size:60px;">{{ pedido[8] }} {{ pedido[9] }} {{ pedido[10] }} </p>
+	<p class="texto">{{ pedido[8] }} {{ pedido[9] }} {{ pedido[10] }} </p>
 	{% endif %}
 
-	<!-- <p style = "font-size:50px;">-  -  -  -  -  - </p> -->
 	<hr>
-	<p> </p>
 	{% endfor %}
 </body>
 </html>

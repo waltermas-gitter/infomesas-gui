@@ -18,6 +18,7 @@ def main():
         curPedidos = conn.cursor()
         curPedidos.execute("SELECT * FROM pedidos WHERE cliente = '%s' ORDER BY fecha DESC" % cliente[0])
         pedidos = []
+        pedidos2 = []
         dataPedidos = curPedidos.fetchall()
         for pedido in dataPedidos:
             # print(pedido)
@@ -33,8 +34,11 @@ def main():
                 fechapentregada = ""
                 lugarEntrega = ""
             # print(pedidos)
-            
-            pedidos.append((fechap, modelo, chapa, pedido[5], pedido[6], pedido[7], pedido[8], pedido[9], pedido[10], fechapentregada, lugarEntrega))
+            if pedido[10] == 'entregada' or pedido[10] == 'anulada':
+                pedidos2.append((fechap, modelo, chapa, pedido[5], pedido[6], pedido[7], pedido[8], pedido[9], pedido[10], fechapentregada, lugarEntrega))
+            else:
+                pedidos.append((fechap, modelo, chapa, pedido[5], pedido[6], pedido[7], pedido[8], pedido[9], pedido[10], fechapentregada, lugarEntrega))
+        pedidos.extend(pedidos2)
         # print(clienteFileName)
         html_template_string = template.render(cliente=cliente[1], pedidos=pedidos)
         clienteFileName = cliente[1].replace(' ', '-')
