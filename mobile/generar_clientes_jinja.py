@@ -4,6 +4,8 @@ import sqlite3
 # from datetime import datetime, timedelta
 import os
 from jinja2 import Template
+from coloresClientes import devuelvoColorCliente
+import codecs
 
 def main():
     jinja2_template_string = open("clientes_template.html", 'r').read()
@@ -14,11 +16,11 @@ def main():
     clientes = []
     data = cur.fetchall()
     for item in data:
-        clientes.append((item[1], "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % item[1].replace(' ', '-')))
+        ofuscado = codecs.encode(item[1].replace(' ', '-'), 'rot_13')
+        clientes.append((item[1], "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % ofuscado, devuelvoColorCliente(item[1])))
+        # os.system("rm %s.html" % item[1].replace(' ', '-'))
 
     html_template_string = template.render(clientes=clientes)
-    # print(html_template_string)
-
     template_file = open("clientes.html", 'w').write(html_template_string)
 
 if __name__ == '__main__':

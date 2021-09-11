@@ -30,13 +30,13 @@
 
 hr {
 	color: blue;
-	height: 40px;
+	height: 20px;
 	background: blue;
 }
 </style>
 
 <p class="button">{{ cliente }}</p>
-<hr><hr>
+<hr>
 	{% for pedido in pedidos %}
 	<p class="fecha";>{{ pedido[0] }} </p>
 	<p class="texto">{{ pedido[1] }} {{ pedido[2] }} </p>
@@ -54,7 +54,7 @@ hr {
 	<p class="texto">{{ pedido[8] }} {{ pedido[9] }} {{ pedido[10] }} </p>
 	{% endif %}
 
-	<hr>
+	<hr><hr>
 	{% endfor %}
 </body>
 </html>

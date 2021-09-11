@@ -27,7 +27,7 @@ from functools import partial
 # import pyqtgraph as pg
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QPercentBarSeries, QBarCategoryAxis, QHorizontalBarSeries, QValueAxis
 import informe_pedidos
-
+from mobile.coloresClientes import devuelvoColorCliente
 
 
 # Create the connection
@@ -117,7 +117,7 @@ class InfomesasWindow(QMainWindow):
             fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
             cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(2)))
-            cliente.setForeground(devuelvoColorCliente(cliente.text()))
+            cliente.setForeground(QBrush(QColor(devuelvoColorCliente(cliente.text()))))
                     
             self.pedidosTableWidget.setItem(rows, 2, cliente)
             self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(devuelvoNombreModelo(query.value(3))))
@@ -747,7 +747,7 @@ class ClientesWindow(QMainWindow):
             self.clientesTableWidget.setRowCount(rows + 1)
             self.clientesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
             cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(0)))
-            cliente.setForeground(devuelvoColorCliente(cliente.text()))
+            cliente.setForeground(QBrush(QColor(devuelvoColorCliente(cliente.text()))))
             self.clientesTableWidget.setItem(rows, 1, cliente)
             saldo = QTableWidgetItem(str(query.value(5)))
             saldo.setTextAlignment(Qt.AlignRight)
@@ -1372,24 +1372,6 @@ def devuelvoNombreCliente(id):
     queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = '%s'" % id)
     queryCliente.first()
     return(queryCliente.value(0))
-
-def devuelvoColorCliente(cliente):
-    if cliente == "Ernesto":
-        color = QBrush(QColor('green'))
-    elif cliente == "Raul":
-        color = QBrush(QColor('brown'))
-    elif cliente == "Maria Rosa":
-        color = QBrush(QColor('magenta'))
-    elif cliente == "Barzante":
-        color = QBrush(QColor('goldenrod'))
-    elif cliente == "Dalzotto":
-        color = QBrush(QColor('blue'))
-    elif cliente == "Guffanti":
-        color = QBrush(QColor('red'))
-    else:
-        color = QBrush(QColor('black'))
-    return color
-
 
 
 

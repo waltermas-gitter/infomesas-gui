@@ -4,6 +4,7 @@ import sqlite3
 from datetime import datetime, timedelta
 import os
 from jinja2 import Template
+import codecs
 
 conn = sqlite3.connect('../infomesas.db')
 
@@ -41,7 +42,8 @@ def main():
         pedidos.extend(pedidos2)
         # print(clienteFileName)
         html_template_string = template.render(cliente=cliente[1], pedidos=pedidos)
-        clienteFileName = cliente[1].replace(' ', '-')
+        # clienteFileName = cliente[1].replace(' ', '-')
+        clienteFileName = codecs.encode(cliente[1].replace(' ', '-'), 'rot_13')
         clienteFileName += '.html'
         template_file = open(clienteFileName, 'w').write(html_template_string)
 
