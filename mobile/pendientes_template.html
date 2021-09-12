@@ -19,7 +19,9 @@
 	{% elif pedido[7] == 'pendiente' %}
 		<p style = "font-size:60px; color:green;">{{ pedido[7] }} </p>
 	{% elif pedido[7] == 'terminada' %}
-		<p style = "font-size:60px; color:yellow;">{{ pedido[7] }} </p>
+		<p style = "font-size:60px; color:goldenrod;">{{ pedido[7] }} </p>
+	{% else %}
+		<p style = "font-size:60px;">{{ pedido[7] }} {{ pedido[8] }} {{ pedido[9] }} </p>
 	{% endif %}
 
 	<hr><hr>

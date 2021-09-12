@@ -14,14 +14,18 @@ import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
 # import re
 # https://www.mfitzp.com/tutorials/qresource-system/
-import generar_cheques_jinja
-import generar_pedidos_jinja
-import generar_precios_jinja
-import generar_soldini_jinja
-import generar_deudas_jinja
-import generar_cc_jinja
-import soldini_deuda
-import generar_pendientes_jinja
+# import generar_cheques_jinja
+# import generar_pedidos_jinja
+# import generar_precios_jinja
+# import generar_soldini_jinja
+# import generar_deudas_jinja
+# import generar_cc_jinja
+# import soldini_deuda
+# import generar_pendientes_jinja
+# import mobile.m_generar_pendientes_jinja
+# import mobile.m_generar_todos_pedidos_jinja
+# import mobile.m_generar_cada_cliente_jinja
+
 
 from functools import partial
 # import pyqtgraph as pg
@@ -259,13 +263,17 @@ class InfomesasWindow(QMainWindow):
 
     def pushear(self):
         # stdouterr = os.popen("./actualizar.sh")[1].read()
-        generar_cheques_jinja.main()
-        generar_pedidos_jinja.main()
-        generar_precios_jinja.main()
-        generar_soldini_jinja.main()
-        generar_deudas_jinja.main()
-        generar_cc_jinja.main()
-        generar_pendientes_jinja.main()
+        # generar_cheques_jinja.main()
+        # generar_pedidos_jinja.main()
+        # generar_precios_jinja.main()
+        # generar_soldini_jinja.main()
+        # generar_deudas_jinja.main()
+        # generar_cc_jinja.main()
+        # generar_pendientes_jinja.main()
+        # m_generar_pendientes_jinja.main()
+        # m_generar_cada_cliente_jinja.main()
+        # m_generar_todos_pedidos_jinja.main()
+        
         os.system("gnome-terminal -e ./actualizar.sh &" )
 
     def imprimirPendientes(self):
