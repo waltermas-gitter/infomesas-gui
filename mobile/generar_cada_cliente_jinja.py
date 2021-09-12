@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import os
 from jinja2 import Template
 import codecs
+from devuelvos import *
 
 conn = sqlite3.connect('../infomesas.db')
 
@@ -47,23 +48,6 @@ def main():
         clienteFileName += '.html'
         template_file = open(clienteFileName, 'w').write(html_template_string)
 
-def devuelvoNombreModelo(id):
-    cur = conn.cursor()
-    cur.execute("SELECT modelo FROM modelos WHERE idModelo = '%s'" % id)
-    data = cur.fetchall()
-    return data[0][0]
-
-def devuelvoNombreChapa(id):
-    cur = conn.cursor()
-    cur.execute("SELECT chapa FROM chapas WHERE idChapa = '%s'" % id)
-    data = cur.fetchall()
-    return data[0][0]
- 
-def devuelvoNombreLugarEntrega(id):
-    cur = conn.cursor()
-    cur.execute("SELECT nombre FROM lugaresEntrega WHERE idLugarEntrega = '%s'" % id)
-    data = cur.fetchall()
-    return data[0][0]
 
 if __name__ == '__main__':
     main()

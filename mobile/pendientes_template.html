@@ -8,11 +8,8 @@
 <body>
 	{% for pedido in pedidos %}
 	<p class="fecha";>{{ pedido[0] }} </p>
-	<p class="button">{{ pedido[1] }}</p>
-	<!-- <p class="texto">{{ pedido[1] }} {{ pedido[2] }} </p> -->
-	<!-- <p class="texto">{{ pedido[4] }} - {{ pedido[5] }} * {{ pedido[6] }}</p> -->
-	<!-- <p class="texto">{{ pedido[3] }} </p> -->
-	<!-- <p class="texto">{{ pedido[7] }} </p> -->
+	<!-- <p class="button">{{ pedido[1] }}</p> -->
+	<p style="text-align:center;"><a class="button" style="color:{{pedido[1][2]}};" href={{pedido[1][1]}}>{{pedido[1][0]}}</a></p>
 	<p class="texto">{{ pedido[2] }} {{ pedido[3]}} </p>
 	<p class="texto">{{ pedido[4] }} </p>
 	<p class="texto">{{ pedido[5] }} </p>

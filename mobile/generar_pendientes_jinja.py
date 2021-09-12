@@ -4,6 +4,9 @@ import sqlite3
 from datetime import datetime, timedelta
 import os
 from jinja2 import Template
+from devuelvos import *
+import codecs
+from coloresClientes import devuelvoColorCliente
 
 def main():
     jinja2_template_string = open("pendientes_template.html", 'r').read()
@@ -18,20 +21,14 @@ def main():
     data = sorted(pedidos_fecha, key=lambda x: x[1])
  
     pedidos = []
-    # orden = 0
-    # pendientes = 0
-    # enproduccion = 0
-    # mesAnterior = 0
     for item in data:
-        # orden += 1
-        # fecha = datetime.strptime(item[1], "%Y-%m-%d %H:%M:%S")
         fechap = "%s-%s-%s" % (item[1].day, item[1].month, item[1].year)
-        cur.execute("SELECT nombre from clientes WHERE idCliente = %s" % (item[2]))
-        cliente = cur.fetchall()[0][0]
-        cur.execute("SELECT modelo from modelos WHERE idmodelo = %s" % (item[3]))
-        modelo = cur.fetchall()[0][0]
-        cur.execute("SELECT chapa from chapas WHERE idchapa = %s" % (item[4]))
-        chapa = cur.fetchall()[0][0]
+        nombreCliente = devuelvoNombreCliente(item[2])
+        ofuscado = codecs.encode(nombreCliente.replace(' ', '-'), 'rot_13')
+        linkOfuscado = "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % ofuscado
+        cliente = ((nombreCliente, linkOfuscado, devuelvoColorCliente(nombreCliente)))
+        modelo = devuelvoNombreModelo(item[3])
+        chapa = devuelvoNombreChapa(item[4])
         medidas = "%s-%s*%s" % (item[6], item[7], item[8])
         pedidos.append((fechap, cliente, modelo , chapa, medidas, item[5], item[9], item[10]))    
 

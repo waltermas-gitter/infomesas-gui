@@ -1,12 +1,12 @@
 .fecha {
 	background-color: blue;
 	color: white;
-	font-size:30px;
+	font-size:55px;
 	display: inline-block;
 }
 .texto {
 	font-family: Palatino;
-	font-size: 40px;
+	font-size: 60px;
 }
 
 hr {
@@ -22,7 +22,7 @@ hr {
 /* } */
 
 .button {
-  font-size: 40px;
+  font-size: 60px;
   background-color: lightgreen;
   border: 5px solid black;
   border-radius: 20px;>
