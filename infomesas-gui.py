@@ -20,7 +20,7 @@ import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
 # import generar_soldini_jinja
 # import generar_deudas_jinja
 # import generar_cc_jinja
-# import soldini_deuda
+import soldini_deuda
 # import generar_pendientes_jinja
 # import mobile.m_generar_pendientes_jinja
 # import mobile.m_generar_todos_pedidos_jinja
