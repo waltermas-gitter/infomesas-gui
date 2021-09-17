@@ -23,5 +23,5 @@ git status
 message=`date`
 git commit -m "$message"
 git push
-notify-send "infomesas actualizado con exito"
+# notify-send "infomesas actualizado con exito"
 read -n1 -s -r -p $'Press any key to continue...\n' key
