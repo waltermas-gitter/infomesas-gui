@@ -1,4 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<button type="button" class="btn btn-primary btn-lg">Infomesas-gui</button>
+<div class="container-md">
+
+{% for cliente in clientes %}
+<p>
+<a href="{{cliente[1]}}" class="btn mx-4" style="background-color:{{cliente[2]}}; color:white;">{{cliente[0]}}</a>
+</p>
+{% endfor %} 
+
+
+</div>
 {% endblock %}
