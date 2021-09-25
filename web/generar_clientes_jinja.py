@@ -18,7 +18,8 @@ def main():
     data = cur.fetchall()
     for item in data:
         ofuscado = codecs.encode(item[1].replace(' ', '-'), 'rot_13')
-        clientes.append((item[1], "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % ofuscado, devuelvoColorCliente(item[1])))
+        clientes.append((item[1], "%s.html" % ofuscado, devuelvoColorCliente(item[1])))
+        # clientes.append((item[1], "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % ofuscado, devuelvoColorCliente(item[1])))
 
     tmpl = env.get_template('clientes_template.html')
     html_template_string = tmpl.render(clientes=clientes)
