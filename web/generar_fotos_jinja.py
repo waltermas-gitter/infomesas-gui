@@ -20,9 +20,14 @@ def main():
         mypath = item["carpeta"]
         fotos = [mypath[2:] + "/" + f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]    
         fotoactiva = fotos[0]
+        refactiva = os.path.splitext(os.path.basename(fotoactiva))[0]
         fotos.pop(0)
+        fotodict = []
+        for i in fotos:
+            ref = os.path.splitext(os.path.basename(i))[0]
+            fotodict.append({"path":i, "ref":ref})
         tmpl = env.get_template('fotos_template.html')
-        html_template_string = tmpl.render(fotoactiva=fotoactiva, fotos=fotos)
+        html_template_string = tmpl.render(fotoactiva=fotoactiva, refactiva=refactiva, fotos=fotodict)
         template_file = open(item["htmlfile"], 'w').write(html_template_string)
 
 if __name__ == '__main__':
