@@ -15,5 +15,5 @@ def devuelvoColorCliente(cliente):
     elif cliente == "Guffanti":
         color = 'red'
     else:
-        color = 'black'
+        color = 'Aquamarine'
     return color

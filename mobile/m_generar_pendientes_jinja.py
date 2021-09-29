@@ -7,10 +7,12 @@ from jinja2 import Template
 from devuelvos import *
 import codecs
 from coloresClientes import devuelvoColorCliente
+from jinja2 import Template, FileSystemLoader, Environment
+
+env = Environment()
+env.loader = FileSystemLoader('.')
 
 def main():
-    jinja2_template_string = open("pendientes_template.html", 'r').read()
-    template = Template(jinja2_template_string)
     conn = sqlite3.connect('../infomesas.db')
     cur = conn.cursor()
     cur.execute("SELECT * from pedidos WHERE estado='pendiente' or estado='en produccion' or estado='terminada'")
@@ -25,17 +27,15 @@ def main():
         fechap = "%s-%s-%s" % (item[1].day, item[1].month, item[1].year)
         nombreCliente = devuelvoNombreCliente(item[2])
         ofuscado = codecs.encode(nombreCliente.replace(' ', '-'), 'rot_13')
-        linkOfuscado = "https://waltermas-gitter.github.io/infomesas-gui/mobile/%s.html" % ofuscado
+        linkOfuscado = "/mobile/%s.html" % ofuscado
         cliente = ((nombreCliente, linkOfuscado, devuelvoColorCliente(nombreCliente)))
         modelo = devuelvoNombreModelo(item[3])
         chapa = devuelvoNombreChapa(item[4])
         medidas = "%s-%s*%s" % (item[6], item[7], item[8])
         pedidos.append((fechap, cliente, modelo , chapa, medidas, item[5], item[9], item[10]))    
 
-    html_template_string = template.render(pedidos=pedidos)
-    # print(html_template_string)
-
-    pedidos_file = open("pendientes.html", 'w').write(html_template_string)
-
+    tmpl = env.get_template('pendientes_template.html')
+    html_template_string = tmpl.render(pedidos=pedidos)
+    template_file = open("pendientes.html", 'w').write(html_template_string)
 if __name__ == '__main__':
     main()

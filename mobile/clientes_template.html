@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/png" sizes="32x32" href="../icons/infomesasicon.png">
-</head> 
+{% extends "base.html" %}
+{% block content %}
 
-<body>
-	{% for cliente in clientes %}
-	<p style="text-align:center;"><a class="button" style="color:{{cliente[2]}};" href={{cliente[1]}}>{{cliente[0]}}</a></p>
-		{% endfor %}
-</body>
-</html>
+{% for cliente in clientes %}
+  <p class="text-center">  <a href="{{cliente[1]}}" class="btn" style="background-color:{{cliente[2]}};">{{cliente[0]}}</a></p>
+{% endfor %}
 
+{% endblock %}
