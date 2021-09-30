@@ -3,13 +3,16 @@
 import sqlite3
 # from datetime import datetime, timedelta
 import os
-from jinja2 import Template
 
+from jinja2 import Template, FileSystemLoader, Environment
+
+env = Environment()
+env.loader = FileSystemLoader('.')
 
 
 def main():
-    jinja2_template_string = open("lista_template.html", 'r').read()
-    template = Template(jinja2_template_string)
+    # jinja2_template_string = open("lista_template.html", 'r').read()
+    # template = Template(jinja2_template_string)
     conn = sqlite3.connect('infomesas.db')
     cur = conn.cursor()
 
@@ -49,13 +52,16 @@ def main():
        ratona.append((item[2], item[3], item[4]))
     # redonda.append((data[0][2], data[0][3], data[0][4]))
  
-    html_template_string = template.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona, mes='8/2021')
+    # html_template_string = template.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona, mes='8/2021')
     # print(html_template_string)
 
 
-    modelos_file = open("lista.html", 'w').write(html_template_string)
+    # modelos_file = open("lista.html", 'w').write(html_template_string)
     
 
+    tmpl = env.get_template('lista_template.html')
+    html_template_string = tmpl.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona, mes='10/2021')
+    template_file = open("lista.html", 'w').write(html_template_string)
 
 if __name__ == '__main__':
     main()
