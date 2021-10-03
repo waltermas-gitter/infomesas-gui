@@ -4,11 +4,10 @@ import sqlite3
 from datetime import datetime, timedelta
 import os
 from jinja2 import Template, FileSystemLoader, Environment
+from datetime import datetime, timedelta
 
 env = Environment()
 env.loader = FileSystemLoader('.')
-
-
 
 def main():
     # jinja2_template_string = open("precios_template.html", 'r').read()
@@ -26,10 +25,11 @@ def main():
         precioMaximo = max(dataProducto, key=lambda i: i[2])
         dataNombreProducto = cur.execute("SELECT * from productosSeguidos WHERE idProducto = '%s'" % precioMaximo[1])
         nombreProducto = cur.fetchall()
-    #     print(nombreProducto[0][1])
-        # print(precioMaximo[2])
-    #     print()
-        precios.append((nombreProducto[0][1], precioMaximo[2]))
+
+        fecha = datetime.strptime(dataProducto[-1][4], "%Y-%m-%d %H:%M:%S")
+        diferencia = datetime.today() - fecha
+        diferenciaint = int(diferencia.days)
+        precios.append((nombreProducto[0][1], precioMaximo[2], diferenciaint))
 
     precios.sort()
     # html_template_string = template.render(precios=precios)
