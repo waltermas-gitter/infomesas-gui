@@ -1,501 +1,618 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<link rel="icon" type="image/png" sizes="32x32" href="icons/infomesasicon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/infomesasicon.png">
+<title>mesasmastrangelo</title>
 <style>
-
-<!--columnas-->
-* {
-  box-sizing: border-box;
-}
-.column {
-  float: left;
-  padding: 10px;
-}
-
-.left {
-  width: 30%;
-}
-
-.middle {
-  width: 40;
-}
-
-.right {
-  width: 25%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-}
-
-		td, th { 
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-
-input { 
-    text-align: right; 
-    width: 20%;
-}
-
-p {
-	text-align: right;
+@media only screen and (max-width: 767px) {
+body {
+  font-size:1.6rem;
 }
 </style>
 
-</head>
-
-
-<body>
 <!--tabla -->
-<div class="row">
-	<div class="column left">
-	<table>
-		
-		<tr>
-			<td>
-			aglomerado caoba floreada 18
-			</td>
-			<td>
-			10777
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			aglomerado caoba rayada 18mm
-			</td>
-			<td>
-			9590
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			aglomerado guatambu 18
-			</td>
-			<td>
-			10808
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			aglomerado jaquetiva 18mm
-			</td>
-			<td>
-			9607
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			aglomerado paraiso 18
-			</td>
-			<td>
-			10682
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			aglomerado roble
-			</td>
-			<td>
-			12135
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			bateria
-			</td>
-			<td>
-			40
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			bisagra cangrejo
-			</td>
-			<td>
-			48
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			bisagras invisibles 14mm
-			</td>
-			<td>
-			239
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			bisagras invisibles cromadas
-			</td>
-			<td>
-			296
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			cemento full stick
-			</td>
-			<td>
-			10938
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			cemento kekol x14kg
-			</td>
-			<td>
-			10700
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			cinta papel 18mm
-			</td>
-			<td>
-			109
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			cola
-			</td>
-			<td>
-			9980
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			corredera telescopica 50cm
-			</td>
-			<td>
-			496
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			diluyente por 1lt
-			</td>
-			<td>
-			380
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			espiga metalica
-			</td>
-			<td>
-			40
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			fibrofacil 3mm guatambu
-			</td>
-			<td>
-			3002
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			fondo blanco 3mm
-			</td>
-			<td>
-			1343
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			grampas 25
-			</td>
-			<td>
-			1345
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			grampas 30
-			</td>
-			<td>
-			1615
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			guatambu
-			</td>
-			<td>
-			394
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			lija banda 100
-			</td>
-			<td>
-			1892
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			lija banda 40
-			</td>
-			<td>
-			2307
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			loro blanco
-			</td>
-			<td>
-			280
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 12
-			</td>
-			<td>
-			2278
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 15mm blanco
-			</td>
-			<td>
-			4613
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 18
-			</td>
-			<td>
-			4400
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 18mm guatambu
-			</td>
-			<td>
-			10903
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 18mm paraiso
-			</td>
-			<td>
-			9315
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 18mm peteribi
-			</td>
-			<td>
-			14400
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 3
-			</td>
-			<td>
-			931
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf 9
-			</td>
-			<td>
-			1750
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf caoba floreada 18
-			</td>
-			<td>
-			10378
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf caoba floreada 3
-			</td>
-			<td>
-			4912
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			mdf roble 18mm
-			</td>
-			<td>
-			9596
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			melamina blanca 15
-			</td>
-			<td>
-			4240
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			paraiso
-			</td>
-			<td>
-			352
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			paraiso ancho
-			</td>
-			<td>
-			485
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			pino
-			</td>
-			<td>
-			88
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			tirafondo con arandela
-			</td>
-			<td>
-			30
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-			tornillo 4x40=6x15/8
-			</td>
-			<td>
-			3
-			</td>
-		</tr>
-		
-	</table>
+<div class="container-md">
+  <div class="row">
+    <div class="col-md-6">
+    <table class="table table-striped table-hover table-bordered">
+      <thead class="table-success">
+	<tr>
+	  <th class="table-dark">Producto</th>
+	  <th>Precio</th>
+	  <th>Actualizacion</th>
+	</tr>
+      </thead>
+      <tbody>
+
+      
+      <tr>
+	      <td>
+	      aglomerado caoba floreada 18
+	      </td>
+	      <td>
+	      10777
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      aglomerado caoba rayada 18mm
+	      </td>
+	      <td>
+	      9590
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      aglomerado guatambu 18
+	      </td>
+	      <td>
+	      11510
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      aglomerado jaquetiva 18mm
+	      </td>
+	      <td>
+	      9607
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      aglomerado paraiso 18
+	      </td>
+	      <td>
+	      11377
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      aglomerado roble
+	      </td>
+	      <td>
+	      12135
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      bateria
+	      </td>
+	      <td>
+	      40
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      bisagra cangrejo
+	      </td>
+	      <td>
+	      48
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      bisagras invisibles 14mm
+	      </td>
+	      <td>
+	      239
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      bisagras invisibles cromadas
+	      </td>
+	      <td>
+	      296
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      cemento full stick
+	      </td>
+	      <td>
+	      10938
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      cemento kekol x14kg
+	      </td>
+	      <td>
+	      10700
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      cinta papel 18mm
+	      </td>
+	      <td>
+	      109
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      cola
+	      </td>
+	      <td>
+	      9980
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      corredera telescopica 50cm
+	      </td>
+	      <td>
+	      496
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      diluyente por 1lt
+	      </td>
+	      <td>
+	      380
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      espiga metalica
+	      </td>
+	      <td>
+	      41
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      fibrofacil 3mm guatambu
+	      </td>
+	      <td>
+	      3002
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      fondo blanco 3mm
+	      </td>
+	      <td>
+	      1343
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      grampas 25
+	      </td>
+	      <td>
+	      1345
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      grampas 30
+	      </td>
+	      <td>
+	      1615
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      guatambu
+	      </td>
+	      <td>
+	      414
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      lija banda 100
+	      </td>
+	      <td>
+	      1892
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      lija banda 40
+	      </td>
+	      <td>
+	      2307
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      loro blanco
+	      </td>
+	      <td>
+	      280
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 12
+	      </td>
+	      <td>
+	      2278
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 15mm blanco
+	      </td>
+	      <td>
+	      4613
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 18
+	      </td>
+	      <td>
+	      4620
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 18mm guatambu
+	      </td>
+	      <td>
+	      10903
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 18mm paraiso
+	      </td>
+	      <td>
+	      9315
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 18mm peteribi
+	      </td>
+	      <td>
+	      14400
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 3
+	      </td>
+	      <td>
+	      931
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf 9
+	      </td>
+	      <td>
+	      1750
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf caoba floreada 18
+	      </td>
+	      <td>
+	      10378
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf caoba floreada 3
+	      </td>
+	      <td>
+	      4912
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      mdf roble 18mm
+	      </td>
+	      <td>
+	      9596
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      melamina blanca 15
+	      </td>
+	      <td>
+	      4240
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      paraiso
+	      </td>
+	      <td>
+	      362
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      paraiso ancho
+	      </td>
+	      <td>
+	      485
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      pino
+	      </td>
+	      <td>
+	      88
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      tablero pino 18mm 120*300 pindo
+	      </td>
+	      <td>
+	      11232
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      tirafondo con arandela
+	      </td>
+	      <td>
+	      30
+	      </td>
+      </tr>
+      
+      <tr>
+	      <td>
+	      tornillo 4x40=6x15/8
+	      </td>
+	      <td>
+	      3
+	      </td>
+      </tr>
+      
+
+      </tbody>
+    </table>
+    </div>
+
+  </div>
+  <div class="row">
+	<!--conversor-->
+	<div class="container p-5 my-5 border">
+	<form>
+	  <h2>Calculo de pies</h2>
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="espesor" class="col-form-label">Espesor</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="espesor"></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="ancho" class="form-label">Ancho</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="ancho"></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	    <label for="largo" class="form-label">Largo (cm)</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="largo">
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="cantidad" class="form-label">Cantidad</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="cantidad" value=1></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="precio" class="form-label">Precio</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="precio" value=1></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	      <div style="text-align:right;"><button type="submit" class="btn btn-primary" id="btnCalcular" onclick="clickBtnCalcular(); return false;">Calcular</button></div>
+	      </div>
+	    </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-4 alert alert-success" id="divResultado"></div>
+	  </div> 
+	</form>
 	</div>
 
-	<!--conversor-->
-	<div class="column middle" style="background-color:#bbb;">
-		<h2>Calculo de pies</h2>
-		<p><label>espesor: </label><input id="espesor" type="text"></p>
-		<p><label>ancho: </label><input id="ancho" type="text"></p>
-		<p><label>largo (cm): </label><input id="largo" type="text"></p>
-		<p><label>cantidad: </label><input id="cantidad" type="text" value=1></p>
-		<p><label>precio: </label><input id="precio" type="text" value=1></p>
-		<p><button id="btnCalcular">Calcular</button></p>
-		<p><div id="divResultado"></div></p>
 
 	<!--hoja-->
-		<h2>Calculo de cortes</h2>
-		<p><label>largo hoja: </label><input id="largo hoja" type="text" value=260></p>
-		<p><label>ancho hoja: </label><input id="ancho hoja" type="text" value=183></p>
-		<p><label>largo (cm): </label><input id="largo corte" type="text"></p>
-		<p><label>ancho (cm): </label><input id="ancho corte" type="text"></p>
-		<p><label>cantidad: </label><input id="cantidad corte" type="text" value=1></p>
-		<p><label>precio: </label><input id="precio hoja" type="text" value=1></p>
-		<p><button id="btnCalcularCorte">Calcular</button></p>
-		<p><div id="divResultadoCorte"></div></p>
+
+	<div class="container p-5 my-5 border">
+	<form>
+	  <h2>Calculo de cortes</h2>
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="largo hoja" class="col-form-label">Largo hoja</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="largo hoja" value=260></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="ancho hoja" class="form-label">Ancho hoja</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="ancho hoja" value=183></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	    <label for="largo corte" class="form-label">Largo (cm)</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="largo corte">
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="ancho corte" class="form-label">Ancho (cm)</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="ancho corte"</input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="cantidad" class="form-label">Cantidad</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="cantidad corte" value=1></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2">
+	  <label for="precio" class="form-label">Precio</label>
+	    </div>
+	    <div class="col-md-2">
+	  <input type="text" class="form-control text-end" id="precio hoja" value=1></input>
+	    </div>
+	  </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	      <div style="text-align:right;"><button type="submit" class="btn btn-primary" id="btnCalcularCorte" onclick="clickBtnCalcularCorte(); return false;">Calcular</button></div>
+	      </div>
+	    </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-4 alert alert-success" id="divResultadoCorte"></div>
+	  </div> 
+	</form>
 	</div>
+
+
 
 	<!--sumatoria-->
-	<div class="column right" style="background-color:#bbb;">
-		<h2 style="text-align:right;">Sumatoria</h2>
-		<p><input id="s1" type="text"></p>
-		<p><input id="s2" type="text"></p>
-		<p><input id="s3" type="text"></p>
-		<p><input id="s4" type="text"></p>
-		<p><input id="s5" type="text"></p>
-		<p><button id="btnCalcularSuma">Calcular</button></p>
-		<p><div id="divResultadoSuma"></div></p>
-		<p><iframe width="219" height="302" src="http://calculator-1.com/outdoor/?f=0666666&r=666666" scrolling="no" frameborder="0"></iframe><br /><a href="https://calculator-1.com/">Calculator</a></p>
-	</div>
+	<div class="container p-5 my-5 border">
+	<form>
+	  <h2>Sumatoria</h2>
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	    <input type="text" class="form-control text-end" id="s1"</input>
+	    </div>
+	  </div> 
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	    <input type="text" class="form-control text-end" id="s2"</input>
+	    </div>
+	  </div> 
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	    <input type="text" class="form-control text-end" id="s3"</input>
+	    </div>
+	  </div> 
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	    <input type="text" class="form-control text-end" id="s4"</input>
+	    </div>
+	  </div> 
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	    <input type="text" class="form-control text-end" id="s5"</input>
+	    </div>
+	  </div> 
+
+	  <div class="row py-1">
+	    <div class="col-md-2 offset-md-2">
+	      <div style="text-align:right;"><button type="submit" class="btn btn-primary" id="btnCalcularSuma" onclick="clickBtnCalcularSuma(); return false;">Calcular</button></div>
+	      </div>
+	    </div>
+
+	  <div class="row py-1">
+	    <div class="col-md-4 alert alert-success" id="divResultadoSuma"></div>
+	  </div> 
+	</form>
+	</div> 
+
+		<!-- <p><iframe width="219" height="302" src="http://calculator-1.com/outdoor/?f=0666666&r=666666" scrolling="no" frameborder="0"></iframe><br /><a href="https://calculator-1.com/">Calculator</a></p> -->
+      
+  </div>
 </div>
 
+
+
 <script>
-		window.onload = iniciar;
-function iniciar(){
-	var btnCalcular = document.getElementById("btnCalcular");
-	btnCalcular.addEventListener("click", clickBtnCalcular);
-	var btnCalcularCorte = document.getElementById("btnCalcularCorte");
-	btnCalcularCorte.addEventListener("click", clickBtnCalcularCorte);
-	var btnCalcularCorte = document.getElementById("btnCalcularSuma");
-	btnCalcularCorte.addEventListener("click", clickBtnCalcularSuma);
-
-
-}
 
 function clickBtnCalcular(){
 	var espesor = document.getElementById("espesor").value;
@@ -548,5 +665,22 @@ function clickBtnCalcularSuma(){
 
 
 </script>
-</body>
+
+
+</head>
+
+<body>
+
+
+    
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+  </body>
 </html>

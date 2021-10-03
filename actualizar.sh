@@ -5,8 +5,8 @@ echo -n "generar pendientes mobile "
 time poetry run python m_generar_pendientes_jinja.py 
 echo -n "generar cada cliente mobile "
 time poetry run python m_generar_cada_cliente_jinja.py
-echo -n "generar todos los pedidos mobile "
-time poetry run python m_generar_todos_pedidos_jinja.py
+# echo -n "generar todos los pedidos mobile "
+# time poetry run python m_generar_todos_pedidos_jinja.py
 
 cd /home/waltermas/MEGAsync/scripts/infomesas-gui
 poetry run python generar_cheques_jinja.py

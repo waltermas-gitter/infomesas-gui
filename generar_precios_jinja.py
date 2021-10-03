@@ -3,11 +3,16 @@
 import sqlite3
 from datetime import datetime, timedelta
 import os
-from jinja2 import Template
+from jinja2 import Template, FileSystemLoader, Environment
+
+env = Environment()
+env.loader = FileSystemLoader('.')
+
+
 
 def main():
-    jinja2_template_string = open("precios_template.html", 'r').read()
-    template = Template(jinja2_template_string)
+    # jinja2_template_string = open("precios_template.html", 'r').read()
+    # template = Template(jinja2_template_string)
     conn = sqlite3.connect('infomesas.db')
     cur = conn.cursor()
     cur.execute("SELECT idProducto from productosSeguidosPrecios ORDER BY idProducto")
@@ -27,8 +32,13 @@ def main():
         precios.append((nombreProducto[0][1], precioMaximo[2]))
 
     precios.sort()
-    html_template_string = template.render(precios=precios)
-    precios_file = open("precios.html", 'w').write(html_template_string)
+    # html_template_string = template.render(precios=precios)
+    # precios_file = open("precios.html", 'w').write(html_template_string)
+
+    tmpl = env.get_template('precios_template.html')
+    html_template_string = tmpl.render(precios=precios)
+    template_file = open("precios.html", 'w').write(html_template_string)
+
 
 if __name__ == '__main__':
     main()
