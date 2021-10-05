@@ -7,13 +7,16 @@ echo -n "generar cada cliente mobile "
 time poetry run python m_generar_cada_cliente_jinja.py
 # echo -n "generar todos los pedidos mobile "
 # time poetry run python m_generar_todos_pedidos_jinja.py
+echo -n "generar soldini "
+time poetry run python m_generar_soldini_jinja.py
 
 cd /home/waltermas/MEGAsync/scripts/infomesas-gui
+echo -n "generar cheques"
 poetry run python generar_cheques_jinja.py
-# poetry run python generar_pedidos_jinja.py
-# poetry run python generar_precios_jinja.py
-poetry run python generar_soldini_jinja.py
-poetry run python generar_deudas_jinja.py
+echo -n "generar precios"
+poetry run python generar_precios_jinja.py
+
+# poetry run python generar_deudas_jinja.py
 # poetry run python generar_cc_jinja.py
 # poetry run python generar_pendientes_jinja.py
 
