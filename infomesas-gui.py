@@ -68,6 +68,7 @@ class InfomesasWindow(QMainWindow):
         self.actionListaHtml.triggered.connect(self.listaHtml)
         self.actionAbrirDB.triggered.connect(self.abrirDB)
         self.actionPresupuestosHtml.triggered.connect(self.presupuestosHtml)
+        self.actionInformeCostos.triggered.connect(self.informeCostos)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
@@ -397,7 +398,10 @@ class InfomesasWindow(QMainWindow):
     def onHeaderClicked(self, indice):
         self.pedidosTableWidget.sortItems(indice, Qt.AscendingOrder)
 
-
+    def informeCostos(self):
+        texto = "Base recta 160 guatambu extensible"
+        self.informeCostosWindow = PrintingWindow(texto)
+        self.informeCostosWindow.show()
 
 
 
