@@ -399,7 +399,41 @@ class InfomesasWindow(QMainWindow):
         self.pedidosTableWidget.sortItems(indice, Qt.AscendingOrder)
 
     def informeCostos(self):
-        texto = "Base recta 160 guatambu extensible"
+        # 20 mesas al mes
+        query = QSqlQuery("SELECT trampa FROM precios2 WHERE idPrecio = 8")
+        query.last()
+        precioActual = query.value(0)
+        texto = f"Base recta 160 guatambu extensible\t{precioActual}\n\n"
+        # medio aglomerado
+        aglomerado = int(devuelvoUltimoPrecio(20) / 2)
+        texto += f"aglomerado\t\t{aglomerado}\n"
+        # guatambu 8 largueros = 27 pies
+        guatambu = devuelvoUltimoPrecio(7) * 27
+        texto += f"guatambu\t\t\t{guatambu}\n"
+        # dos bisagras
+        bisagras = devuelvoUltimoPrecio(27) * 2
+        texto += f"bisagras\t\t\t{bisagras}\n"
+        # cemento dura 1 mes
+        cemento = int(devuelvoUltimoPrecio(45) / 20)
+        texto += f"cemento\t\t\t{cemento}\n"
+        # cola dura 1 mes
+        cola = int(devuelvoUltimoPrecio(37) / 20)
+        texto += f"cola\t\t\t{cola}\n"
+        # diluyente por 3 litros
+        diluyente = int(devuelvoUltimoPrecio(28) * 3 / 20) 
+        texto += f"diluyente\t\t\t{diluyente}\n"
+        # espigas metalicas 8
+        espigas = devuelvoUltimoPrecio(25) * 8
+        texto += f"espigas\t\t\t{espigas}\n"
+        # lijas 1 de 100 y 1 de 40
+        lijas = int((devuelvoUltimoPrecio(31) + devuelvoUltimoPrecio(32)) / 20) 
+        texto += f"lijas\t\t\t{lijas}\n"
+        # tirafondo por 4
+        tirafondos = devuelvoUltimoPrecio(30) * 4
+        texto += f"tirafondos\t\t\t{tirafondos}\n"
+
+        total = aglomerado + guatambu + bisagras + cemento + diluyente + cola + espigas + lijas + tirafondos
+        texto += f"total\t\t\t\t{total}\n"
         self.informeCostosWindow = PrintingWindow(texto)
         self.informeCostosWindow.show()
 
@@ -1411,7 +1445,13 @@ def devuelvoNombreLugarEntrega(id):
     queryLugarEntrega = QSqlQuery("SELECT nombre FROM lugaresEntrega WHERE idLugarEntrega = '%s'" % id)
     queryLugarEntrega.first()
     return(queryLugarEntrega.value(0))
- 
+
+def devuelvoUltimoPrecio(id):
+    query = QSqlQuery("SELECT precio FROM productosSeguidosPrecios WHERE idProducto = '%s' ORDER BY fecha" % id)
+    query.last()
+    return(query.value(0))
+
+
 def mensaje(texto):
     msgBox = QMessageBox()
     msgBox.setIcon(QMessageBox.Information)
