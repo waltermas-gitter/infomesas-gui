@@ -5,12 +5,12 @@ description = ""
 authors = ["waltermas <walterjmas@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-PyQt5 = "^5.15.4"
-Jinja2 = "^3.0.1"
-python-dateutil = "^2.8.1"
-pyqtgraph = "^0.12.1"
-PyQtChart = "^5.15.4"
+python = "3.9.10"
+PyQt5 = "5.15.4"
+Jinja2 = "3.0.1"
+python-dateutil = "2.8.1"
+pyqtgraph = "0.12.1"
+PyQtChart = "5.15.4"
 
 [tool.poetry.dev-dependencies]
 
