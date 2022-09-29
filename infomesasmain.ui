@@ -237,10 +237,21 @@
     </item>
     <item row="2" column="0" colspan="2">
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QPushButton" name="proveedoresPushButton">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="chequesPushButton">
         <property name="text">
-         <string>Proveedores</string>
+         <string>Cheques</string>
+        </property>
+        <property name="icon">
+         <iconset resource="iconosResource.qrc">
+          <normaloff>:/icons/cheque.png</normaloff>:/icons/cheque.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="clientesPushButton">
+        <property name="text">
+         <string>Clientes</string>
         </property>
        </widget>
       </item>
@@ -255,28 +266,24 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="clientesPushButton">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="proveedoresPushButton">
         <property name="text">
-         <string>Clientes</string>
+         <string>Proveedores</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="chequesPushButton">
-        <property name="text">
-         <string>Cheques</string>
-        </property>
-        <property name="icon">
-         <iconset resource="iconosResource.qrc">
-          <normaloff>:/icons/cheque.png</normaloff>:/icons/cheque.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
+      <item row="2" column="1">
        <widget class="QPushButton" name="productosSeguidosPushButton">
         <property name="text">
          <string>Productos seguidos</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="cajaPushButton">
+        <property name="text">
+         <string>Caja</string>
         </property>
        </widget>
       </item>
@@ -340,7 +347,7 @@
      <x>0</x>
      <y>0</y>
      <width>1173</width>
-     <height>31</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">

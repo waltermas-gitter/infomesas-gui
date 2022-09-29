@@ -90,6 +90,7 @@ class InfomesasWindow(QMainWindow):
         self.clienteComboBox.currentTextChanged.connect(self.vistaChanged)
         self.proveedoresPushButton.clicked.connect(self.showProveedores)
         self.clientesPushButton.clicked.connect(self.showClientes)
+        self.cajaPushButton.clicked.connect(self.showCaja)
         self.productosSeguidosPushButton.clicked.connect(self.showProductosSeguidos)
         self.chequesPushButton.clicked.connect(self.showCheques)
         self.salirPushButton.clicked.connect(self.close)
@@ -214,6 +215,9 @@ class InfomesasWindow(QMainWindow):
         self.notas = NotasWindow()
         self.notas.show()
 
+    def showCaja(self):
+        self.caja = CajaWindow()
+        self.caja.show()
 
     def closeEvent(self, event):
         con.close()
@@ -1388,6 +1392,75 @@ class PedidosPorMesWindow(QMainWindow):
         chartView.setRenderHint(QPainter.Antialiasing)
  
         self.setCentralWidget(chartView)        
+
+class CajaWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("caja.ui", self)
+        self.initUI()
+
+    def initUI(self):
+        self.cajaTableWidget.setColumnCount(5)
+        self.cajaTableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.cajaTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Descripcion", "Importe", "Saldo"])
+        self.nuevoPushButton.clicked.connect(self.nuevoCaja)
+        # self.cajaTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.salirPushButton.clicked.connect(self.close)
+        self.cargarTabla()
+
+    # def sumasSaldosShow(self):
+        # self.sumasSaldos = SumasSaldosDialog(self.clientesTableWidget.selectedItems()[0].text(), False)
+        # if self.sumasSaldos.exec_() == QDialog.Accepted:
+            # self.cargarTabla()
+
+    def cargarTabla(self):
+        self.cajaTableWidget.setRowCount(0)
+        query = QSqlQuery("SELECT * FROM caja")
+        while query.next():        
+            rows = self.cajaTableWidget.rowCount()
+            self.cajaTableWidget.setRowCount(rows + 1)
+            self.cajaTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
+            fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
+            fechap = fecha.strftime("%d-%m")
+            self.cajaTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
+            self.cajaTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(2)))
+            self.cajaTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(3))))
+        self.cajaTableWidget.resizeColumnsToContents()
+
+    def nuevoCaja(self):
+        self.mov = MovimientoCaja()
+        if self.mov.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+
+class MovimientoCaja(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi("movimientoCaja.ui", self)
+        self.initUI()
+
+    def initUI(self):
+        self.fechaDateEdit.setDate(QDate.currentDate())
+        self.entradaRadioButton.setChecked(True)
+        self.okPushButton.clicked.connect(self.save)
+        self.cancelPushButton.clicked.connect(self.reject)
+
+    def save(self):
+        query = QSqlQuery()
+        query.prepare("INSERT INTO caja (fecha, descripcion, importe) VALUES (:fecha, :descripcion, :importe)")
+        dia = self.fechaDateEdit.date().toPyDate()
+        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
+        query.bindValue(":fecha", diaString)
+        descripcion = self.conceptoLineEdit.text()
+        query.bindValue(":descripcion", descripcion)
+        importe = int(self.importeLineEdit.text())
+        if self.salidaRadioButton.isChecked() == True:
+            importe = importe * (-1)
+
+        query.bindValue(":importe", importe)
+        query.exec_()
+        self.accept()
+
+
 
 
 def llenoClientes():
