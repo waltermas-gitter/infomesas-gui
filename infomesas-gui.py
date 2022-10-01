@@ -334,12 +334,12 @@ class InfomesasWindow(QMainWindow):
             while query.next():
                 if query.value(3):
                     nuevoPrecio = int(round(query.value(3) * porcentaje, -2))
-                    print(nuevoPrecio)
+                    # print(nuevoPrecio)
                     queryPrecio = QSqlQuery("UPDATE precios2 SET trampa='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
 
                 if query.value(4):
                     nuevoPrecio = int(round(query.value(4) * porcentaje, -2))
-                    print(nuevoPrecio)
+                    # print(nuevoPrecio)
                     queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
 
     def listaHtml(self):
@@ -1404,7 +1404,7 @@ class CajaWindow(QMainWindow):
         self.cajaTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.cajaTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Descripcion", "Importe", "Saldo"])
         self.nuevoPushButton.clicked.connect(self.nuevoCaja)
-        # self.cajaTableWidget.itemDoubleClicked.connect(self.sumasSaldosShow)
+        self.cajaTableWidget.itemDoubleClicked.connect(self.modificarFila)
         self.salirPushButton.clicked.connect(self.close)
         self.cargarTabla()
 
@@ -1416,6 +1416,7 @@ class CajaWindow(QMainWindow):
     def cargarTabla(self):
         self.cajaTableWidget.setRowCount(0)
         query = QSqlQuery("SELECT * FROM caja")
+        saldo = 0
         while query.next():        
             rows = self.cajaTableWidget.rowCount()
             self.cajaTableWidget.setRowCount(rows + 1)
@@ -1425,28 +1426,56 @@ class CajaWindow(QMainWindow):
             self.cajaTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
             self.cajaTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(2)))
             self.cajaTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(3))))
+            saldo = saldo + query.value(3)
+            self.cajaTableWidget.setItem(rows, 4, QTableWidgetItem(str(saldo)))
         self.cajaTableWidget.resizeColumnsToContents()
 
     def nuevoCaja(self):
-        self.mov = MovimientoCaja()
+        self.mov = MovimientoCaja(0)
+        if self.mov.exec_() == QDialog.Accepted:
+            self.cargarTabla()
+    def modificarFila(self):
+        id = self.cajaTableWidget.selectedItems()[0].text()
+        self.mov = MovimientoCaja(id)
         if self.mov.exec_() == QDialog.Accepted:
             self.cargarTabla()
 
 class MovimientoCaja(QDialog):
-    def __init__(self):
+    def __init__(self, id):
         super().__init__()
         uic.loadUi("movimientoCaja.ui", self)
+        self.id = id
         self.initUI()
 
     def initUI(self):
-        self.fechaDateEdit.setDate(QDate.currentDate())
-        self.entradaRadioButton.setChecked(True)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
+        if self.id == 0:
+            self.fechaDateEdit.setDate(QDate.currentDate())
+            self.entradaRadioButton.setChecked(True)
+        else:
+            query = QSqlQuery("SELECT * FROM caja WHERE idCaja = '%i'" % int(self.id))
+            query.first()
+            dialist = query.value(1)[:-9].split('-')
+            dia = QDate(int(dialist[0]), int(dialist[1]), int(dialist[2]))
+            self.fechaDateEdit.setDate(dia)
+            self.conceptoLineEdit.setText(query.value(2))
+            self.importeLineEdit.setText(str(query.value(3)))
+            if query.value(3) >= 0:
+                self.entradaRadioButton.setChecked(True)
+            else:
+                self.salidaRadioButton.setChecked(True)
+                self.importeLineEdit.setText(str(query.value(3)*(-1)))
+
 
     def save(self):
         query = QSqlQuery()
-        query.prepare("INSERT INTO caja (fecha, descripcion, importe) VALUES (:fecha, :descripcion, :importe)")
+        if self.id == 0:
+            query.prepare("INSERT INTO caja (fecha, descripcion, importe) VALUES (:fecha, :descripcion, :importe)")
+        else:
+            query.prepare("UPDATE caja SET fecha=:fecha, descripcion=:descripcion, importe=:importe WHERE idCaja=:idCaja")
+            query.bindValue(":idCaja", self.id)
+            
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
         query.bindValue(":fecha", diaString)
@@ -1455,7 +1484,6 @@ class MovimientoCaja(QDialog):
         importe = int(self.importeLineEdit.text())
         if self.salidaRadioButton.isChecked() == True:
             importe = importe * (-1)
-
         query.bindValue(":importe", importe)
         query.exec_()
         self.accept()
