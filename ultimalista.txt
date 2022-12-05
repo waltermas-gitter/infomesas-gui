@@ -39,3 +39,44 @@ pata pino escandinava 140   5600
 pata pino escandinava 160   6200
 pata pino escandinava 180   6400
 dressoire 100*30*90   19600
+nro 100 140*85 41400 33300
+nro 100 160*85 43600 34800
+nro 100 180*90 45700 36700
+nro 100 200*90 48200 38600
+nro 100 220*90 50900 40400
+recta 120*80 41400 33300
+recta 140*85 43600 35400
+recta 160*85 45700 37400
+recta 180*90 48200 38600
+recta 200*90 50900 40400
+recta 220*90 53000 42800
+recta 120*120 45300 37100
+recta 130*130 50900 40400
+recta 140*140   45100
+con vidrios     6900
+con patas 10*10     8700
+redonda 120 45700 37400
+escandinava 120*80   30100
+escandinava 140*85   31100
+escandinava 160*85   32700
+escandinava 180*85   34900
+escandinava 200*90   36600
+escandinava 220*90   38500
+escandinava redonda redonda 120   35500
+ratona 80*60   13000
+mesa lampara 40*40   10300
+ratona escandinava redonda 60   8500
+pata paraiso 120   20000
+pata paraiso 140   21300
+pata paraiso 160   22400
+pata paraiso 180   23500
+pata paraiso 140*140   26400
+pata pino 3*3 120   7900
+pata pino 3*3 140   8500
+pata pino 3*3 160   8900
+pata pino 3*3 180   9600
+pata pino escandinava 120   6100
+pata pino escandinava 140   6200
+pata pino escandinava 160   6800
+pata pino escandinava 180   7000
+dressoire 100*30*90   21600
