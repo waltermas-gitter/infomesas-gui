@@ -24,6 +24,7 @@ def devuelvoNombreChapa(id):
     return data[0][0]
  
 def devuelvoNombreLugarEntrega(id):
+    print(id)
     cur = conn.cursor()
     cur.execute("SELECT nombre FROM lugaresEntrega WHERE idLugarEntrega = '%s'" % id)
     data = cur.fetchall()
