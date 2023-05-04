@@ -343,7 +343,7 @@ class InfomesasWindow(QMainWindow):
                     queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
 
     def listaHtml(self):
-        os.system("opera lista.html &")
+        os.system("firefox lista.html &")
         # llamar a genera_lista_jinja.py cuando este el mes
     def presupuestosHtml(self):
         os.system("opera https://drive.google.com/file/d/1yGTNuvgv2nC_jddTfmd-MrzfYJaWRDUV/view?usp=sharing &")
