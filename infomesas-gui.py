@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 # https://realpython.com/python-pyqt-database/
+# sqlitebrowser
+
 
 import os, sys
 from PyQt5.QtCore import *
