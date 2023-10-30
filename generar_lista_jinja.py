@@ -60,7 +60,7 @@ def main():
     
 
     tmpl = env.get_template('lista_template.html')
-    html_template_string = tmpl.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona, mes='9/2023')
+    html_template_string = tmpl.render(nro100=nro100, recta=recta, redonda=redonda, escandinava=escandinava, ratona=ratona, mes='10/2023')
     template_file = open("lista.html", 'w').write(html_template_string)
 
 if __name__ == '__main__':
