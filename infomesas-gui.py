@@ -1078,7 +1078,7 @@ class ChequesWindow(QMainWindow):
     def cargarTabla(self):
         saldo = 0
         self.chequesTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM cheques")
+        query = QSqlQuery("SELECT * FROM cheques ORDER BY fechaRecibido DESC")
         while query.next():        
             rows = self.chequesTableWidget.rowCount()
             self.chequesTableWidget.setRowCount(rows + 1)
@@ -1107,8 +1107,6 @@ class ChequesWindow(QMainWindow):
 
             self.chequesTableWidget.setItem(rows, 7, QTableWidgetItem(fechap))
             self.chequesTableWidget.setItem(rows, 8, proveedorWidget)
-            
- 
 
         self.chequesTableWidget.resizeColumnsToContents()
         self.statusbar.showMessage("Total disponible: %s" % saldo)
