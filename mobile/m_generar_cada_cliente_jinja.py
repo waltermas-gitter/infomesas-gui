@@ -1,12 +1,12 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import sqlite3
 from datetime import datetime, timedelta
 import os
-import codecs
+# import codecs
 from devuelvos import *
 from jinja2 import Template, FileSystemLoader, Environment
-from coloresClientes import devuelvoColorCliente
+# from coloresClientes import devuelvoColorCliente
 
 env = Environment()
 env.loader = FileSystemLoader('.')
@@ -18,7 +18,7 @@ def main():
     # clientes = []
     clientes = cur.fetchall()
     for cliente in clientes:
-        colorCliente = devuelvoColorCliente(cliente[1])
+        # colorCliente = devuelvoColorCliente(cliente[1])
         curPedidos = conn.cursor()
         curPedidos.execute("SELECT * FROM pedidos WHERE cliente = '%s' ORDER BY fecha DESC" % cliente[0])
         pedidos = []
@@ -43,15 +43,12 @@ def main():
             else:
                 pedidos.append((fechap, modelo, chapa, pedido[5], pedido[6], pedido[7], pedido[8], pedido[9], pedido[10], fechapentregada, lugarEntrega))
         pedidos.extend(pedidos2)
-        # print(clienteFileName)
-        # html_template_string = template.render(cliente=cliente[1], pedidos=pedidos)
-        # clienteFileName = cliente[1].replace(' ', '-')
-        clienteFileName = codecs.encode(cliente[1].replace(' ', '-'), 'rot_13')
+        clienteFileName = cliente[1].replace(' ', '-')
         clienteFileName += '.html'
 
 
         tmpl = env.get_template('cada_cliente_template.html')
-        html_template_string = tmpl.render(colorCliente=colorCliente, cliente=cliente[1], pedidos=pedidos)
+        html_template_string = tmpl.render(cliente=cliente[1], pedidos=pedidos)
         template_file = open(clienteFileName, 'w').write(html_template_string)
 
 if __name__ == '__main__':

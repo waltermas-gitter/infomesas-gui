@@ -1,12 +1,11 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import sqlite3
 from datetime import datetime, timedelta
 import os
 from jinja2 import Template
 from devuelvos import *
-import codecs
-from coloresClientes import devuelvoColorCliente
+# import codecs
 from jinja2 import Template, FileSystemLoader, Environment
 
 env = Environment()
@@ -26,9 +25,10 @@ def main():
     for item in data:
         fechap = "%s-%s-%s" % (item[1].day, item[1].month, item[1].year)
         nombreCliente = devuelvoNombreCliente(item[2])
-        ofuscado = codecs.encode(nombreCliente.replace(' ', '-'), 'rot_13')
-        linkOfuscado = "/mobile/%s.html" % ofuscado
-        cliente = ((nombreCliente, linkOfuscado, devuelvoColorCliente(nombreCliente)))
+        # ofuscado = codecs.encode(nombreCliente.replace(' ', '-'), 'rot_13')
+        nombreSinEspacios = nombreCliente.replace(' ', '-')
+        linkSinEspacios = "/mobile/%s.html" % nombreSinEspacios
+        cliente = ((nombreCliente, linkSinEspacios))
         modelo = devuelvoNombreModelo(item[3])
         chapa = devuelvoNombreChapa(item[4])
         medidas = "%s-%s*%s" % (item[6], item[7], item[8])

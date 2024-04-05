@@ -2,7 +2,9 @@
 
 # https://realpython.com/python-pyqt-database/
 # sqlitebrowser
-
+# designer: sudo apt install qttools5-dev-tools
+#
+BROWSER = "/usr/bin/firefox"
 
 import os, sys
 from PyQt5.QtCore import *
@@ -16,24 +18,11 @@ import calendar
 import iconosResource_rc # pyrcc5 iconosResource.qrc -o iconosResource_rc.py
 # import re
 # https://www.mfitzp.com/tutorials/qresource-system/
-# import generar_cheques_jinja
-# import generar_pedidos_jinja
-# import generar_precios_jinja
-# import generar_soldini_jinja
-# import generar_deudas_jinja
-# import generar_cc_jinja
 import soldini_deuda
-# import generar_pendientes_jinja
-# import mobile.m_generar_pendientes_jinja
-# import mobile.m_generar_todos_pedidos_jinja
-# import mobile.m_generar_cada_cliente_jinja
-
-
 from functools import partial
 # import pyqtgraph as pg
 from PyQt5.QtChart import QChart, QChartView, QBarSet, QPercentBarSeries, QBarCategoryAxis, QHorizontalBarSeries, QValueAxis
 import informe_pedidos
-from mobile.coloresClientes import devuelvoColorCliente
 
 
 # Create the connection
@@ -125,8 +114,7 @@ class InfomesasWindow(QMainWindow):
             fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
             cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(2)))
-            cliente.setForeground(QBrush(QColor(devuelvoColorCliente(cliente.text()))))
-                    
+
             self.pedidosTableWidget.setItem(rows, 2, cliente)
             self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(devuelvoNombreModelo(query.value(3))))
             self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(devuelvoNombreChapa(query.value(4))))
@@ -147,7 +135,6 @@ class InfomesasWindow(QMainWindow):
             self.pedidosTableWidget.setItem(rows, 9, precio)
             estado = QTableWidgetItem(str(query.value(10)))
             if query.value(10) == 'pendiente':
-                # estado.setForeground(QBrush(QColor(0, 255, 0)))
                 estado.setForeground(QBrush(QColor('green')))
                 contadorPendientes += 1
             elif query.value(10) == 'en produccion':                
@@ -225,10 +212,6 @@ class InfomesasWindow(QMainWindow):
         con.close()
         event.accept()
         
-    # def salir(self):
-    #     con.close()
-    #     sys.exit(0)
-
     def vistaChanged(self):
         queryString = ''
         if self.pendientesCheckBox.isChecked():
@@ -269,18 +252,6 @@ class InfomesasWindow(QMainWindow):
 
 
     def pushear(self):
-        # stdouterr = os.popen("./actualizar.sh")[1].read()
-        # generar_cheques_jinja.main()
-        # generar_pedidos_jinja.main()
-        # generar_precios_jinja.main()
-        # generar_soldini_jinja.main()
-        # generar_deudas_jinja.main()
-        # generar_cc_jinja.main()
-        # generar_pendientes_jinja.main()
-        # m_generar_pendientes_jinja.main()
-        # m_generar_cada_cliente_jinja.main()
-        # m_generar_todos_pedidos_jinja.main()
-        
         os.system("gnome-terminal -e ./actualizar.sh &" )
 
     def imprimirPendientes(self):
@@ -331,24 +302,32 @@ class InfomesasWindow(QMainWindow):
     def aumentar(self):
         porcentaje, ok = QInputDialog.getText(self, 'Aumento', 'Ingresa el porcentaje')
         if ok:
-            porcentaje = int(porcentaje)/100 + 1
-            query = QSqlQuery("SELECT * FROM precios2")
-            while query.next():
-                if query.value(3):
-                    nuevoPrecio = int(round(query.value(3) * porcentaje, -2))
-                    # print(nuevoPrecio)
-                    queryPrecio = QSqlQuery("UPDATE precios2 SET trampa='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
+            mes, ok = QInputDialog.getText(self, 'Aumento', 'Ingresa el mes')
+            if ok:
+                porcentaje = int(porcentaje)/100 + 1
+                query = QSqlQuery("SELECT * FROM precios2")
+                while query.next():
+                    if query.value(3):
+                        nuevoPrecio = int(round(query.value(3) * porcentaje, -2))
+                        # print(nuevoPrecio)
+                        queryPrecio = QSqlQuery("UPDATE precios2 SET trampa='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
 
-                if query.value(4):
-                    nuevoPrecio = int(round(query.value(4) * porcentaje, -2))
-                    # print(nuevoPrecio)
-                    queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
+                    if query.value(4):
+                        nuevoPrecio = int(round(query.value(4) * porcentaje, -2))
+                        # print(nuevoPrecio)
+                        queryPrecio = QSqlQuery("UPDATE precios2 SET fija='%s' WHERE idPrecio='%s'" % (nuevoPrecio, query.value(0)))
+                import generar_ultima_lista
+                generar_ultima_lista.main()
+                import generar_lista_jinja
+                generar_lista_jinja.main(mes)
+                self.listaHtml()
+
 
     def listaHtml(self):
-        os.system("firefox lista.html &")
-        # llamar a genera_lista_jinja.py cuando este el mes
+        os.system("%s lista.html &" % BROWSER)
+
     def presupuestosHtml(self):
-        os.system("opera https://drive.google.com/file/d/1yGTNuvgv2nC_jddTfmd-MrzfYJaWRDUV/view?usp=sharing &")
+        os.system("xdg-open presupuestoXparaimprimir.png")
 
     def abrirDB(self):
         os.system("xdg-open infomesas.db &")
@@ -799,7 +778,6 @@ class ClientesWindow(QMainWindow):
             self.clientesTableWidget.setRowCount(rows + 1)
             self.clientesTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
             cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(0)))
-            cliente.setForeground(QBrush(QColor(devuelvoColorCliente(cliente.text()))))
             self.clientesTableWidget.setItem(rows, 1, cliente)
             saldo = QTableWidgetItem(str(query.value(5)))
             saldo.setTextAlignment(Qt.AlignRight)

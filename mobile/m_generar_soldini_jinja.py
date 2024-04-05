@@ -18,7 +18,6 @@ def main():
     total = 0
     for item in data_raw:
         total += item[4]
-        # print(item)
         fecha = datetime.strptime(item[2], "%Y-%m-%d %H:%M:%S")
         fechap = "%s-%s-%s" % (fecha.day, fecha.month, fecha.year)
         if item[4] >= 0:
@@ -27,7 +26,7 @@ def main():
             data.append((fechap, item[3], " ", item[4], total))
     deuda_pendiente = []
     total_general = total
-    data_raw.reverse() 
+    data_raw.reverse()
     for item in data_raw:
         if item[4] > 0:
             if total > 0 :
@@ -42,7 +41,7 @@ def main():
             total -= item[4]
     deuda_pendiente.reverse()
 
-
+    data.reverse()
     tmpl = env.get_template('soldini_template.html')
     html_template_string = tmpl.render(data=data, total=total_general, deuda_pendiente=deuda_pendiente)
     template_file = open("soldini.html", 'w').write(html_template_string)
