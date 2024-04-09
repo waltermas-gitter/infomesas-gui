@@ -280,13 +280,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="cajaPushButton">
-        <property name="text">
-         <string>Caja</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item row="2" column="3">
@@ -347,7 +340,7 @@
      <x>0</x>
      <y>0</y>
      <width>1173</width>
-     <height>29</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -363,7 +356,6 @@
     <addaction name="actionImprimirVistaActual"/>
     <addaction name="actionImprimirPendientes"/>
     <addaction name="actionPedidosPorMes"/>
-    <addaction name="actionInformeCostos"/>
    </widget>
    <widget class="QMenu" name="menuUtilidades">
     <property name="title">

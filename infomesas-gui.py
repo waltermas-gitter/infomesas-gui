@@ -3,7 +3,7 @@
 # https://realpython.com/python-pyqt-database/
 # sqlitebrowser
 # designer: sudo apt install qttools5-dev-tools
-#
+# reference: https://doc.bccnsoft.com/docs/PyQt5/class_reference.html
 BROWSER = "/usr/bin/firefox"
 
 import os, sys
@@ -39,9 +39,6 @@ if not con.open():
     sys.exit(1)
 
 
-
-
-
 class InfomesasWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -59,14 +56,13 @@ class InfomesasWindow(QMainWindow):
         self.actionListaHtml.triggered.connect(self.listaHtml)
         self.actionAbrirDB.triggered.connect(self.abrirDB)
         self.actionPresupuestosHtml.triggered.connect(self.presupuestosHtml)
-        self.actionInformeCostos.triggered.connect(self.informeCostos)
+        # self.actionInformeCostos.triggered.connect(self.informeCostos)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
         self.enproduccionCheckBox.stateChanged.connect(self.vistaChanged)
         self.terminadasCheckBox.stateChanged.connect(self.vistaChanged)
         self.entregadasCheckBox.stateChanged.connect(self.vistaChanged)
         self.anuladasCheckBox.stateChanged.connect(self.vistaChanged)
-
         self.pedidosTableWidget.setColumnCount(14)
         self.pedidosTableWidget.setSelectionBehavior(QTableView.SelectRows)
         self.pedidosTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Cliente", "Modelo", "Chapa", "Notas", "cerrada", "abierta", "ancho", "Precio", "Estado", "F.entrega", "L.entrega", "Demora"])
@@ -81,7 +77,7 @@ class InfomesasWindow(QMainWindow):
         self.clienteComboBox.currentTextChanged.connect(self.vistaChanged)
         self.proveedoresPushButton.clicked.connect(self.showProveedores)
         self.clientesPushButton.clicked.connect(self.showClientes)
-        self.cajaPushButton.clicked.connect(self.showCaja)
+        # self.cajaPushButton.clicked.connect(self.showCaja)
         self.productosSeguidosPushButton.clicked.connect(self.showProductosSeguidos)
         self.chequesPushButton.clicked.connect(self.showCheques)
         self.salirPushButton.clicked.connect(self.close)
@@ -99,7 +95,6 @@ class InfomesasWindow(QMainWindow):
         # self.visualizarQuery("SELECT * FROM pedidos")
         self.vistaChanged()
 
-
     def visualizarQuery(self, queryString):
         contadorPendientes = 0
         contadorEnProduccion = 0
@@ -114,12 +109,9 @@ class InfomesasWindow(QMainWindow):
             fechap = fechaPedido.strftime("%d-%m-%Y")
             self.pedidosTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
             cliente = QTableWidgetItem(devuelvoNombreCliente(query.value(2)))
-
             self.pedidosTableWidget.setItem(rows, 2, cliente)
             self.pedidosTableWidget.setItem(rows, 3, QTableWidgetItem(devuelvoNombreModelo(query.value(3))))
             self.pedidosTableWidget.setItem(rows, 4, QTableWidgetItem(devuelvoNombreChapa(query.value(4))))
-
-
             self.pedidosTableWidget.setItem(rows, 5, QTableWidgetItem(str(query.value(5))))
             medidaCerrada = QTableWidgetItem(str(query.value(6)))
             medidaCerrada.setTextAlignment(Qt.AlignRight)
@@ -160,16 +152,12 @@ class InfomesasWindow(QMainWindow):
             demora = datetime.today() - fechaPedido 
             if query.value(10) == 'pendiente' or query.value(10) == 'en produccion':
                 self.pedidosTableWidget.setItem(rows, 13, QTableWidgetItem(str(demora.days)))
- 
         self.pedidosTableWidget.resizeColumnsToContents()
         # self.pedidosTableWidget.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
         self.pedidosTableWidget.setColumnWidth(5, 150)
         self.pedidosTableWidget.scrollToBottom()
         mensajeStatus = "%i registros. %i pendientes, %i en produccion, %i terminadas" % (self.pedidosTableWidget.rowCount(), contadorPendientes, contadorEnProduccion, contadorTerminadas)
         self.statusbar.showMessage(mensajeStatus)
-
-
-
 
     def editarPedido(self):
         self.pedido = PedidoDialog(self.pedidosTableWidget.selectedItems())
@@ -182,7 +170,6 @@ class InfomesasWindow(QMainWindow):
         self.pedido = PedidoDialog(0)
         if self.pedido.exec_() == QDialog.Accepted:
             self.vistaChanged()
-
 
     def showProveedores(self):
         self.prov = ProveedoresWindow()
@@ -204,10 +191,6 @@ class InfomesasWindow(QMainWindow):
         self.notas = NotasWindow()
         self.notas.show()
 
-    def showCaja(self):
-        self.caja = CajaWindow()
-        self.caja.show()
-
     def closeEvent(self, event):
         con.close()
         event.accept()
@@ -227,14 +210,12 @@ class InfomesasWindow(QMainWindow):
         # queryString = "SELECT * FROM pedidos WHERE" + queryString
         # queryString = queryString[:28] + queryString[31:]
         queryString = queryString[3:]
-
         diaDesde = self.desdeDateEdit.date().toPyDate()
         diaDesdeString = datetime.strftime(diaDesde, "%Y-%m-01")
         diaHasta = self.hastaDateEdit.date().toPyDate()
         diaHastaString = datetime.strftime(diaHasta, "%Y-%m-")
         ultimoDiaMes = calendar.monthrange(int(datetime.strftime(diaHasta,"%y")), int(datetime.strftime(diaHasta,"%m")))[1]
         diaHastaString = diaHastaString + str(ultimoDiaMes) + " 23:59:59"
-
         # queryStringFecha = "SELECT * FROM pedidos WHERE (fecha BETWEEN '" + diaDesdeString + "'AND '" + diaHastaString + "') AND ("
         queryStringFecha = "SELECT * FROM pedidos WHERE (fecha >= '" + diaDesdeString + "'AND fecha <= '" + diaHastaString + "') AND ("
         queryString = queryStringFecha + queryString + ")"
@@ -288,11 +269,8 @@ class InfomesasWindow(QMainWindow):
             texto += self.pedidosTableWidget.item(row, 9).text() + '] '
             texto += self.pedidosTableWidget.item(row, 10).text() 
             texto += '\n'
-
         self.pendientesWindow = PrintingWindow(texto)
         self.pendientesWindow.show()
-
-
 
     def listaPrecios(self):
         texto = open("ultimalista.txt", "r").read()
@@ -322,7 +300,6 @@ class InfomesasWindow(QMainWindow):
                 generar_lista_jinja.main(mes)
                 self.listaHtml()
 
-
     def listaHtml(self):
         os.system("%s lista.html &" % BROWSER)
 
@@ -331,8 +308,6 @@ class InfomesasWindow(QMainWindow):
 
     def abrirDB(self):
         os.system("xdg-open infomesas.db &")
-
-
 
     def pedidosPorMes(self):
         self.pedidosPorMes = PedidosPorMesWindow()
@@ -348,7 +323,6 @@ class InfomesasWindow(QMainWindow):
         if len(self.pedidosTableWidget.selectedItems()) == 0:
             mensaje('no hay pedido seleccionado')
             return()
-
         query = QSqlQuery()
         query.prepare("INSERT INTO pedidos (fecha, cliente, modelo, chapa, notas, medidaCerrada, medidaAbierta, medidaAncho, precio, estado, fechaEntrega, lugarEntrega) VALUES (:fecha, :cliente, :modelo, :chapa, :notas, :medidaCerrada, :medidaAbierta, :medidaAncho, :precio, :estado, :fechaEntrega, :lugarEntrega)")
         fechaDT = datetime.strptime(self.pedidosTableWidget.selectedItems()[1].text(), "%d-%m-%Y")
@@ -379,51 +353,8 @@ class InfomesasWindow(QMainWindow):
         query.exec_()
         self.vistaChanged()
 
-
     def onHeaderClicked(self, indice):
         self.pedidosTableWidget.sortItems(indice, Qt.AscendingOrder)
-
-    def informeCostos(self):
-        # 20 mesas al mes
-        query = QSqlQuery("SELECT trampa FROM precios2 WHERE idPrecio = 8")
-        query.last()
-        precioActual = query.value(0)
-        texto = f"Base recta 160 guatambu extensible\t{precioActual}\n\n"
-        # medio aglomerado
-        aglomerado = int(devuelvoUltimoPrecio(20) / 2)
-        texto += f"aglomerado\t\t{aglomerado}\n"
-        # guatambu 8 largueros = 27 pies
-        guatambu = devuelvoUltimoPrecio(7) * 27
-        texto += f"guatambu\t\t\t{guatambu}\n"
-        # dos bisagras
-        bisagras = devuelvoUltimoPrecio(27) * 2
-        texto += f"bisagras\t\t\t{bisagras}\n"
-        # cemento dura 1 mes
-        cemento = int(devuelvoUltimoPrecio(45) / 20)
-        texto += f"cemento\t\t\t{cemento}\n"
-        # cola dura 1 mes
-        cola = int(devuelvoUltimoPrecio(37) / 20)
-        texto += f"cola\t\t\t{cola}\n"
-        # diluyente por 3 litros
-        diluyente = int(devuelvoUltimoPrecio(28) * 3 / 20) 
-        texto += f"diluyente\t\t\t{diluyente}\n"
-        # espigas metalicas 8
-        espigas = devuelvoUltimoPrecio(25) * 8
-        texto += f"espigas\t\t\t{espigas}\n"
-        # lijas 1 de 100 y 1 de 40
-        lijas = int((devuelvoUltimoPrecio(31) + devuelvoUltimoPrecio(32)) / 20) 
-        texto += f"lijas\t\t\t{lijas}\n"
-        # tirafondo por 4
-        tirafondos = devuelvoUltimoPrecio(30) * 4
-        texto += f"tirafondos\t\t\t{tirafondos}\n"
-
-        total = aglomerado + guatambu + bisagras + cemento + diluyente + cola + espigas + lijas + tirafondos
-        texto += f"total\t\t\t\t{total}\n"
-        self.informeCostosWindow = PrintingWindow(texto)
-        self.informeCostosWindow.show()
-
-
-
 
 
 class PedidoDialog(QDialog):
@@ -448,8 +379,6 @@ class PedidoDialog(QDialog):
         query = QSqlQuery("SELECT nombre FROM lugaresEntrega ORDER BY nombre")
         while query.next():
             self.lugarEntregaComboBox.addItem(query.value(0))
-
-
         # lleno los items correspondientes
         # id = 0 implica nuevo pedido
         if self.id == 0:
@@ -457,7 +386,6 @@ class PedidoDialog(QDialog):
             self.precioLineEdit.setText('0')
             estadoItem = self.estadoListWidget.findItems('pendiente', Qt.MatchExactly)
             self.estadoListWidget.setCurrentItem(estadoItem[0])
-
         else:
             dialist = self.id[1].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
@@ -479,14 +407,11 @@ class PedidoDialog(QDialog):
                 dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
                 self.fechaEntregaDateEdit.setDate(dia)
                 self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
-
             else:
                 self.fechaEntregaDateEdit.setDate(QDate.currentDate())
                 self.fechaEntregaDateEdit.setEnabled(False)
                 self.lugarEntregaComboBox.setEnabled(False)
-
             # self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
-
         self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
@@ -496,7 +421,7 @@ class PedidoDialog(QDialog):
         self.calcularPushButton.clicked.connect(self.calcular)
         self.ultimaLista=open('ultimalista.txt').readlines()
         self.pasarAccPushButton.clicked.connect(self.pasarAcc)
-
+        self.medidaCerradaSpinBox.valueChanged.connect(self.autoFilterUltimaLista)
 
     def cambioEstado(self):
         if self.estadoListWidget.currentItem().text() == 'entregada':
@@ -513,12 +438,6 @@ class PedidoDialog(QDialog):
     def calcular(self):
         res = round(eval(self.precioLineEdit.text()))
         self.precioLineEdit.setText(str(res))
-        
-    # def keyPressEvent(self, event):     
-    #     print(event)
-
-    #     event.ignore()
-
 
     def save(self):
         # checks
@@ -536,8 +455,6 @@ class PedidoDialog(QDialog):
         except:
             mensaje("importe no correcto")
             return
-
-
         #save
         query = QSqlQuery()
         if self.id == 0:
@@ -547,7 +464,6 @@ class PedidoDialog(QDialog):
             query.prepare("UPDATE pedidos SET fecha=:fecha, cliente=:cliente, modelo=:modelo, chapa=:chapa, notas=:notas, medidaCerrada=:medidaCerrada, medidaAbierta=:medidaAbierta, medidaAncho=:medidaAncho, precio=:precio, estado=:estado, fechaEntrega=:fechaEntrega, lugarEntrega=:lugarEntrega WHERE idPedido = :idPedido")
             query.bindValue(":idPedido", int(self.id[0].text()))
             self.returnValues.append(self.id[0].text())
-
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
         query.bindValue(":fecha", diaString)
@@ -577,7 +493,6 @@ class PedidoDialog(QDialog):
             queryEntrega.first()
             query.bindValue(":lugarEntrega", queryEntrega.value(0))
         query.exec_()
-
         # self.returnValues.append(self.id[0].text())
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%d-%m-%Y")
@@ -625,6 +540,8 @@ class PedidoDialog(QDialog):
         queryCliente = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, devuelvoIdCliente(self.clienteComboBox.currentText())))
         reply = QMessageBox.information(self, 'Confirmacion', 'Se ha actualizado cuentas corrientes',  QMessageBox.Ok)
 
+    def autoFilterUltimaLista(self):
+        self.filterListaLineEdit.setText(self.medidaCerradaSpinBox.cleanText())
 
 
 class SumasSaldosDialog(QDialog):
@@ -648,7 +565,6 @@ class SumasSaldosDialog(QDialog):
         self.sumasSaldosTableWidget.setHorizontalHeaderLabels(["Id", "Fecha", "Concepto", "Debe", "Haber", "Saldo"])
         self.sumasSaldosTableWidget.itemDoubleClicked.connect(self.movimiento)
         self.cargarTabla()
-        
 
     def cargarTabla(self):
         self.sumasSaldosTableWidget.setRowCount(0)
@@ -679,7 +595,6 @@ class SumasSaldosDialog(QDialog):
             saldoItem = QTableWidgetItem(str(saldo))
             saldoItem.setTextAlignment(Qt.AlignRight)
             self.sumasSaldosTableWidget.setItem(rows, 5, saldoItem)
-
         self.sumasSaldosTableWidget.scrollToBottom()
         self.sumasSaldosTableWidget.resizeColumnsToContents()
 
@@ -687,8 +602,6 @@ class SumasSaldosDialog(QDialog):
         deudaSoldini = soldini_deuda.main()
         self.soldiniListWidget.clear()
         self.soldiniListWidget.addItems(deudaSoldini)
-
-
 
     def movimiento(self):
         # idMovimiento = self.sumasSaldosTableWidget.selectedItems()[0].text()
@@ -698,7 +611,6 @@ class SumasSaldosDialog(QDialog):
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
             # for i in range(len(self.mov.returnValues)):
                 # self.sumasSaldosTableWidget.selectedItems()[i].setText(self.mov.returnValues[i])
-
         # self.show()
 
     def nuevoMovimiento(self):
@@ -706,11 +618,6 @@ class SumasSaldosDialog(QDialog):
         if self.mov.exec_() == QDialog.Accepted:
             self.cargarTabla()
  
-
-
-
-
-
 
 class ProveedoresWindow(QMainWindow):
     def __init__(self):
@@ -743,12 +650,7 @@ class ProveedoresWindow(QMainWindow):
             saldo = QTableWidgetItem(str(query.value(5)))
             saldo.setTextAlignment(Qt.AlignRight)
             self.proveedoresTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
-
         self.proveedoresTableWidget.resizeColumnsToContents()
-
-
-
-
 
 
 class ClientesWindow(QMainWindow):
@@ -783,11 +685,7 @@ class ClientesWindow(QMainWindow):
             saldo.setTextAlignment(Qt.AlignRight)
             self.clientesTableWidget.setItem(rows, 2, QTableWidgetItem(saldo))
         self.clientesTableWidget.resizeColumnsToContents()
-
-
-
-
-
+        self.clientesTableWidget.sortItems(2, Qt.DescendingOrder)
 
 
 class Movimiento(QDialog):
@@ -801,11 +699,11 @@ class Movimiento(QDialog):
 
     def initUI(self):
         self.pagoPushButton.clicked.connect(self.pago)
+        self.debeRadioButton.setChecked(True)
         if self.esProveedor == True:
             self.setWindowTitle(devuelvoNombreProveedor(self.provId))
         else:
             self.setWindowTitle(devuelvoNombreCliente(self.provId))
-
         # lleno los items correspondientes
         # id = 0 implica nuevo pedido
         if self.id == 0:
@@ -816,7 +714,6 @@ class Movimiento(QDialog):
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
             self.fechaDateEdit.setDate(dia)
             self.conceptoLineEdit.setText(self.id[2].text())
-
             # for i in range(5):
                 # print(self.id[i].text())
             if self.esProveedor == True:
@@ -825,29 +722,24 @@ class Movimiento(QDialog):
                 queryString = "SELECT importe FROM cuentasCorrientes WHERE idcc = '%i'" % int(self.id[0].text())
             querySigno = QSqlQuery(queryString)
             querySigno.first()
-            
             if querySigno.value(0) >= 0:
                 self.debeRadioButton.setChecked(True)
             else:
                 self.haberRadioButton.setChecked(True)
             importe = int(self.id[3].text())
             self.importeLineEdit.setText(str(importe))
-
         # self.dialogButtonBox.accepted.connect(self.save)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
 
-
     def save(self):
         query = QSqlQuery()
-        
         if self.id == 0:
             if self.esProveedor == True:
                 queryString = "INSERT INTO deudas (proveedor, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
             else:
                 queryString = "INSERT INTO cuentasCorrientes (cliente, fecha, concepto, importe) VALUES (:proveedor, :fecha, :concepto, :importe)"
             query.prepare(queryString)
-        
         else:
             if self.esProveedor == True:
                 queryString = "UPDATE deudas SET proveedor=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idDeuda = :idDeuda"
@@ -855,7 +747,6 @@ class Movimiento(QDialog):
                 queryString = "UPDATE cuentasCorrientes SET cliente=:proveedor, fecha=:fecha, concepto=:concepto, importe=:importe WHERE idcc = :idDeuda"
             query.prepare(queryString)
             query.bindValue(":idDeuda", int(self.id[0].text()))
-
         query.bindValue(":proveedor", self.provId)
         dia = self.fechaDateEdit.date().toPyDate()
         diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
@@ -866,7 +757,6 @@ class Movimiento(QDialog):
           importe = importe * (-1) 
         query.bindValue(":importe", importe)
         query.exec_()
-
         if self.esProveedor == True:
             # actualizo saldo en tabla proveedores
             queryImportes = QSqlQuery("SELECT importe FROM deudas WHERE Proveedor = '%s'" % self.provId)
@@ -884,15 +774,16 @@ class Movimiento(QDialog):
         self.accept()
         
     def pago(self):
+        if self.esProveedor == True:
+            query = QSqlQuery("SELECT saldo FROM proveedores WHERE idProveedor = '%s'" % self.provId)
+        else:
+            query = QSqlQuery("SELECT saldo FROM clientes WHERE idCliente = '%s'" % self.provId)
+        query.last()
         self.haberRadioButton.setChecked(True)
         self.conceptoLineEdit.setText("pago")
+        self.importeLineEdit.setText(str(query.value(0)))
         self.importeLineEdit.setFocus()
         self.importeLineEdit.selectAll()
-
-
-
- 
-
 
 
 class ProductosSeguidosWindow(QMainWindow):
@@ -938,18 +829,15 @@ class ProductosSeguidosWindow(QMainWindow):
                 precioItem = QTableWidgetItem(str(queryPrecio.value(2)))
                 precioItem.setTextAlignment(Qt.AlignRight)
                 self.productosSeguidosTableWidget.setItem(rows, 4, precioItem)
-        
         self.productosSeguidosTableWidget.resizeColumnsToContents()
         self.filtroLineEdit.setFocus()
 
-        
     def nuevoProducto(self):
         descripcion, okPressed = QInputDialog.getText(self, "Nuevo producto","Descripcion", QLineEdit.Normal, "")
         if okPressed and descripcion != '':
             query = QSqlQuery("INSERT INTO productosSeguidos (descripcion) VALUES ('%s')" % descripcion) 
             self.cargarTabla()
 
-        
 
 class HistorialPreciosDialog(QDialog):
     def __init__(self, id):
@@ -970,7 +858,6 @@ class HistorialPreciosDialog(QDialog):
         self.okPushButton.clicked.connect(self.accept)
         self.cargarTabla()
 
-
     def cargarTabla(self):
         self.historialPreciosTableWidget.setRowCount(0)
         query = QSqlQuery("SELECT * FROM productosSeguidosPrecios WHERE idProducto = '%s'" % self.id[0].text())
@@ -989,7 +876,6 @@ class HistorialPreciosDialog(QDialog):
                 porcentaje = (precioActual * 100 / precioAnterior) - 100
                 self.historialPreciosTableWidget.setItem(rows, 4, QTableWidgetItem(str(round(porcentaje, 2))))
 
-
     def nuevoPrecioShow(self):
         # self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems())
         self.nuevoPrecio = NuevoPrecioDialog(0, self.id)
@@ -1000,11 +886,6 @@ class HistorialPreciosDialog(QDialog):
         self.nuevoPrecio = NuevoPrecioDialog(self.historialPreciosTableWidget.selectedItems(), self.id)
         if self.nuevoPrecio.exec_() == QDialog.Accepted:
             self.cargarTabla()
-
-
-
-
-
 
 
 class NuevoPrecioDialog(QDialog):
@@ -1021,13 +902,11 @@ class NuevoPrecioDialog(QDialog):
         self.proveedoresComboBox.addItems(proveedores)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
-
         if self.tablaAnterior == 0:
             self.fechaDateEdit.setDate(QDate.currentDate())
             self.importeLineEdit.setText('0')
             if len(self.id) != 2:
                 self.proveedoresComboBox.setCurrentText(self.id[3].text())
-
         else:
             dialist = self.tablaAnterior[2].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
@@ -1035,8 +914,6 @@ class NuevoPrecioDialog(QDialog):
             self.importeLineEdit.setText(self.tablaAnterior[3].text())
             self.proveedoresComboBox.setCurrentText(self.tablaAnterior[1].text())
         self.importeLineEdit.setFocus()
-
-
 
     def save(self):
         query = QSqlQuery() 
@@ -1053,11 +930,6 @@ class NuevoPrecioDialog(QDialog):
         query.bindValue(":fecha", diaString)
         query.exec_()
         self.accept()
-
-
-
-
-
 
 
 class ChequesWindow(QMainWindow):
@@ -1104,13 +976,10 @@ class ChequesWindow(QMainWindow):
                 proveedorWidget = QTableWidgetItem('disponible')
                 proveedorWidget.setForeground(QBrush(QColor('green')))
                 saldo += query.value(6)
-
             self.chequesTableWidget.setItem(rows, 7, QTableWidgetItem(fechap))
             self.chequesTableWidget.setItem(rows, 8, proveedorWidget)
-
         self.chequesTableWidget.resizeColumnsToContents()
         self.statusbar.showMessage("Total disponible: %s" % saldo)
-
 
     def editarCheque(self):
         self.cheque = ChequeDialog(self.chequesTableWidget.selectedItems())
@@ -1121,10 +990,6 @@ class ChequesWindow(QMainWindow):
         self.cheque = ChequeDialog(0)
         if self.cheque.exec_() == QDialog.Accepted:
             self.cargarTabla()
-
-
-
-
 
 
 class ChequeDialog(QDialog):
@@ -1141,17 +1006,14 @@ class ChequeDialog(QDialog):
         self.cancelPushButton.clicked.connect(self.reject)
         clientes = llenoClientes()
         self.clienteComboBox.addItems(clientes)
- 
         proveedores = llenoProveedores()
         self.proveedorComboBox.addItems(proveedores)
-
         if self.id == 0:
             self.recibidoDateEdit.setDate(QDate.currentDate())
             self.fechaChequeDateEdit.setDate(QDate.currentDate())
             self.fechaEntregadoDateEdit.setDate(QDate.currentDate())
             self.fechaEntregadoDateEdit.setEnabled(False)
             self.proveedorComboBox.setCurrentText("[elegir]")
-
         else:
             dialist = self.id[1].text().split('-')
             dia = QDate(int(dialist[2]), int(dialist[1]), int(dialist[0]))
@@ -1192,8 +1054,6 @@ class ChequeDialog(QDialog):
             mensaje("importe no seleccionado")
             return
 
-
-
         #save
         query = QSqlQuery()
         if self.id == 0:
@@ -1218,8 +1078,6 @@ class ChequeDialog(QDialog):
             query.bindValue(":entregadoA", devuelvoIdProveedor(self.proveedorComboBox.currentText()))
         query.exec_()
         self.accept()
-
-
 
  
 class NotasWindow(QMainWindow):
@@ -1293,7 +1151,6 @@ class NotaDialog(QDialog):
     def actualizarTitulo(self):
         self.setWindowTitle(self.tituloLineEdit.text())
 
-
     def save(self):
         query = QSqlQuery() 
         if self.id == 0:
@@ -1305,9 +1162,6 @@ class NotaDialog(QDialog):
         query.bindValue(":nota", self.notaPlainTextEdit.toPlainText())
         query.exec_()
         self.accept()
-
-           
-
 
 
 class PrintingWindow(QMainWindow):
@@ -1330,8 +1184,6 @@ class PrintingWindow(QMainWindow):
             self.textoPlainTextEdit.print_(printer)
 
 
-
-
 class PedidosPorMesWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -1350,7 +1202,6 @@ class PedidosPorMesWindow(QMainWindow):
         chart.addSeries(series)
         # chart.setTitle("Percent Example")
         chart.setAnimationOptions(QChart.SeriesAnimations)
- 
         # categories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
         axisY = QBarCategoryAxis()
         axisY.append(categories)
@@ -1362,112 +1213,11 @@ class PedidosPorMesWindow(QMainWindow):
         chart.addAxis(axisX, Qt.AlignBottom)
         series.attachAxis(axisX)
         axisX.applyNiceNumbers()
-
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
- 
         chartView = QChartView(chart)
         chartView.setRenderHint(QPainter.Antialiasing)
- 
-        self.setCentralWidget(chartView)        
-
-class CajaWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi("caja.ui", self)
-        self.initUI()
-
-    def initUI(self):
-        self.cajaTableWidget.setColumnCount(5)
-        self.cajaTableWidget.setSelectionBehavior(QTableView.SelectRows)
-        self.cajaTableWidget.setHorizontalHeaderLabels(["ID", "Fecha", "Descripcion", "Importe", "Saldo"])
-        self.nuevoPushButton.clicked.connect(self.nuevoCaja)
-        self.cajaTableWidget.itemDoubleClicked.connect(self.modificarFila)
-        self.salirPushButton.clicked.connect(self.close)
-        self.cargarTabla()
-
-    # def sumasSaldosShow(self):
-        # self.sumasSaldos = SumasSaldosDialog(self.clientesTableWidget.selectedItems()[0].text(), False)
-        # if self.sumasSaldos.exec_() == QDialog.Accepted:
-            # self.cargarTabla()
-
-    def cargarTabla(self):
-        self.cajaTableWidget.setRowCount(0)
-        query = QSqlQuery("SELECT * FROM caja")
-        saldo = 0
-        while query.next():        
-            rows = self.cajaTableWidget.rowCount()
-            self.cajaTableWidget.setRowCount(rows + 1)
-            self.cajaTableWidget.setItem(rows, 0, QTableWidgetItem(str(query.value(0))))
-            fecha = datetime.strptime(query.value(1), "%Y-%m-%d %H:%M:%S")
-            fechap = fecha.strftime("%d-%m")
-            self.cajaTableWidget.setItem(rows, 1, QTableWidgetItem(fechap))
-            self.cajaTableWidget.setItem(rows, 2, QTableWidgetItem(query.value(2)))
-            self.cajaTableWidget.setItem(rows, 3, QTableWidgetItem(str(query.value(3))))
-            saldo = saldo + query.value(3)
-            self.cajaTableWidget.setItem(rows, 4, QTableWidgetItem(str(saldo)))
-        self.cajaTableWidget.resizeColumnsToContents()
-
-    def nuevoCaja(self):
-        self.mov = MovimientoCaja(0)
-        if self.mov.exec_() == QDialog.Accepted:
-            self.cargarTabla()
-    def modificarFila(self):
-        id = self.cajaTableWidget.selectedItems()[0].text()
-        self.mov = MovimientoCaja(id)
-        if self.mov.exec_() == QDialog.Accepted:
-            self.cargarTabla()
-
-class MovimientoCaja(QDialog):
-    def __init__(self, id):
-        super().__init__()
-        uic.loadUi("movimientoCaja.ui", self)
-        self.id = id
-        self.initUI()
-
-    def initUI(self):
-        self.okPushButton.clicked.connect(self.save)
-        self.cancelPushButton.clicked.connect(self.reject)
-        if self.id == 0:
-            self.fechaDateEdit.setDate(QDate.currentDate())
-            self.entradaRadioButton.setChecked(True)
-        else:
-            query = QSqlQuery("SELECT * FROM caja WHERE idCaja = '%i'" % int(self.id))
-            query.first()
-            dialist = query.value(1)[:-9].split('-')
-            dia = QDate(int(dialist[0]), int(dialist[1]), int(dialist[2]))
-            self.fechaDateEdit.setDate(dia)
-            self.conceptoLineEdit.setText(query.value(2))
-            self.importeLineEdit.setText(str(query.value(3)))
-            if query.value(3) >= 0:
-                self.entradaRadioButton.setChecked(True)
-            else:
-                self.salidaRadioButton.setChecked(True)
-                self.importeLineEdit.setText(str(query.value(3)*(-1)))
-
-
-    def save(self):
-        query = QSqlQuery()
-        if self.id == 0:
-            query.prepare("INSERT INTO caja (fecha, descripcion, importe) VALUES (:fecha, :descripcion, :importe)")
-        else:
-            query.prepare("UPDATE caja SET fecha=:fecha, descripcion=:descripcion, importe=:importe WHERE idCaja=:idCaja")
-            query.bindValue(":idCaja", self.id)
-            
-        dia = self.fechaDateEdit.date().toPyDate()
-        diaString = datetime.strftime(dia, "%Y-%m-%d %H:%M:%S")
-        query.bindValue(":fecha", diaString)
-        descripcion = self.conceptoLineEdit.text()
-        query.bindValue(":descripcion", descripcion)
-        importe = int(self.importeLineEdit.text())
-        if self.salidaRadioButton.isChecked() == True:
-            importe = importe * (-1)
-        query.bindValue(":importe", importe)
-        query.exec_()
-        self.accept()
-
-
-
+        self.setCentralWidget(chartView)
 
 def llenoClientes():
     clientes = []
@@ -1487,7 +1237,6 @@ def llenoProveedores():
     proveedores.sort()
     return(proveedores)
 
-
 def devuelvoIdCliente(nombre):
     queryCliente = QSqlQuery("SELECT idCliente FROM clientes WHERE nombre = '%s'" % nombre)
     queryCliente.first()
@@ -1497,8 +1246,6 @@ def devuelvoNombreCliente(id):
     queryCliente = QSqlQuery("SELECT nombre FROM clientes WHERE idCliente = '%s'" % id)
     queryCliente.first()
     return(queryCliente.value(0))
-
-
 
 def devuelvoIdProveedor(nombre):
     queryProveedor = QSqlQuery("SELECT idProveedor FROM proveedores WHERE nombre = '%s'" % nombre)
@@ -1530,7 +1277,6 @@ def devuelvoUltimoPrecio(id):
     query.last()
     return(query.value(0))
 
-
 def mensaje(texto):
     msgBox = QMessageBox()
     msgBox.setIcon(QMessageBox.Information)
@@ -1538,14 +1284,11 @@ def mensaje(texto):
     msgBox.setWindowTitle("Error")
     msgBox.setStandardButtons(QMessageBox.Ok)
     msgBox.exec()
-    
 
-    
 def window():
     app = QApplication(sys.argv)
     win = InfomesasWindow()
     win.show()
-    
     sys.exit(app.exec_())
 
 window()
