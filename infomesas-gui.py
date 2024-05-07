@@ -412,6 +412,12 @@ class PedidoDialog(QDialog):
                 self.fechaEntregaDateEdit.setEnabled(False)
                 self.lugarEntregaComboBox.setEnabled(False)
             # self.lugarEntregaComboBox.setCurrentText(self.id[12].text())
+            query = QSqlQuery("SELECT pasadoACC FROM pedidos WHERE idPedido = '%s'" % self.id[0].text())
+            query.last()
+            if query.value(0) == 1:
+                self.pasarAccPushButton.setEnabled(False)
+
+
         self.estadoListWidget.itemSelectionChanged.connect(self.cambioEstado)
         self.okPushButton.clicked.connect(self.save)
         self.cancelPushButton.clicked.connect(self.reject)
@@ -539,6 +545,9 @@ class PedidoDialog(QDialog):
             saldo += queryImportes.value(0)
         queryCliente = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, devuelvoIdCliente(self.clienteComboBox.currentText())))
         reply = QMessageBox.information(self, 'Confirmacion', 'Se ha actualizado cuentas corrientes',  QMessageBox.Ok)
+        #marco como actualizado en tabla pedidos
+        query2 = QSqlQuery("UPDATE pedidos SET pasadoACC = 1 WHERE idPedido = '%s'" % self.id[0].text())
+        self.pasarAccPushButton.setEnabled(False)
 
     def autoFilterUltimaLista(self):
         self.filterListaLineEdit.setText(self.medidaCerradaSpinBox.cleanText())
