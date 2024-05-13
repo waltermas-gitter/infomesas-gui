@@ -544,7 +544,7 @@ class PedidoDialog(QDialog):
         while queryImportes.next():
             saldo += queryImportes.value(0)
         queryCliente = QSqlQuery("UPDATE clientes SET saldo = '%s' WHERE idCliente = '%s'" % (saldo, devuelvoIdCliente(self.clienteComboBox.currentText())))
-        reply = QMessageBox.information(self, 'Confirmacion', 'Se ha actualizado cuentas corrientes',  QMessageBox.Ok)
+        # reply = QMessageBox.information(self, 'Confirmacion', 'Se ha actualizado cuentas corrientes',  QMessageBox.Ok)
         #marco como actualizado en tabla pedidos
         query2 = QSqlQuery("UPDATE pedidos SET pasadoACC = 1 WHERE idPedido = '%s'" % self.id[0].text())
         self.pasarAccPushButton.setEnabled(False)
