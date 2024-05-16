@@ -56,6 +56,10 @@ class InfomesasWindow(QMainWindow):
         self.actionListaHtml.triggered.connect(self.listaHtml)
         self.actionAbrirDB.triggered.connect(self.abrirDB)
         self.actionPresupuestosHtml.triggered.connect(self.presupuestosHtml)
+        self.actionAdministrarModelos.triggered.connect(self.administrarModelos)
+        self.actionAdministrarClientes.triggered.connect(self.administrarClientes)
+        self.actionAdministrarProveedores.triggered.connect(self.administrarProveedores)
+        self.actionAdministrarLugaresEntrega.triggered.connect(self.administrarLugaresEntrega)
         # self.actionInformeCostos.triggered.connect(self.informeCostos)
         self.nuevoPushButton.clicked.connect(self.nuevoPedido)
         self.pendientesCheckBox.stateChanged.connect(self.vistaChanged)
@@ -356,6 +360,21 @@ class InfomesasWindow(QMainWindow):
     def onHeaderClicked(self, indice):
         self.pedidosTableWidget.sortItems(indice, Qt.AscendingOrder)
 
+    def administrarModelos(self):
+        self.tabla = TableWindow("modelos")
+        self.tabla.show()
+
+    def administrarClientes(self):
+        self.tabla = TableWindow("clientes")
+        self.tabla.show()
+
+    def administrarProveedores(self):
+        self.tabla = TableWindow("proveedores")
+        self.tabla.show()
+
+    def administrarLugaresEntrega(self):
+        self.tabla = TableWindow("lugaresEntrega")
+        self.tabla.show()
 
 class PedidoDialog(QDialog):
     def __init__(self, id):
@@ -1227,6 +1246,29 @@ class PedidosPorMesWindow(QMainWindow):
         chartView = QChartView(chart)
         chartView.setRenderHint(QPainter.Antialiasing)
         self.setCentralWidget(chartView)
+
+
+class TableWindow(QMainWindow):
+    def __init__(self, tabla):
+        super().__init__()
+        uic.loadUi("tabla.ui", self)
+        self.tabla = tabla
+        self.initUI()
+
+    def initUI(self):
+        self.model = QSqlTableModel()
+        self.model.setTable(self.tabla)
+        self.model.select()
+        self.tableViewTabla.setModel(self.model)
+        self.tableViewTabla.setSortingEnabled(True)
+        self.model.sort(0,Qt.SortOrder.AscendingOrder)
+        self.newPushButton.clicked.connect(self.new)
+        self.salirPushButton.clicked.connect(self.close)
+        # self.deletePushButton.clicked.connect(self.delete)
+        #
+    def new(self):
+        ret = self.model.insertRow(self.model.rowCount())
+
 
 def llenoClientes():
     clientes = []

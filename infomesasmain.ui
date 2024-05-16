@@ -363,6 +363,10 @@
     </property>
     <addaction name="actionDuplicarPedido"/>
     <addaction name="actionAbrirDB"/>
+    <addaction name="actionAdministrarModelos"/>
+    <addaction name="actionAdministrarClientes"/>
+    <addaction name="actionAdministrarProveedores"/>
+    <addaction name="actionAdministrarLugaresEntrega"/>
    </widget>
    <widget class="QMenu" name="menuLista">
     <property name="title">
@@ -432,6 +436,26 @@
   <action name="actionInformeCostos">
    <property name="text">
     <string>Informe costos</string>
+   </property>
+  </action>
+  <action name="actionAdministrarModelos">
+   <property name="text">
+    <string>Administrar modelos</string>
+   </property>
+  </action>
+  <action name="actionAdministrarClientes">
+   <property name="text">
+    <string>Administar clientes</string>
+   </property>
+  </action>
+  <action name="actionAdministrarProveedores">
+   <property name="text">
+    <string>Administrar proveedores</string>
+   </property>
+  </action>
+  <action name="actionAdministrarLugaresEntrega">
+   <property name="text">
+    <string>Administrar lugares de entrega</string>
    </property>
   </action>
  </widget>
