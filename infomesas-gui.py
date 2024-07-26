@@ -131,14 +131,13 @@ class InfomesasWindow(QMainWindow):
             self.pedidosTableWidget.setItem(rows, 9, precio)
             estado = QTableWidgetItem(str(query.value(10)))
             if query.value(10) == 'pendiente':
-                estado.setForeground(QBrush(QColor('green')))
                 contadorPendientes += 1
-            elif query.value(10) == 'en produccion':                
-                estado.setForeground(QBrush(QColor('brown')))
+            elif query.value(10) == 'en produccion':
                 contadorEnProduccion += 1
-            elif query.value(10) == 'terminada':                
-                estado.setForeground(QBrush(QColor(200,160,50)))
+            elif query.value(10) == 'terminada':
                 contadorTerminadas += 1
+            estado.setForeground(self.establecerColorEstado(query.value(10)))
+            
             self.pedidosTableWidget.setItem(rows, 10, estado)
             if query.value(11):
                 fecha = datetime.strptime(query.value(11), "%Y-%m-%d %H:%M:%S")
@@ -169,6 +168,17 @@ class InfomesasWindow(QMainWindow):
             # row = int(self.pedidosTableWidget.selectedItems()[0].text())
             for i in range(len(self.pedido.returnValues)):
                 self.pedidosTableWidget.selectedItems()[i].setText(self.pedido.returnValues[i])
+                self.pedidosTableWidget.selectedItems()[10].setForeground(self.establecerColorEstado(self.pedido.returnValues[10]))
+
+    def establecerColorEstado(self, estado):
+        brush = QBrush(QColor('black'))
+        if estado == 'pendiente':
+            brush = QBrush(QColor('green'))
+        elif estado == 'en produccion':
+            brush = QBrush(QColor('brown'))
+        elif estado == 'terminada':
+            brush = QBrush(QColor(200,160,50))
+        return brush
 
     def nuevoPedido(self):
         self.pedido = PedidoDialog(0)
